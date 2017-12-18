@@ -63,10 +63,21 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
     compile "com.google.code.gson:gson:$gsonLibrabryVersion"
 
+    //TODO:Remove this library
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+
+
     //Field and Method Binding Library
     compile "com.jakewharton:butterknife:$butterKnifeLibraryVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeAnnotationLibrary"
 
+    //Signature Drawing
+    compile 'com.github.gcacace:signature-pad:1.2.1'
+
+    //Logging
+    compile 'com.jakewharton.timber:timber:4.6.0'
 
     //Image Compression
     compile "id.zelory:compressor:$ImageCompressionLibrary"
