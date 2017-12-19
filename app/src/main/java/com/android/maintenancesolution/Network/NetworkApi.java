@@ -1,10 +1,11 @@
 package com.android.maintenancesolution.Network;
 
-import com.android.maintenancesolution.Token;
+import com.android.maintenancesolution.Models.Token;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 /**
@@ -17,7 +18,8 @@ public interface NetworkApi {
      * @param username need to be the username.
      * @param password need to be the password
      **/
-    @POST("/o/token/")
+    @FormUrlEncoded
+    @POST("/api/token/")
     Call<Token> authNetwork(@Field("username") String username, @Field("password") String password);
 
     @POST("/api/verify/")

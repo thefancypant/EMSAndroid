@@ -1,38 +1,48 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.android.maintenancesolution.ListActivity;
+import com.android.maintenancesolution.Models.Token;
+import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.Utils.GeneralUtils;
+import com.android.maintenancesolution.Utils.PreferenceUtils;
 
 import org.json.JSONException;
-import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity {
+    PreferenceUtils preferenceUtils;
     //private UserLoginTask mAuthTask = null;
     // UI references.
+    private String TAG = "LoginActivity";
     private EditText mEmailView;
     private EditText mPasswordView;
     private Button mEmailSignInButton;
+    private Dialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        preferenceUtils = new PreferenceUtils(getApplication());
 
         // Set up the login form.
         mEmailView = findViewById(R.id.editTextUserName);
@@ -46,7 +56,8 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     attemptLogin();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, e.toString());
+
                 }
             }
         });
@@ -69,72 +80,63 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mEmailView.getText().toString().trim();
+        String password = mPasswordView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
-
-        // Check for a valid email address.
-        if (email.isEmpty()) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }
-        if (password.isEmpty()) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        if (!GeneralUtils.isNetworkAvailable(getApplication())) {
+            alertDialog = new GeneralUtils().showValidationPopup(LoginActivity.this, "Network not connected.Please try later");
+            alertDialog.show();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            //showProgress(true);
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            // Check for a valid email address.
+            if (email.isEmpty()) {
+                mEmailView.setError(getString(R.string.error_field_required));
+                focusView = mEmailView;
+                cancel = true;
+            }
+            if (password.isEmpty()) {
+                mEmailView.setError(getString(R.string.error_field_required));
+                focusView = mEmailView;
+                cancel = true;
+            }
 
+            if (cancel) {
+                // There was an error; don't attempt login and focus the first
+                // form field with an error.
+                focusView.requestFocus();
+            } else {
 
-//            String url ="http://app.hopcontracting.net/api/token/";
-            String url = getString(R.string.global_url) + "/token/";
-            JSONObject jsonBody = new JSONObject();
-            jsonBody.put("username", email);
-            jsonBody.put("password", password);
+                NetworkService
+                        .getInstance()
+                        .authNetwork(email, password)
+                        .enqueue(new Callback<Token>() {
+                            @Override
+                            public void onResponse(Call<Token> call, Response<Token> response) {
 
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+                                processAuthNetwork(response);
+                            }
 
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                String token = response.getString("token");
-                                PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("MYTOKEN", token).apply();
-                                //showProgress(false);
-                                Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
-                                goToNextActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(goToNextActivity);
-                                finish();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            @Override
+                            public void onFailure(Call<Token> call, Throwable t) {
+                                Log.d(TAG, "authNetworkFailed");
 
                             }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                            //showProgress(false);
-                            mPasswordView.setError(getString(R.string.error_incorrect_password));
-                            mPasswordView.requestFocus();
-
-                        }
-                    });
-            requestQueue.add(jsObjRequest);
+                        });
+            }
         }
+    }
+
+    private void processAuthNetwork(Response<Token> response) {
+        if (response.code() >= 200 && response.code() < 299) {
+            preferenceUtils.saveAuthToken(response.body().getToken());
+            Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+            goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(goToNextActivity);
+        } else if (response.body().getNonFieldErrors() != null) {
+            Toast.makeText(getApplication(), "Username or Password Incorrect ", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private boolean isEmailValid(String email) {
@@ -151,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
      * Shows the progress UI and hides the login form.
      */
     /*@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    private void showProgress(final boolean show) {non_field_errors
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.

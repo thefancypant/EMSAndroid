@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,13 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.android.maintenancesolution.ListActivity;
+import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 
 import retrofit2.Call;
@@ -38,8 +43,20 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Create an Intent that will start the Menu-Activity.
-                checkToken();
-                SplashScreenActivity.this.finish();
+                if (!GeneralUtils.isNetworkAvailable(getApplication())) {
+                    preferenceUtils.saveAuthToken(null);
+                    Toast.makeText(getApplication(), "no internet", Toast.LENGTH_LONG).show();
+                    Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                    goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(goToNextActivity);
+
+                } else {
+                    //TODO:Remove next line
+                    preferenceUtils.saveAuthToken(null);
+
+                    checkToken();
+
+                }
 
             }
         }, SPLASH_DISPLAY_LENGTH);
@@ -86,6 +103,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
 
+
     private void processVerify(Response<Token> response) {
         if (response.code() >= 200 && response.code() < 300) {
             preferenceUtils.saveAuthToken(response.body().getToken());
@@ -101,5 +119,13 @@ public class SplashScreenActivity extends AppCompatActivity {
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
         }
+
+
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
 }
