@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 public class UserSelectorActivity extends AppCompatActivity {
 
-    private ConstraintLayout customerView;
+    private ConstraintLayout customerLayout;
     private ConstraintLayout workerLayout;
 
     @Override
@@ -27,10 +27,12 @@ public class UserSelectorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_selector);
 
-        customerView = findViewById(R.id.customerLayout);
+        customerLayout = findViewById(R.id.customerLayout);
         workerLayout = findViewById(R.id.workerLayout);
+        customerLayout.setEnabled(true);
+        workerLayout.setEnabled(true);
 
-        customerView.setOnClickListener(new View.OnClickListener() {
+        customerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent goToNextActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
@@ -87,6 +89,16 @@ public class UserSelectorActivity extends AppCompatActivity {
                     }
                 });
         requestQueue.add(jsObjRequest);
+    }
+
+    private void toggle(String user) {
+
+        if (user.equals("Worker")) {
+            customerLayout.setEnabled(false);
+        } else if (user.equals("Customer")) {
+            workerLayout.setEnabled(false);
+
+        }
     }
 
 
