@@ -75,7 +75,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             case R.id.action_logout:
                 //Logout logic goes here
                 PreferenceManager.getDefaultSharedPreferences(this).edit().remove("MYTOKEN").apply();
-                final Intent intent = new Intent(ListActivity.this, UserSelector.class);
+                final Intent intent = new Intent(ListActivity.this, UserSelectorActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

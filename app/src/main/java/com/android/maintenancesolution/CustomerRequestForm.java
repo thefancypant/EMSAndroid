@@ -1,23 +1,15 @@
 package com.android.maintenancesolution;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -41,22 +33,22 @@ import java.util.Map;
 public class CustomerRequestForm extends AppCompatActivity {
 
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
-    ListView mWorkTypesListView;
-    EditText mPhoneNumberEditText;
-    EditText mEmailEditText;
-    EditText mNotesEditText;
-    Button submitButton;
+    /* ListView mWorkTypesListView;
+     EditText mPhoneNumberEditText;
+     EditText mEmailEditText;
+     EditText mNotesEditText;
+     Button submitButton;*/
     ConstraintLayout mConstraintLayout;
-    private View mProgressView;
+    //private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_request_form);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        submitButton = findViewById(R.id.submit_button);
+*/
+      /*  submitButton = findViewById(R.id.submit_button);
 
         mEmailEditText = findViewById(R.id.edit_text_email);
         mPhoneNumberEditText = findViewById(R.id.edit_text_input_phone_number);
@@ -64,7 +56,7 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         mNotesEditText = findViewById(R.id.edit_text_input_notes);
         mNotesEditText.setMaxLines(4);
-        mNotesEditText.setHorizontallyScrolling(false);
+        mNotesEditText.setHorizontallyScrolling(false);*/
 
         final ListView mWorkTypesListView = findViewById(R.id.work_types_list_view);
 
@@ -168,7 +160,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         requestQueue.add(localJReq);
 
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
+        /*submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
                     attemptSubmit();
@@ -176,7 +168,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
     }
 
@@ -188,7 +180,7 @@ public class CustomerRequestForm extends AppCompatActivity {
             public void onResponse(NetworkResponse response) {
                 String resultResponse = new String(response.data);
                 // parse success output
-                showProgress(false);
+                //showProgress(false);
                 AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
                 alertDialog.setTitle("Success!");
                 alertDialog.setMessage("You have successfully submitted your request!");
@@ -204,7 +196,7 @@ public class CustomerRequestForm extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                showProgress(false);
+                //showProgress(false);
                 AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
                 alertDialog.setTitle("Failure!");
                 alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
@@ -220,9 +212,9 @@ public class CustomerRequestForm extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("notes", mNotesEditText.getText().toString());
+               /* params.put("notes", mNotesEditText.getText().toString());
                 params.put("email", mEmailEditText.getText().toString());
-                params.put("phone", mPhoneNumberEditText.getText().toString());
+                params.put("phone", mPhoneNumberEditText.getText().toString());*/
                 String jobTypes = "";
                 for (int i = 0; i < workTypesList.size(); i++) {
                     jobTypes += workTypesList.get(i).getId() + ",";
@@ -238,21 +230,21 @@ public class CustomerRequestForm extends AppCompatActivity {
     private void attemptSubmit() throws JSONException {
 
         // Reset errors.
-        mEmailEditText.setError(null);
+        /*mEmailEditText.setError(null);
         mPhoneNumberEditText.setError(null);
         mNotesEditText.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailEditText.getText().toString();
         String phoneNumber = mPhoneNumberEditText.getText().toString();
-        String notes = mNotesEditText.getText().toString();
+        String notes = mNotesEditText.getText().toString();*/
 
         boolean cancel = false;
         boolean typesFlag = false;
         View focusView = null;
 
         // Check for a valid email address.
-        if (email.isEmpty()) {
+        /*if (email.isEmpty()) {
             mEmailEditText.setError(getString(R.string.error_field_required));
             focusView = mEmailEditText;
             cancel = true;
@@ -267,7 +259,7 @@ public class CustomerRequestForm extends AppCompatActivity {
             mNotesEditText.setError(getString(R.string.error_field_required));
             focusView = mNotesEditText;
             cancel = true;
-        }
+        }*/
         if (workTypesList.size() == 0) {
             typesFlag = true;
 
@@ -294,7 +286,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+            //showProgress(true);
             makeRequest();
         }
     }
@@ -302,7 +294,7 @@ public class CustomerRequestForm extends AppCompatActivity {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+   /* @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -337,5 +329,5 @@ public class CustomerRequestForm extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
+    }*/
 }

@@ -48,7 +48,10 @@
             android:name="com.android.maintenancesolution.OrderDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.android.maintenancesolution.CustomerFeedbackActivity"
+            android:name="com.android.maintenancesolution.CustomerRequestForm"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.android.maintenancesolution.UserSelectorActivity"
             android:screenOrientation="portrait" />
     </application>
 

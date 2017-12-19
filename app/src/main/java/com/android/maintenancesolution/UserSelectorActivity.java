@@ -2,11 +2,9 @@ package com.android.maintenancesolution;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageButton;
 
 import com.android.maintenancesolution.Views.LoginActivity;
 import com.android.volley.Request;
@@ -19,19 +17,20 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserSelector extends AppCompatActivity {
+public class UserSelectorActivity extends AppCompatActivity {
+
+    private ConstraintLayout customerView;
+    private ConstraintLayout workerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_selector);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        ImageButton customerButton = findViewById(R.id.customerButton);
-        ImageButton workerButton = findViewById(R.id.workerButton);
+        customerView = findViewById(R.id.customerLayout);
+        workerLayout = findViewById(R.id.workerLayout);
 
-        customerButton.setOnClickListener(new View.OnClickListener() {
+        customerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent goToNextActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
@@ -39,7 +38,7 @@ public class UserSelector extends AppCompatActivity {
             }
         });
 
-        workerButton.setOnClickListener(new View.OnClickListener() {
+        workerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
@@ -48,7 +47,7 @@ public class UserSelector extends AppCompatActivity {
         });
 
         // Check if we have an access token already
-        String token = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", "");
+        /*String token = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", "");
         if (!token.equals("")) {
             // Try to validate the token
             try {
@@ -57,7 +56,7 @@ public class UserSelector extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-        }
+        }*/
 
 
     }

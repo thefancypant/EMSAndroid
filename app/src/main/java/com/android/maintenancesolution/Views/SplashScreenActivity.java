@@ -12,6 +12,7 @@ import com.android.maintenancesolution.ListActivity;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.UserSelectorActivity;
 import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 
@@ -46,7 +47,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 if (!GeneralUtils.isNetworkAvailable(getApplication())) {
                     preferenceUtils.saveAuthToken(null);
                     Toast.makeText(getApplication(), "no internet", Toast.LENGTH_LONG).show();
-                    Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                    Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
                     goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(goToNextActivity);
 
@@ -115,7 +116,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             preferenceUtils.saveAuthToken(null);
             Timber.e("Token not vaild");
-            Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
         }

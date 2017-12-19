@@ -4,7 +4,7 @@
     <solid android:color="#D9FFFFFF" />
     <stroke
         android:width="0.3dip"
-        android:color="@color/login_page_background" />
+        android:color="@color/white" />
     <corners android:radius="12dp"></corners>
 
 
