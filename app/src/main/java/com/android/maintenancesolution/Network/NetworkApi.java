@@ -1,11 +1,15 @@
 package com.android.maintenancesolution.Network;
 
+import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Token;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -24,6 +28,10 @@ public interface NetworkApi {
 
     @POST("/api/verify/")
     Call<Token> verify(@Body Token token);
+
+    @GET("/api/job_types/")
+    Call<List<Job>> getJobTypes();
+
 
    /* *//**
      * userRegisterNetwork is used to signup a new user

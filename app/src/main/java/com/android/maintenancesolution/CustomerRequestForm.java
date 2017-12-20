@@ -1,28 +1,26 @@
 package com.android.maintenancesolution;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import com.android.volley.AuthFailureError;
+import com.android.maintenancesolution.Models.Job;
+import com.android.maintenancesolution.Network.NetworkService;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -30,15 +28,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+
 public class CustomerRequestForm extends AppCompatActivity {
 
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
-    /* ListView mWorkTypesListView;
-     EditText mPhoneNumberEditText;
-     EditText mEmailEditText;
-     EditText mNotesEditText;
-     Button submitButton;*/
+    ListView mWorkTypesListView;
+    EditText mPhoneNumberEditText;
+    EditText mEmailEditText;
+    EditText mNotesEditText;
+    Spinner mJobsSpinner;
+    Button submitButton;
+    WorkTypeAdapater workTypeAdapater;
+
+    ArrayList<String> spinnerArray = new ArrayList<>();
+
     ConstraintLayout mConstraintLayout;
+    private ArrayList<String> jobsSelectedList = new ArrayList<>();
     //private View mProgressView;
 
     @Override
@@ -48,17 +55,28 @@ public class CustomerRequestForm extends AppCompatActivity {
         /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 */
-      /*  submitButton = findViewById(R.id.submit_button);
+        submitButton = findViewById(R.id.buttonSubmitRequest);
 
-        mEmailEditText = findViewById(R.id.edit_text_email);
-        mPhoneNumberEditText = findViewById(R.id.edit_text_input_phone_number);
+        mEmailEditText = findViewById(R.id.textViewEmail);
+        mPhoneNumberEditText = findViewById(R.id.editTextPhoneNumber);
+        mJobsSpinner = findViewById(R.id.spinnerWorkType);
+        mWorkTypesListView = findViewById(R.id.listViewSelectedJobs);
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
-        mNotesEditText = findViewById(R.id.edit_text_input_notes);
+        mNotesEditText = findViewById(R.id.editTextDescription);
         mNotesEditText.setMaxLines(4);
-        mNotesEditText.setHorizontallyScrolling(false);*/
+        mNotesEditText.setHorizontallyScrolling(false);
 
-        final ListView mWorkTypesListView = findViewById(R.id.work_types_list_view);
+        mJobsSpinner.setEnabled(false);
+        getJobs();
+
+       /* if (jobsSelectedList.size()>0)
+        {
+            workTypeAdapater = new WorkTypeAdapater(this, jobsSelectedList);
+            mWorkTypesListView.setAdapter(workTypeAdapater);
+            workTypeAdapater.notifyDataSetChanged();
+        }*/
+       /* final ListView mWorkTypesListView = findViewById(R.id.work_types_list_view);
 
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = getString(R.string.global_url) + "/job_types/";
@@ -160,7 +178,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         requestQueue.add(localJReq);
 
 
-        /*submitButton.setOnClickListener(new View.OnClickListener() {
+        *//*submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
                     attemptSubmit();
@@ -170,6 +188,59 @@ public class CustomerRequestForm extends AppCompatActivity {
             }
         });*/
 
+
+    }
+
+    private void getJobs() {
+        NetworkService
+                .getInstance()
+                .getJobTypes()
+                .enqueue(new Callback<List<Job>>() {
+                    @Override
+                    public void onResponse(Call<List<Job>> call, retrofit2.Response<List<Job>> response) {
+                        processJobs(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Job>> call, Throwable t) {
+
+                    }
+                });
+
+
+    }
+
+    private void processJobs(List<Job> jobList) {
+        for (int i = 0; i < jobList.size(); i++) {
+            spinnerArray.add(jobList.get(i).getName());
+        }
+
+
+        mJobsSpinner.setEnabled(true);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        mJobsSpinner.setAdapter(arrayAdapter);
+
+        mJobsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != 0) {
+                    jobsSelectedList.add(spinnerArray.get(position));
+
+                    workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList);
+                    mWorkTypesListView.setAdapter(workTypeAdapater);
+
+                    workTypeAdapater.notifyDataSetChanged();
+
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     void makeRequest() throws JSONException {

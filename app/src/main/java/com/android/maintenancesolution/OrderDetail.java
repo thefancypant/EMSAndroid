@@ -182,10 +182,10 @@ public class OrderDetail extends AppCompatActivity {
                             final WorkType workType = workTypes.get(position - 1);
                             if (!workTypesList.contains(workType) && !workType.getTitle().equals("Select Work Type")) {
                                 workTypesList.add(workType);
-                                final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
+                                /*final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
                                 mWorkTypesListView.setAdapter(workTypeAdapater);
 
-                                workTypeAdapater.notifyDataSetChanged();
+                                workTypeAdapater.notifyDataSetChanged();*/
 
                                 mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
@@ -197,10 +197,10 @@ public class OrderDetail extends AppCompatActivity {
                                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
                                                 new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
-                                                        workTypesList.remove(temp);
+                                                       /* workTypesList.remove(temp);
                                                         final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
                                                         mWorkTypesListView.setAdapter(workTypeAdapater);
-                                                        workTypeAdapater.notifyDataSetChanged();
+                                                        workTypeAdapater.notifyDataSetChanged();*/
                                                     }
                                                 });
                                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",

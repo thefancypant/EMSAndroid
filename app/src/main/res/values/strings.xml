@@ -29,11 +29,14 @@
     <string name="title_activity_customer_request_form">CustomerRequestForm</string>
     <string name="email_hint">Email</string>
     <string name="phone_number_hint">Phone Number</string>
-    <string name="please_describe_your_request_here">Please describe your request here</string>
     <string name="submit">Submit</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="worker">Worker</string>
     <string name="customer">Customer</string>
+    <string name="request">Request</string>
+    <string name="please_make_your_request_below">Please make your request below</string>
+    <string name="please_describe_your_request_here">Please describe your request here</string>
+    <string name="submit_request">Submit Request</string>
 </resources>

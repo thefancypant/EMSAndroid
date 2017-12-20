@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,9 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.android.maintenancesolution.Views.LoginActivity;
+import com.android.maintenancesolution.CustomerRequestForm;
+import com.android.maintenancesolution.ListActivity;
+import com.android.maintenancesolution.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;

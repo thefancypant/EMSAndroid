@@ -12,7 +12,6 @@ import com.android.maintenancesolution.ListActivity;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
-import com.android.maintenancesolution.UserSelectorActivity;
 import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 

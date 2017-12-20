@@ -6,4 +6,5 @@
     <color name="text_black">#000000</color>
     <color name="login_page_background">#dedddd</color>
     <color name="white">#ffffff</color>
+    <color name="grey">#838383</color>
 </resources>

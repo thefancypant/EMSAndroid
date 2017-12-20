@@ -12,13 +12,14 @@ import java.util.ArrayList;
 public class WorkTypeAdapater extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<WorkType> mDataSource;
+    private ArrayList<String> mDataSource;
 
-    public WorkTypeAdapater(Context context, ArrayList<WorkType> items) {
+    public WorkTypeAdapater(Context context, ArrayList<String> items) {
         mContext = context;
         mDataSource = items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
 
     //1
     @Override
@@ -41,14 +42,14 @@ public class WorkTypeAdapater extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.work_type_item, viewGroup, false);
+        View rowView = mInflater.inflate(R.layout.list_item, viewGroup, false);
 
         // Get title element
-        TextView titleTextView = rowView.findViewById(R.id.work_type_title);
+        TextView titleTextView = rowView.findViewById(R.id.textViewJob);
         // 1
-        WorkType workType = (WorkType) getItem(i);
+        //WorkType workType = (WorkType) getItem(i);
         // 2
-        titleTextView.setText(workType.getTitle());
+        titleTextView.setText(mDataSource.get(i));
 
         return rowView;
     }
