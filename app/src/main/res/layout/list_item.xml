@@ -38,13 +38,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toStartOf="@+id/endGuideline"
-        app:layout_constraintRight_toLeftOf="@+id/ivCompleted"
+        app:layout_constraintRight_toLeftOf="@+id/ivPicture"
         app:layout_constraintStart_toStartOf="@id/startGuideline"
         app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView
-        android:id="@+id/ivCompleted"
+        android:id="@+id/ivPicture"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginBottom="8dp"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageViewResourceInfo"
+        android:id="@+id/ivClose"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginBottom="8dp"
@@ -66,7 +66,7 @@
         android:src="@drawable/exit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/ivCompleted"
+        app:layout_constraintLeft_toRightOf="@+id/ivPicture"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

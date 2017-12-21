@@ -1,5 +1,6 @@
 package com.android.maintenancesolution.Network;
 
+import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Token;
 
@@ -26,13 +27,14 @@ public interface NetworkApi {
     @POST("/api/token/")
     Call<Token> authNetwork(@Field("username") String username, @Field("password") String password);
 
-    @POST("/api/verify/")
-    Call<Token> verify(@Body Token token);
-
     @GET("/api/job_types/")
     Call<List<Job>> getJobTypes();
 
+    @POST("/api/verify/")
+    Call<Token> verify(@Body Token token);
 
+    @POST("/api/request/")
+    Call<Token> customerFormSubmit(@Body CustomerRequest customerRequest);
    /* *//**
      * userRegisterNetwork is used to signup a new user
      *

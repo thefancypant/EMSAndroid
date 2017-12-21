@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,26 +15,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.Job;
+import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
 public class CustomerRequestForm extends AppCompatActivity {
 
-    final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
+    List<Job> workTypesList = new ArrayList<>();
     ListView mWorkTypesListView;
     EditText mPhoneNumberEditText;
     EditText mEmailEditText;
@@ -69,6 +64,19 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         mJobsSpinner.setEnabled(false);
         getJobs();
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptSubmit();
+            }
+        });
+
+        /*mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });*/
 
        /* if (jobsSelectedList.size()>0)
         {
@@ -211,6 +219,9 @@ public class CustomerRequestForm extends AppCompatActivity {
     }
 
     private void processJobs(List<Job> jobList) {
+        workTypesList = jobList;
+        spinnerArray.add("Select Work Type");
+        //spinnerArray.add("Select Work Type");
         for (int i = 0; i < jobList.size(); i++) {
             spinnerArray.add(jobList.get(i).getName());
         }
@@ -224,14 +235,22 @@ public class CustomerRequestForm extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position != 0) {
-                    jobsSelectedList.add(spinnerArray.get(position));
+                    if (!spinnerArray.get(position).equals("Select Work Type")) {
+                        jobsSelectedList.add(spinnerArray.get(position));
 
-                    workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList);
-                    mWorkTypesListView.setAdapter(workTypeAdapater);
+                        workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList, CustomerRequestForm.this);
+                        mWorkTypesListView.setAdapter(workTypeAdapater);
 
-                    workTypeAdapater.notifyDataSetChanged();
+                        workTypeAdapater.notifyDataSetChanged();
+                   /* mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            jobsSelectedList.remove(i);
+                            workTypeAdapater.notifyDataSetChanged();
+                        }
+                    });*/
 
-
+                    }
                 }
 
             }
@@ -243,7 +262,13 @@ public class CustomerRequestForm extends AppCompatActivity {
         });
     }
 
-    void makeRequest() throws JSONException {
+    public WorkTypeAdapater getWorkTypeAdapater() {
+        return workTypeAdapater;
+    }
+
+
+
+    /*void makeRequest() throws JSONException {
         String url = getString(R.string.global_url) + "/request/";
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
@@ -283,9 +308,9 @@ public class CustomerRequestForm extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-               /* params.put("notes", mNotesEditText.getText().toString());
+               *//* params.put("notes", mNotesEditText.getText().toString());
                 params.put("email", mEmailEditText.getText().toString());
-                params.put("phone", mPhoneNumberEditText.getText().toString());*/
+                params.put("phone", mPhoneNumberEditText.getText().toString());*//*
                 String jobTypes = "";
                 for (int i = 0; i < workTypesList.size(); i++) {
                     jobTypes += workTypesList.get(i).getId() + ",";
@@ -295,10 +320,10 @@ public class CustomerRequestForm extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
-    }
+    }*/
 
 
-    private void attemptSubmit() throws JSONException {
+    private void attemptSubmit() {
 
         // Reset errors.
         /*mEmailEditText.setError(null);
@@ -315,26 +340,27 @@ public class CustomerRequestForm extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid email address.
-        /*if (email.isEmpty()) {
+        if (mEmailEditText.toString().trim().equals("")) {
             mEmailEditText.setError(getString(R.string.error_field_required));
             focusView = mEmailEditText;
             cancel = true;
         }
-        if (phoneNumber.isEmpty()) {
+        if (mPhoneNumberEditText.toString().trim().equals("")) {
             mPhoneNumberEditText.setError(getString(R.string.error_field_required));
             focusView = mPhoneNumberEditText;
             cancel = true;
         }
 
-        if (notes.isEmpty()) {
+        if (mNotesEditText.toString().trim().equals("")) {
             mNotesEditText.setError(getString(R.string.error_field_required));
             focusView = mNotesEditText;
             cancel = true;
-        }*/
-        if (workTypesList.size() == 0) {
+        }
+        if (jobsSelectedList.size() == 0) {
             typesFlag = true;
 
         }
+
 
 
         if (cancel || typesFlag) {
@@ -362,43 +388,59 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-   /* @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        // Setup Progress View
-        mConstraintLayout = findViewById(R.id.customer_request_form_layout);
-        mProgressView = findViewById(R.id.request_progress);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+    private void makeRequest() {
 
-
-            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
-            mConstraintLayout.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+        String jobTypes = "";
+        for (int i = 0; i < jobsSelectedList.size(); i++) {
+            for (int j = 0; j < workTypesList.size(); j++) {
+                if (workTypesList.get(j).getName().equals(jobsSelectedList.get(i))) {
+                    jobTypes += workTypesList.get(j).getId() + ",";
                 }
-            });
+            }
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+
         }
-    }*/
+
+        Log.d("jobTypes", jobTypes);
+        CustomerRequest customerRequest = new CustomerRequest(mEmailEditText.getText().toString().trim()
+                , mPhoneNumberEditText.getText().toString().trim()
+                , mNotesEditText.getText().toString().trim(), jobTypes);
+
+        NetworkService
+                .getInstance()
+                .customerFormSubmit(customerRequest)
+                .enqueue(new Callback<Token>() {
+                    @Override
+                    public void onResponse(Call<Token> call, retrofit2.Response<Token> response) {
+                        Log.d("jobTypes", "Successful");
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Success!");
+                        alertDialog.setMessage("You have successfully submitted your request!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Token> call, Throwable t) {
+                        Log.d("jobTypes", "Fail");
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Failure!");
+                        alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                });
+    }
+
+
 }
