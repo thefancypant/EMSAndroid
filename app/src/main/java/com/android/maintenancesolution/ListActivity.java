@@ -13,51 +13,46 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.android.maintenancesolution.Views.UserSelectorActivity;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.android.maintenancesolution.Models.Order;
+import com.android.maintenancesolution.Models.PostLocationRequest;
+import com.android.maintenancesolution.Models.PostLocationResponse;
+import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.Utils.PreferenceUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ListActivity extends AppCompatActivity implements LocationListener {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    OrderAdapter adapter;
+    OrderListAdapter adapter;
     double lattiude;
     double longitude;
     ListView mListView;
     ProgressBar mProgressView;
     ConstraintLayout constraint_layout;
     LocationManager locationManager;
+    PreferenceUtils preferenceUtils;
+    Intent intent;
+    private String header;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,7 +61,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
@@ -83,9 +78,9 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
-    public void makeRequest() {
+  /*  public void makeRequest() {
         showProgress(true);
 
 
@@ -219,16 +214,215 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         };
 
         requestQueue.add(localJReq);
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkLocationPermission();
-        setContentView(R.layout.activity_list);
+        getPrefUtils();
+
+        setContentView(R.layout.activity_newlist);
         mListView = findViewById(R.id.recipe_list_view);
-        mListView.setEmptyView(findViewById(R.id.empty_list_view));
-        this.makeRequest();
+        // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
+        makeRequest();
+        //this.makeRequest();
+    }
+
+    private void makeRequest() {
+        showProgress(true);
+
+        NetworkService
+                .getInstance()
+                .getUserWorks(header)
+                .enqueue(new Callback<List<com.android.maintenancesolution.Models.Order>>() {
+                    @Override
+                    public void onResponse(Call<List<Order>> call, retrofit2.Response<List<Order>> response) {
+                        if (response.code() >= 200 && response.code() < 299) {
+                            processMakeRequest(response.body());
+                        } else {
+                            showProgress(false);
+                            showErrorDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Order>> call, Throwable t) {
+                        showProgress(false);
+                        showErrorDialog();
+
+                    }
+                });
+
+    }
+
+    private void processMakeRequest(List<Order> orderList) {
+        showProgress(false);
+
+        adapter = new OrderListAdapter(ListActivity.this, orderList);
+        mListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (!checkLocationPermission()) {
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+                        alertDialog.setTitle("Warning");
+                        alertDialog.setMessage("The HOP application will no longer be able to update your location, is this ok?");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        checkLocationPermission();
+                                    }
+                                });
+                        alertDialog.show();
+                    } else {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
+                    }
+                } else {
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
+                }
+                Order item = (Order) adapter.getItem(i);
+
+                intent = new Intent(ListActivity.this, OrderDetail.class);
+                intent.putExtra("Order", item);
+                Date currentTime = Calendar.getInstance().getTime();
+                Date date = new Date();   // given date
+                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                calendar.setTime(date);   // assigns calendar to given date
+                int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+                int minutes = calendar.get(Calendar.MINUTE);
+                postLocationNetwork(hours, minutes, item.getId());
+                /*Order item = (Order) adapter.getItem(i);
+                final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
+                intent.putExtra("Order", item);
+                Date currentTime = Calendar.getInstance().getTime();
+                Date date = new Date();   // given date
+                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                calendar.setTime(date);   // assigns calendar to given date
+                int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+                int minutes = calendar.get(Calendar.MINUTE);
+                String url = getString(R.string.global_url) + "/works/"+item.id+"/";
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("latitude", ListActivity.this.lattiude);
+                    jsonBody.put("longitude", ListActivity.this.longitude);
+                    jsonBody.put("register_time", hours+":"+minutes);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                showProgress(false);
+                                startActivity(intent);
+                            }
+
+
+
+                        }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // TODO Auto-generated method stub
+                                AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+                                alertDialog.setTitle("Failure");
+                                alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //
+                                            }
+                                        });
+                                alertDialog.show();
+                            }
+                        }){
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
+                        return params;
+                    }
+                };
+                requestQueue.add(jsObjRequest);*/
+            }
+        });
+
+
+    }
+
+    private void postLocationNetwork(int hours, int minutes, int id) {
+        showProgress(true);
+
+        PostLocationRequest postLocationRequest =
+                new PostLocationRequest(
+                        longitude
+                        , lattiude
+                        , (Integer.toString(hours) + ":" + Integer.toString(minutes)));
+
+        NetworkService
+                .getInstance()
+                .postLocation(header, Integer.toString(id), postLocationRequest)
+                .enqueue(new Callback<PostLocationResponse>() {
+                    @Override
+                    public void onResponse(Call<PostLocationResponse> call, retrofit2.Response<PostLocationResponse> response) {
+                        if (response.code() >= 200 && response.code() < 299) {
+                            processLocationNetwork(response.body());
+                        } else {
+                            showProgress(false);
+                            showErrorDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostLocationResponse> call, Throwable t) {
+                        showProgress(false);
+                        showErrorDialog();
+
+                    }
+                });
+    }
+
+    private void processLocationNetwork(PostLocationResponse body) {
+        showProgress(false);
+
+        if (body.getMessage().equals("Success")) {
+            startActivity(intent);
+        }
+
+    }
+
+    private void showErrorDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+        alertDialog.setTitle("Failure");
+        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //
+                    }
+                });
+        alertDialog.show();
+    }
+
+
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(ListActivity.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
     }
 
     public boolean checkLocationPermission() {
@@ -302,6 +496,9 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+        Log.d("location", "onLocationChanged: " + Double.toString(latitude));
+        Log.d("location", "onLocationChanged: " + Double.toString(longitude));
+
         this.lattiude = latitude;
         this.longitude = longitude;
     }

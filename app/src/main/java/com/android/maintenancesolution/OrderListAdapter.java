@@ -5,15 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.android.maintenancesolution.Models.Order;
 
-public class OrderAdapter extends BaseAdapter {
+import java.util.List;
+
+/**
+ * Created by kalyan on 1/2/18.
+ */
+
+public class OrderListAdapter extends BaseAdapter {
+
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<Order> mDataSource;
+    private List<Order> mDataSource;
 
-    public OrderAdapter(Context context, ArrayList<Order> items) {
+    public OrderListAdapter(Context context, List<Order> items) {
         mContext = context;
         mDataSource = items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -42,16 +50,18 @@ public class OrderAdapter extends BaseAdapter {
 // Get view for row item
         View rowView = mInflater.inflate(R.layout.order_item, viewGroup, false);
 
-       /* // Get title element
-        TextView titleTextView = rowView.findViewById(R.id.order_title);
-        // Get subtitle element
-        TextView subtitleTextView = rowView.findViewById(R.id.order_subtitle);
-        // 1
+        // Get title element
+        TextView textViewDate = rowView.findViewById(R.id.textViewDate);
+        TextView textViewTime = rowView.findViewById(R.id.textViewTime);
+        TextView textViewJob = rowView.findViewById(R.id.textViewJob);
+        TextView textViewAddress = rowView.findViewById(R.id.textViewAddress);
+
         Order order = (Order) getItem(i);
         // 2
-        titleTextView.setText(order.title);
-        subtitleTextView.setText(order.description);*/
-
+        textViewAddress.setText(order.getAddress());
+        textViewDate.setText(order.getDate());
+        textViewTime.setText(order.getRegisterTime());
+        textViewJob.setText(order.getProject().toString());
         return rowView;
     }
 

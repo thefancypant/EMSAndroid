@@ -1,6 +1,7 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,8 @@ import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.WorkTypeAdapater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -419,6 +422,9 @@ public class CustomerRequestForm extends AppCompatActivity {
                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
+                                        goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(goToNextActivity);
                                         finish();
                                     }
                                 });

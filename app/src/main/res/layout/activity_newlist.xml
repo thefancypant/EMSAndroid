@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/list_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <android.support.constraint.ConstraintLayout
+
+        android:id="@+id/list_constraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="142dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+
+        <TextView
+            android:id="@+id/textViewSelectJob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="Select a Job"
+            android:textColor="@color/text_black"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="@+id/imageView5"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <Button
+            android:id="@+id/buttonRefresh"
+            android:layout_width="130dp"
+            android:layout_height="26dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimaryDark"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:text="Refresh Jobs"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewSelectJob"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewSelectJob"
+            app:layout_constraintVertical_bias="0.576" />
+
+        <ListView
+            android:id="@+id/recipe_list_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewSelectJob"></ListView>
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

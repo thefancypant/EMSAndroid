@@ -39,4 +39,6 @@
     <string name="please_make_your_request_below">Please make your request below</string>
     <string name="please_describe_your_request_here">Please describe your request here</string>
     <string name="submit_request">Submit Request</string>
+    <string name="continue_text">Continue</string>
+    <string name="thank_you_your_request">Thank You,Your request has been succesfully sent.</string>
 </resources>

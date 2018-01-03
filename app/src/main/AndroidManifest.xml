@@ -35,25 +35,25 @@
         </provider>
 
         <activity
-            android:name="com.android.maintenancesolution.Views.LoginActivity"
+            android:name=".Views.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.android.maintenancesolution.ListActivity"
+            android:name=".ListActivity"
             android:launchMode="singleTop"
-
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.android.maintenancesolution.OrderDetail"
+            android:name=".OrderDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.android.maintenancesolution.CustomerRequestForm"
+            android:name=".Views.CustomerRequestForm"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name="com.android.maintenancesolution.Views.UserSelectorActivity"
+            android:name=".Views.UserSelectorActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Views.ThankYouActivity"></activity>
     </application>
 
 </manifest>

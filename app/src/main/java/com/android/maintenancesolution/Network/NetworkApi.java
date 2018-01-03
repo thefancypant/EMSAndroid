@@ -2,6 +2,9 @@ package com.android.maintenancesolution.Network;
 
 import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.Job;
+import com.android.maintenancesolution.Models.Order;
+import com.android.maintenancesolution.Models.PostLocationRequest;
+import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Models.Token;
 
 import java.util.List;
@@ -11,7 +14,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * NetworkAPi interface contains the Network API Calls
@@ -35,11 +40,7 @@ public interface NetworkApi {
 
     @POST("/api/request/")
     Call<Token> customerFormSubmit(@Body CustomerRequest customerRequest);
-   /* *//**
-     * userRegisterNetwork is used to signup a new user
-     *
-     * @param signupRequest This object takes in different parameters like first name,last name etc.
-     **//*
+   /*
     @Headers("Content-Type: application/json")
     @POST("/api/users_register/")
     Call<SignupResponse> userRegisterNetwork(@Body SignupRequest signupRequest);
@@ -47,5 +48,12 @@ public interface NetworkApi {
     @POST("/api/students_register/")
     Call<SignupResponse> userRegisterNetwork(@Header("Authorization") String accessToken, @Body SignupRequest signupRequest);*/
 
+    @GET("/api/user_works/")
+    Call<List<Order>> getUserWorks(@Header("Authorization") String header);
 
+    @POST("/api/works/{id}/")
+    Call<PostLocationResponse> postLocation(
+            @Header("Authorization") String header
+            , @Path("id") String resource_id
+            , @Body PostLocationRequest postLocationRequest);
 }

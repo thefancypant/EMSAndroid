@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.maintenancesolution.Views.CustomerRequestForm;
+
 import java.util.ArrayList;
 
 public class WorkTypeAdapater extends BaseAdapter {

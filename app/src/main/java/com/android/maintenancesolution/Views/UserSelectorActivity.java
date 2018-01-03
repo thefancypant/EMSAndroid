@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.android.maintenancesolution.CustomerRequestForm;
 import com.android.maintenancesolution.ListActivity;
 import com.android.maintenancesolution.R;
 import com.android.volley.Request;
