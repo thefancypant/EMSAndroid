@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views.ListActivity;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -30,6 +30,8 @@ import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
 import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.OrderDetail;
+import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 
 import java.util.Calendar;
@@ -220,6 +222,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkLocationPermission();
+        //enableGps();
         getPrefUtils();
 
         setContentView(R.layout.activity_newlist);
@@ -419,6 +422,23 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         alertDialog.show();
     }
 
+    private void enableGps() {
+        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("GPS not enabled");  // GPS not found
+            builder.setMessage("Do you want to enable GPS"); // Want to enable?
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.setNegativeButton("No", null);
+            builder.create().show();
+            return;
+        }
+
+    }
 
     private void getPrefUtils() {
         preferenceUtils = new PreferenceUtils(ListActivity.this);
@@ -434,6 +454,11 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
             return false;
         } else {
+
+            //  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+            // enableGps();
             return true;
         }
     }
@@ -457,6 +482,8 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                         //Request location updates:
                         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+                        enableGps();
                     }
 
                 } else {
@@ -513,6 +540,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderDisabled(String s) {
+        enableGps();
     }
 
 

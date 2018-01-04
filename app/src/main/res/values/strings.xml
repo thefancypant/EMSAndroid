@@ -41,4 +41,8 @@
     <string name="submit_request">Submit Request</string>
     <string name="continue_text">Continue</string>
     <string name="thank_you_your_request">Thank You,Your request has been succesfully sent.</string>
+    <string name="select_images">Select Images</string>
+    <string name="job_details">Job Details</string>
+    <string name="before_images">Before Images</string>
+    <string name="done_text">Done</string>
 </resources>

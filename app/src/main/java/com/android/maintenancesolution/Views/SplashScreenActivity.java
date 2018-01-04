@@ -8,12 +8,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.android.maintenancesolution.ListActivity;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
+import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
 
-        preferenceUtils = new PreferenceUtils(this);
+        preferenceUtils = PreferenceUtils.getInstance(getApplicationContext());
 
         //setUpAWS();
         new Handler().postDelayed(new Runnable() {

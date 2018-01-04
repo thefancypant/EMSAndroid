@@ -16,17 +16,18 @@ public class WorkTypeAdapater extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private ArrayList<String> mDataSource;
-    private CustomerRequestForm customerRequestForm;
+    private CustomerRequestForm customerRequestForm = null;
+    private OrderDetail orderDetail = null;
+
     private WorkTypeAdapater workTypeAdapater;
 
-    public WorkTypeAdapater(Context context, ArrayList<String> items, CustomerRequestForm customerRequestForm) {
-        mContext = context;
-        mDataSource = items;
+    public WorkTypeAdapater(Context context, ArrayList<String> items, CustomerRequestForm customerRequestForm, OrderDetail orderDetail) {
+        this.mContext = context;
+        this.mDataSource = items;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.customerRequestForm = customerRequestForm;
-
+        this.orderDetail = orderDetail;
     }
-
 
     //1
     @Override
@@ -59,13 +60,26 @@ public class WorkTypeAdapater extends BaseAdapter {
         //WorkType workType = (WorkType) getItem(i);
         // 2
         titleTextView.setText(mDataSource.get(position));
-        workTypeAdapater = customerRequestForm.getWorkTypeAdapater();
-
+        if (customerRequestForm != null) {
+            workTypeAdapater = customerRequestForm.getWorkTypeAdapater();
+        } else {
+            workTypeAdapater = orderDetail.getWorkTypeAdapater();
+        }
         imageViewClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mDataSource.remove(position);
                 workTypeAdapater.notifyDataSetChanged();
+                if (mDataSource.size() == 0) {
+                    if (orderDetail != null) {
+                        if (mDataSource.size() == 0) {
+                            orderDetail.getListViewSelectedJobs().setVisibility(View.GONE);
+                        } else {
+                            orderDetail.getListViewSelectedJobs().setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
 
             }
         });

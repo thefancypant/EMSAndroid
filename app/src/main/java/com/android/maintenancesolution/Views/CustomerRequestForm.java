@@ -241,7 +241,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                     if (!spinnerArray.get(position).equals("Select Work Type")) {
                         jobsSelectedList.add(spinnerArray.get(position));
 
-                        workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList, CustomerRequestForm.this);
+                        workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList, CustomerRequestForm.this, null);
                         mWorkTypesListView.setAdapter(workTypeAdapater);
 
                         workTypeAdapater.notifyDataSetChanged();

@@ -7,4 +7,6 @@
     <color name="login_page_background">#dedddd</color>
     <color name="white">#ffffff</color>
     <color name="grey">#838383</color>
+    <color name="green">#6AB344</color>
+
 </resources>

@@ -40,7 +40,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ListActivity"
+            android:name=".Views.ListActivity.ListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -53,7 +53,8 @@
         <activity
             android:name=".Views.UserSelectorActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Views.ThankYouActivity"></activity>
+        <activity android:name=".Views.ThankYouActivity" />
+        <activity android:name=".Views.SelectImagesActivity"></activity>
     </application>
 
 </manifest>

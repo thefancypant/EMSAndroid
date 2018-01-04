@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views.ListActivity;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.maintenancesolution.Models.Order;
+import com.android.maintenancesolution.R;
 
 import java.util.List;
 

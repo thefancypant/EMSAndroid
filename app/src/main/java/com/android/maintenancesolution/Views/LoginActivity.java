@@ -11,12 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.maintenancesolution.ListActivity;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
+import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 
 import org.json.JSONException;
 
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        preferenceUtils = new PreferenceUtils(getApplication());
+        preferenceUtils = PreferenceUtils.getInstance(getApplicationContext());
 
         // Set up the login form.
         mEmailView = findViewById(R.id.editTextUserName);
