@@ -208,7 +208,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                 showPickImageDialog();
                 break;
             case R.id.imageViewAfterSeven:
-                selectedImageView = imageViewBeforeSeven;
+                selectedImageView = imageViewAfterSeven;
 
                 showPickImageDialog();
                 break;
