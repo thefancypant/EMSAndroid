@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
@@ -45,14 +44,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                 //Create an Intent that will start the Menu-Activity.
                 if (!GeneralUtils.isNetworkAvailable(getApplication())) {
                     preferenceUtils.saveAuthToken(null);
-                    Toast.makeText(getApplication(), "no internet", Toast.LENGTH_LONG).show();
                     Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
+                    goToNextActivity.putExtra("internet", 2);
                     goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(goToNextActivity);
 
                 } else {
                     //TODO:Remove next line
-                    preferenceUtils.saveAuthToken(null);
+                    //preferenceUtils.saveAuthToken(null);
 
                     checkToken();
 

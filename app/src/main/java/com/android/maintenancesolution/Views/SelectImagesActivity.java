@@ -22,8 +22,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.maintenancesolution.Models.GenericResponse;
+import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.FileUtils;
+import com.android.maintenancesolution.Utils.PreferenceUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -35,6 +38,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import id.zelory.compressor.Compressor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class SelectImagesActivity extends AppCompatActivity {
 
@@ -101,6 +109,8 @@ public class SelectImagesActivity extends AppCompatActivity {
     private File cameraCompressedFile;
     private File galleryFile;
     private File galleryCompressedFile;
+    private PreferenceUtils preferenceUtils;
+    private String header;
 
 
     @Override
@@ -563,5 +573,34 @@ public class SelectImagesActivity extends AppCompatActivity {
 
     }
 
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(SelectImagesActivity.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
+    }
+
+    @OnClick(R.id.buttonDone)
+    public void sendImages() {
+        getPrefUtils();
+        RequestBody imageFileBody =
+                RequestBody.create(MediaType.parse("image/*"), compressedFileBOne);
+        MultipartBody.Part icon = MultipartBody
+                .Part
+                .createFormData("photo1", compressedFileBOne.getName(), imageFileBody);
+        NetworkService
+                .getInstance()
+                .postBeforeAfterImagesNetwork(header, 902, icon, null, null, null)
+                .enqueue(new Callback<GenericResponse>() {
+                    @Override
+                    public void onResponse(Call<GenericResponse> call, retrofit2.Response<GenericResponse> response) {
+                        Log.d("SendImage", "onResponse: ");
+                    }
+
+                    @Override
+                    public void onFailure(Call<GenericResponse> call, Throwable t) {
+                        Log.d("SendImage", "onFailure: ");
+                    }
+                });
+
+    }
 }
 

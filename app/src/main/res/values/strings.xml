@@ -45,4 +45,8 @@
     <string name="job_details">Job Details</string>
     <string name="before_images">Before Images</string>
     <string name="done_text">Done</string>
+    <string name="please_sign_below">Please Sign Below</string>
+    <string name="service_completed">Service Completed</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

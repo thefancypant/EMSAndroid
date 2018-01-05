@@ -1,8 +1,10 @@
 package com.android.maintenancesolution.Views;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -22,11 +24,28 @@ public class UserSelectorActivity extends AppCompatActivity {
 
     private ConstraintLayout customerLayout;
     private ConstraintLayout workerLayout;
+    private int internetStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_selector);
+        Intent intent = getIntent();
+        internetStatus = intent.getIntExtra("internet", 0);
+
+        if (internetStatus == 2) {
+
+            AlertDialog alertDialog = new AlertDialog.Builder(UserSelectorActivity.this).create();
+            alertDialog.setTitle("Failure");
+            alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    });
+            alertDialog.show();
+        }
 
         customerLayout = findViewById(R.id.customerLayout);
         workerLayout = findViewById(R.id.workerLayout);

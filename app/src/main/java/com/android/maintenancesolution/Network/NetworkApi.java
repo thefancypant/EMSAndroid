@@ -1,6 +1,7 @@
 package com.android.maintenancesolution.Network;
 
 import com.android.maintenancesolution.Models.CustomerRequest;
+import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
@@ -9,13 +10,16 @@ import com.android.maintenancesolution.Models.Token;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 /**
@@ -56,4 +60,27 @@ public interface NetworkApi {
             @Header("Authorization") String header
             , @Path("id") String resource_id
             , @Body PostLocationRequest postLocationRequest);
+
+    //@Multipart
+    @POST("/api/works/{id}/")
+    Call<GenericResponse> postSignNetwork(@Header("Authorization") String accessToken,
+                                          @Path("id") String resource_id,
+                                          /*@Part("evaluation") String evaluation,
+                                          @Part("end_time") String time,*/
+                                          @Part MultipartBody.Part sign);
+                                         /*  @Body RequestBody a);*/
+
+    @Multipart
+    @POST("/api/works/{id}/")
+    Call<GenericResponse> postBeforeAfterImagesNetwork(@Header("Authorization") String accessToken,
+                                                       @Path("id") int resource_id,
+
+                                                       @Part MultipartBody.Part photo1,
+                                                       @Part MultipartBody.Part photo2,
+                                                       @Part MultipartBody.Part photo3,
+                                                      /* @Part MultipartBody.Part photo4,
+                                                       @Part MultipartBody.Part photo5,
+                                                       @Part MultipartBody.Part photo6,
+                                                       @Part MultipartBody.Part photo7,*/
+                                                       @Part MultipartBody.Part photo8);
 }

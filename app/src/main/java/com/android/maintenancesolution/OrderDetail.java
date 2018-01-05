@@ -38,7 +38,7 @@ public class OrderDetail extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private static int RESULT_LOAD_IMAGE = 1;
     //final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
-    final String dir = Environment.getExternalStoragePublicDirectory(".HopConsulting") + "/Folder/";
+    final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
     Button selectedImageButton;
     ConstraintLayout mConstraintLayout;
     EditText reportField;
@@ -100,12 +100,15 @@ public class OrderDetail extends AppCompatActivity {
             }
         });
 
-        /*buttonSubmitRequest.setOnClickListener(new View.OnClickListener() {
+        buttonSubmitRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
+                startActivity(intent);
+
             }
-        });*/
+        });
 
 
     }
@@ -229,6 +232,16 @@ public class OrderDetail extends AppCompatActivity {
             mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+/*
+
+    @OnClick(R.id.submit_button)
+    public void submit()
+    {
+
+        Intent intent = new Intent(OrderDetail.this,CustomerFeedbackActivity.class);
+        startActivity(intent);
+    }
+*/
 
     @Override
     protected void onStop() {

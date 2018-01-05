@@ -51,6 +51,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".CustomerFeedbackActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
             android:name=".Views.UserSelectorActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Views.ThankYouActivity" />

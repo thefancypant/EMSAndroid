@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -55,6 +56,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     PreferenceUtils preferenceUtils;
     Intent intent;
     private String header;
+    private Button refreshButton;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,9 +229,16 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
         setContentView(R.layout.activity_newlist);
         mListView = findViewById(R.id.recipe_list_view);
+        refreshButton = findViewById(R.id.buttonRefresh);
         // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
         makeRequest();
         //this.makeRequest();
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeRequest();
+            }
+        });
     }
 
     private void makeRequest() {

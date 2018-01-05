@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
+import com.android.maintenancesolution.Utils.PreferenceUtils;
 import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -31,26 +32,42 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import okhttp3.MultipartBody;
+
 public class CustomerFeedbackActivity extends AppCompatActivity {
+    final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
     View mFormView;
     Order order;
-
+    //ProgressBar mProgressBar;
+    //ConstraintLayout mConstraintLayout;
+    @BindView(R.id.customer_feedback_progress)
     ProgressBar mProgressBar;
+    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;
+    @BindView(R.id.signature_pad)
+    SignaturePad signaturePad;
+    @BindView(R.id.buttonSubmitRequest)
+    Button buttonSubmitRequest;
+    @BindView(R.id.customer_feedback_constraint_layout)
     ConstraintLayout mConstraintLayout;
+    private PreferenceUtils preferenceUtils;
+    private String header;
+    private MultipartBody.Part icon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_feedback);
-        final RatingBar mRatingBar = findViewById(R.id.ratingBar);
-        mRatingBar.setRating(3);
-        this.order = (Order) getIntent().getSerializableExtra("Order");
-        Button mButton = findViewById(R.id.button);
+        ButterKnife.bind(this);
+        ratingBar.setRating(3);
+        // this.order = (Order) getIntent().getSerializableExtra("Order");
+        Button mButton = findViewById(R.id.buttonSubmitRequest);
 
-        mProgressBar = findViewById(R.id.customer_feedback_progress);
-        mConstraintLayout = findViewById(R.id.customer_feedback_constraint_layout);
+        getPrefUtils();
 
-        final SignaturePad signature = findViewById(R.id.signature_pad);
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +77,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                String url = getString(R.string.global_url) + "/works/" + order.id + "/";
+                String url = getString(R.string.global_url) + "/works/" + /*order.id*/902 + "/";
                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
@@ -107,14 +124,14 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                         int minutes = calendar.get(Calendar.MINUTE);
                         params.put("end_time", hours + ":" + minutes);
-                        params.put("evaluation", String.valueOf(Math.round(mRatingBar.getRating())));
+                        params.put("evaluation", String.valueOf(Math.round(ratingBar.getRating())));
                         return params;
                     }
 
                     @Override
                     protected Map<String, DataPart> getByteData() {
                         Map<String, DataPart> params = new HashMap<>();
-                        Bitmap bmp = signature.getSignatureBitmap();
+                        Bitmap bmp = signaturePad.getSignatureBitmap();
                         if (bmp != null) {
                             params.put("sign", new DataPart("sign.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp), "image/png"));
                         }
@@ -124,7 +141,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     @Override
                     public Map<String, String> getHeaders() throws AuthFailureError {
                         Map<String, String> params = new HashMap<String, String>();
-                        params.put("Authorization", "JWT " + PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
+                        params.put("Authorization", header);
                         return params;
                     }
                 };
@@ -132,8 +149,72 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                 showProgress(true);
             }
         });
-
     }
+
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(CustomerFeedbackActivity.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
+    }
+
+   /* @OnClick(R.id.buttonSubmitRequest)
+    public void submit()
+    {
+        Bitmap bmp = signaturePad.getSignatureBitmap();
+        String evaluation =String.valueOf(Math.round(ratingBar.getRating()));
+
+        Date currentTime = Calendar.getInstance().getTime();
+        Date date = new Date();   // given date
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+        int minutes = calendar.get(Calendar.MINUTE);
+
+        String time =Integer.toString(hours)+":"+Integer.toString(minutes);
+
+        File signFile=new File(dir+"sign.png");
+        //signFile.
+        *//*try {
+            signFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        signFile=AppHelper.getFileDataFromBitmap(getBaseContext(), bmp);*//*
+
+        *//*try {
+            if (!signFile.exists()) {
+                signFile.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream();
+            fos.write(bmp);
+            fos.close();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }*//*
+        //bmp.compress(Bitmap.CompressFormat.PNG,50,bmp.ou);
+
+        RequestBody imageFileBody =
+                RequestBody.create(MediaType.parse("application/octet-stream"),AppHelper.getFileDataFromBitmap(getBaseContext(), bmp) );
+        icon = MultipartBody
+                .Part
+                .createFormData("sign", "t.png", imageFileBody);
+
+        NetworkService
+                .getInstance()
+                .postSignNetwork(header,"902",*//*evaluation,time,*//*imageFileBody)
+                .enqueue(new Callback<GenericResponse>() {
+                    @Override
+                    public void onResponse(Call<GenericResponse> call, retrofit2.Response<GenericResponse> response) {
+                        Log.d("SendSign", "onResponse: ");
+                    }
+
+                    @Override
+                    public void onFailure(Call<GenericResponse> call, Throwable t) {
+                        Log.d("SendSign", "onFailure: ");
+                    }
+                });
+
+
+    }*/
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
