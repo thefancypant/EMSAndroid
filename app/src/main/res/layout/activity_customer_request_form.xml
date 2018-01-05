@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_page_background">
-
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
@@ -33,112 +32,186 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
 
-    <EditText
-        android:id="@+id/textViewEmail"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="@string/email"
-        android:imeOptions="actionNext"
-        android:inputType="textEmailAddress"
-        android:text="app_test2"
-        app:layout_constraintDimensionRatio="h,5.75:0.7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHeading" />
-
-    <EditText
-        android:id="@+id/editTextPhoneNumber"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:ems="10"
-        android:hint="@string/phone_number"
-        android:imeOptions="actionNext"
-        android:inputType="phone"
-        android:text="123"
-        app:layout_constraintDimensionRatio="h,5.75:0.7"
-        app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
-        app:layout_constraintStart_toStartOf="@+id/textViewEmail"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
-
-    <Spinner
-        android:id="@+id/spinnerWorkType"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:dropDownSelector="@color/colorPrimaryDark"
-        android:ems="10"
-        app:layout_constraintDimensionRatio="h,5.75:0.7"
-        app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textViewEmail"
-        app:layout_constraintTop_toBottomOf="@id/editTextDescription" />
-
-    <ListView
-        android:id="@+id/listViewSelectedJobs"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/buttonSubmitRequest"
-        app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
-        app:layout_constraintStart_toStartOf="@+id/textViewEmail"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerWorkType">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewHeading">
 
-    </ListView>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextDescription"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:ems="10"
-        android:gravity="left|top"
-        android:hint="@string/please_describe_your_request_here"
-        android:imeOptions="actionDone"
-        android:inputType="textMultiLine"
-        android:lines="8"
-        android:maxLines="10"
-        android:minLines="4"
-        app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textViewEmail"
-        app:layout_constraintTop_toBottomOf="@id/editTextPhoneNumber"
-        tools:layout_editor_absoluteY="210dp" />
+            <EditText
+                android:id="@+id/textViewName"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="@string/name"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/textViewAddress"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="@string/address"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewName" />
+
+            <EditText
+                android:id="@+id/textViewEmail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="@string/email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:text="app_test2"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewAddress" />
+
+            <EditText
+                android:id="@+id/editTextPhoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="@string/phone_number"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:text="123"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
+                app:layout_constraintStart_toStartOf="@+id/textViewEmail"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/gray_picture"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editTextPhoneNumber" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/gray_picture"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editTextPhoneNumber" />
+
+            <Spinner
+                android:id="@+id/spinnerWorkType"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:dropDownSelector="@color/colorPrimaryDark"
+                android:ems="10"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textViewEmail"
+                app:layout_constraintTop_toBottomOf="@id/editTextDescription" />
+
+            <ListView
+                android:id="@+id/listViewSelectedJobs"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
+                app:layout_constraintStart_toStartOf="@+id/textViewEmail"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerWorkType">
+
+            </ListView>
+
+            <EditText
+                android:id="@+id/editTextDescription"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:gravity="left|top"
+                android:hint="@string/please_describe_your_request_here"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:maxLines="10"
+                android:minLines="4"
+                app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textViewEmail"
+                app:layout_constraintTop_toBottomOf="@id/imageView1"
+                tools:layout_editor_absoluteY="210dp" />
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 
     <Button
         android:id="@+id/buttonSubmitRequest"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:background="@color/colorPrimaryDark"
         android:text="@string/submit_request"
+
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="h,6:0.8"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPhoneNumber"
+        app:layout_constraintDimensionRatio="6:0.75"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextPhoneNumber" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:layout_width="73dp"
-        android:layout_height="32dp"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="2dp"
         android:background="@drawable/send_icon"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="@id/buttonSubmitRequest"
         app:layout_constraintEnd_toEndOf="@id/buttonSubmitRequest"
         app:layout_constraintTop_toTopOf="@id/buttonSubmitRequest"
-        app:layout_constraintVertical_bias="0.117" />
+        app:layout_constraintVertical_bias="0.307" />-->
 
 
 </android.support.constraint.ConstraintLayout>
