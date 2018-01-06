@@ -7,9 +7,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.maintenancesolution.R;
@@ -71,4 +74,38 @@ public class GeneralUtils {
         this.btnOk = btnOk;
     }
 
+    public void setEditTextUI(final EditText editText, final int greyIconId, final int darkIconId, final ImageView imageview) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    editText.setBackground(context.getResources().getDrawable(R.drawable.edittext_background_dark));
+                    // Picasso.with(context).load(darkIconId).into(imageview);
+                    editText.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                    /*Drawable drawable = context.getResources().getDrawable(darkIconId );//Your drawable image
+                    drawable = DrawableCompat.wrap(drawable);
+                    DrawableCompat.setTint(drawable, Color.GREEN); // Set whatever color you want
+                    DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_OVER);
+                    editText.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);*/
+                    imageview.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.MULTIPLY);
+                } else {
+                    if (editText.getText().toString().equals("")) {
+                        editText.setBackground(context.getResources().getDrawable(R.drawable.edittext_background_normal));
+                        //Picasso.with(context).load(greyIconId).into(imageview);
+                        editText.setHintTextColor(context.getResources().getColor(R.color.login_page_background));
+                        imageview.setColorFilter(ContextCompat.getColor(context, R.color.login_page_background), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    } else {
+
+                        editText.setBackground(context.getResources().getDrawable(R.drawable.edittext_background_dark));
+                        //Picasso.with(context).load(darkIconId).into(imageview);
+                        editText.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                        imageview.setColorFilter(ContextCompat.getColor(context, R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.MULTIPLY);
+
+
+                    }
+                }
+            }
+        });
+
+    }
 }

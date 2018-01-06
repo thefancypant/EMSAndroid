@@ -4,7 +4,7 @@
     android:id="@+id/resourceRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/white"
     android:orientation="horizontal">
 
 
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.24" />
+        app:layout_constraintGuide_percent="0.21" />
 
     <android.support.constraint.Guideline
         android:id="@+id/endGuideline"
@@ -21,6 +21,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.82" />
+
+    <ImageView
+        android:id="@+id/ivtool"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/gray_tools"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -33,7 +45,7 @@
         android:layout_marginTop="6dp"
         android:gravity="start"
         android:text="The word you"
-        android:textColor="@color/white"
+        android:textColor="@color/default_hint_color"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio=""
@@ -59,10 +71,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/exit"
+        android:src="@drawable/arrow_down"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

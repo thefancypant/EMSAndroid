@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_page_background">
-
     <TextView
-        android:id="@+id/textViewBefore"
+        android:id="@+id/textViewHeading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/before_images"
+        android:text="@string/before_and_after_images"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
@@ -19,13 +18,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:id="@+id/textViewBefore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/before_images"
+        android:textAlignment="center"
+        android:textColor="@color/text_black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewHeading" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/beforeLayout"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewBefore">
@@ -63,8 +77,8 @@
             android:id="@+id/imageViewBeforeOne"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineBeforeHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineBeforeOne"
@@ -72,11 +86,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeOne"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeOne"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeOne"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeOne" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeTwo"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineBeforeHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineBeforeTwo"
@@ -84,11 +107,19 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeTwo"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeTwo"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeTwo"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeTwo" />
+        <ImageView
             android:id="@+id/imageViewBeforeThree"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineBeforeHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineBeforeThree"
@@ -96,12 +127,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeThree"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeThree"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeThree"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeThree" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeFour"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineBeforeHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,12 +149,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeFour"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeFour"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeFour"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeFour" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeFive"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineBeforeOne"
@@ -122,12 +171,22 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineBeforeHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeFive"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeFive"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeFive"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeFive" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeSix"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineBeforeTwo"
@@ -135,12 +194,22 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineBeforeHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeSix"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeSix"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeSix"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeSix" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeSeven"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineBeforeThree"
@@ -148,17 +217,37 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineBeforeHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeSeven"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeSeven"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeSeven"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeSeven" />
+
+        <ImageView
             android:id="@+id/imageViewBeforeEight"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guidelineBeforeThree"
             app:layout_constraintTop_toBottomOf="@id/guidelineBeforeHorizontal" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewBeforeEight"
+            app:layout_constraintEnd_toEndOf="@id/imageViewBeforeEight"
+            app:layout_constraintStart_toStartOf="@id/imageViewBeforeEight"
+            app:layout_constraintTop_toTopOf="@id/imageViewBeforeEight" />
+
 
     </android.support.constraint.ConstraintLayout>
 
@@ -166,10 +255,10 @@
         android:id="@+id/textViewAfter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="After Images"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/text_black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -179,10 +268,10 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/afterLayout"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewAfter">
@@ -220,8 +309,9 @@
             android:id="@+id/imageViewAfterOne"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineAfterHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineAfterOne"
@@ -229,11 +319,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterOne"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterOne"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterOne"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterOne" />
+
+
+        <ImageView
             android:id="@+id/imageViewAfterTwo"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineAfterHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineAfterTwo"
@@ -241,11 +341,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterTwo"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterTwo"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterTwo"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterTwo" />
+
+        <ImageView
             android:id="@+id/imageViewAfterThree"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
-            android:src="@drawable/gray_picture"
+            android:layout_margin="4dp"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineAfterHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toStartOf="@id/guidelineAfterThree"
@@ -253,12 +362,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterThree"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterThree"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterThree"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterThree" />
+
+        <ImageView
             android:id="@+id/imageViewAfterFour"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@id/guidelineAfterHorizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -266,12 +384,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterFour"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterFour"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterFour"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterFour" />
+
+        <ImageView
             android:id="@+id/imageViewAfterFive"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineAfterOne"
@@ -279,12 +406,21 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineAfterHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterFive"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterFive"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterFive"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterFive" />
+
+        <ImageView
             android:id="@+id/imageViewAfterSix"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineAfterTwo"
@@ -292,12 +428,21 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineAfterHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterSix"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterSix"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterSix"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterSix" />
+
+        <ImageView
             android:id="@+id/imageViewAfterSeven"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="@id/guidelineAfterThree"
@@ -305,17 +450,35 @@
             app:layout_constraintTop_toBottomOf="@id/guidelineAfterHorizontal" />
 
         <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterSeven"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterSeven"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterSeven"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterSeven" />
+
+        <ImageView
             android:id="@+id/imageViewAfterEight"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_picture"
+            android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guidelineAfterThree"
             app:layout_constraintTop_toBottomOf="@id/guidelineAfterHorizontal" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/gray_picture"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewAfterEight"
+            app:layout_constraintEnd_toEndOf="@id/imageViewAfterEight"
+            app:layout_constraintStart_toStartOf="@id/imageViewAfterEight"
+            app:layout_constraintTop_toTopOf="@id/imageViewAfterEight" />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -323,7 +486,7 @@
         android:id="@+id/buttonDone"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="36dp"

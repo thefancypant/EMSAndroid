@@ -2,7 +2,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/login_page_background">
 
     <ProgressBar
         android:id="@+id/list_progress_bar"
@@ -47,14 +48,14 @@
 
         <Button
             android:id="@+id/buttonRefresh"
-            android:layout_width="130dp"
-            android:layout_height="26dp"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
             android:layout_marginEnd="36dp"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimaryDark"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
+            android:paddingStart="25dp"
             android:text="Refresh Jobs"
+
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/textViewSelectJob"
@@ -62,14 +63,30 @@
             app:layout_constraintTop_toTopOf="@+id/textViewSelectJob"
             app:layout_constraintVertical_bias="0.576" />
 
+        <ImageView
+            android:id="@+id/imageViewRefresh"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:elevation="10dp"
+            android:src="@drawable/white_refresh"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonRefresh"
+            app:layout_constraintStart_toStartOf="@+id/buttonRefresh"
+            app:layout_constraintTop_toTopOf="@+id/buttonRefresh"
+            app:layout_constraintVertical_bias="0.533" />
+
         <ListView
             android:id="@+id/recipe_list_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
-            android:layout_marginEnd="36dp"
-            android:layout_marginStart="36dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

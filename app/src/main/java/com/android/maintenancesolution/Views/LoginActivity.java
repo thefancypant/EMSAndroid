@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.maintenancesolution.Models.Token;
@@ -30,6 +31,7 @@ import retrofit2.Response;
  */
 public class LoginActivity extends AppCompatActivity {
     PreferenceUtils preferenceUtils;
+    GeneralUtils generalUtils;
     //private UserLoginTask mAuthTask = null;
     // UI references.
     private String TAG = "LoginActivity";
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private Button mEmailSignInButton;
     private Dialog alertDialog;
+    private ImageView imageViewUsername;
+    private ImageView imageViewPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,13 @@ public class LoginActivity extends AppCompatActivity {
         mEmailView = findViewById(R.id.editTextUserName);
         mPasswordView = findViewById(R.id.editTextPassword);
         mEmailSignInButton = findViewById(R.id.buttonLogin);
+        imageViewUsername = findViewById(R.id.imageViewUsername);
+        imageViewPassword = findViewById(R.id.imageViewPassword);
+        generalUtils = new GeneralUtils(LoginActivity.this);
+
+        generalUtils.setEditTextUI(mEmailView, R.drawable.gray_username, R.drawable.blue_username, imageViewUsername);
+        generalUtils.setEditTextUI(mPasswordView, R.drawable.gray_password, R.drawable.blue_password, imageViewPassword);
+
 
 
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -64,6 +75,35 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    /*private void setEditTextUI(final Context context, final EditText editText, final int greyIconId, final int darkIconId, final ImageView imageview) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b)
+                {
+                    editText.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
+                    Picasso.with(context).load(darkIconId).into(imageview);
+                    editText.setTextColor(getColor(R.color.colorPrimaryDark));
+                }
+                else {
+                    if(editText.getText().toString().equals("")){
+                        editText.setBackground(getResources().getDrawable(R.drawable.edittext_background_normal));
+                        Picasso.with(context).load(greyIconId).into(imageview);
+                        editText.setHintTextColor(getResources().getColor(R.color.login_page_background));
+                    }
+                    else{
+
+                        editText.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
+                        Picasso.with(context).load(darkIconId).into(imageview);
+                        editText.setTextColor(getColor(R.color.colorPrimaryDark));
+
+
+                    }
+                }
+            }
+        });
+    }*/
 
     /**
      * Attempts to sign in or register the account specified by the login form.

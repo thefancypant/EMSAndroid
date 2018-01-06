@@ -2,13 +2,14 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#3A419B</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#3A419B</color>
     <color name="text_black">#000000</color>
     <color name="login_page_background">#dedddd</color>
     <color name="white">#ffffff</color>
     <color name="grey">#838383</color>
     <color name="green">#6AB344</color>
     <color name="ratingBar_Yellow">#ee9205</color>
+    <color name="default_hint_color">#808080</color>
 
 
 </resources>
