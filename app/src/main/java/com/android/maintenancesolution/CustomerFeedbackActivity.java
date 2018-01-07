@@ -12,11 +12,14 @@ import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
+import com.android.maintenancesolution.Models.Order;
+import com.android.maintenancesolution.Network.NetworkContract;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 import com.android.volley.AuthFailureError;
@@ -36,10 +39,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.MultipartBody;
 
+
 public class CustomerFeedbackActivity extends AppCompatActivity {
     final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
     View mFormView;
-    Order order;
+
     //ProgressBar mProgressBar;
     //ConstraintLayout mConstraintLayout;
     @BindView(R.id.customer_feedback_progress)
@@ -52,10 +56,10 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
     Button buttonSubmitRequest;
     @BindView(R.id.customer_feedback_constraint_layout)
     ConstraintLayout mConstraintLayout;
+    Order order;
     private PreferenceUtils preferenceUtils;
     private String header;
     private MultipartBody.Part icon;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_customer_feedback);
         ButterKnife.bind(this);
         ratingBar.setRating(3);
-        // this.order = (Order) getIntent().getSerializableExtra("Order");
+        order = getIntent().getParcelableExtra("Order");
         Button mButton = findViewById(R.id.buttonSubmitRequest);
 
         getPrefUtils();
@@ -77,7 +81,8 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                String url = getString(R.string.global_url) + "/works/" + /*order.id*/902 + "/";
+                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/";
+                Log.d("FinalUrl", "onClick: " + url);
                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
@@ -108,6 +113,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        showProgress(false);
                                         //
                                     }
                                 });
@@ -123,7 +129,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         calendar.setTime(date);   // assigns calendar to given date
                         int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                         int minutes = calendar.get(Calendar.MINUTE);
-                        params.put("end_time", hours + ":" + minutes);
+                        params.put("end_time", Integer.toString(hours) + ":" + Integer.toString(minutes));
                         params.put("evaluation", String.valueOf(Math.round(ratingBar.getRating())));
                         return params;
                     }

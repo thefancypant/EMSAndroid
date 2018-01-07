@@ -9,6 +9,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class CustomerRequest {
 
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("address")
+    @Expose
+    private String address;
     @SerializedName("email")
     @Expose
     private String email;
@@ -25,7 +31,9 @@ public class CustomerRequest {
     @Expose
     private String message;
 
-    public CustomerRequest(String email, String phone, String notes, String types) {
+    public CustomerRequest(String name, String address, String email, String phone, String notes, String types) {
+        this.name = name;
+        this.address = address;
         this.email = email;
         this.phone = phone;
         this.notes = notes;

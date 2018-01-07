@@ -74,8 +74,10 @@ public class WorkTypeAdapater extends BaseAdapter {
                     if (orderDetail != null) {
                         if (mDataSource.size() == 0) {
                             orderDetail.getListViewSelectedJobs().setVisibility(View.GONE);
+                            orderDetail.setSpinnerUi();
                         } else {
                             orderDetail.getListViewSelectedJobs().setVisibility(View.VISIBLE);
+                            orderDetail.setSpinnerUi();
                         }
                     }
                 }

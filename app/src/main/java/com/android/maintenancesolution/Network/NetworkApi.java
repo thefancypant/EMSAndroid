@@ -1,6 +1,5 @@
 package com.android.maintenancesolution.Network;
 
-import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Order;
@@ -33,17 +32,26 @@ public interface NetworkApi {
      * @param password need to be the password
      **/
     @FormUrlEncoded
-    @POST("/api/token/")
+    @POST("/token/")
     Call<Token> authNetwork(@Field("username") String username, @Field("password") String password);
 
-    @GET("/api/job_types/")
+    @GET("/gm/job_types/")
     Call<List<Job>> getJobTypes();
 
-    @POST("/api/verify/")
+    @POST("/verify/")
     Call<Token> verify(@Body Token token);
 
-    @POST("/api/request/")
-    Call<Token> customerFormSubmit(@Body CustomerRequest customerRequest);
+    @Multipart
+    @POST("/gm/post_job_requests/")
+    Call<Token> customerFormSubmit(
+            @Part("name") String name,
+            @Part("address") String address,
+            @Part("email") String email,
+            @Part("phone") String phone,
+            @Part("notes") String description,
+            @Part("types") String types,
+            @Part MultipartBody.Part photo1,
+            @Part MultipartBody.Part photo2);
    /*
     @Headers("Content-Type: application/json")
     @POST("/api/users_register/")
@@ -52,10 +60,10 @@ public interface NetworkApi {
     @POST("/api/students_register/")
     Call<SignupResponse> userRegisterNetwork(@Header("Authorization") String accessToken, @Body SignupRequest signupRequest);*/
 
-    @GET("/api/user_works/")
+    @GET("/gm/user_works/")
     Call<List<Order>> getUserWorks(@Header("Authorization") String header);
 
-    @POST("/api/works/{id}/")
+    @POST("/gm/works/{id}/")
     Call<PostLocationResponse> postLocation(
             @Header("Authorization") String header
             , @Path("id") String resource_id
@@ -70,17 +78,48 @@ public interface NetworkApi {
                                           @Part MultipartBody.Part sign);
                                          /*  @Body RequestBody a);*/
 
+
+    @POST("/gm/works/{id}/")
+    Call<GenericResponse> postTypesReport(@Header("Authorization") String accessToken,
+                                          @Path("id") String resource_id,
+                                          @Body Order item
+                                          /*@Query("id") String id,
+                                          @Query("job_types")String types,
+                                          @Query("report")String report)*/);
+
     @Multipart
+    @POST("/gm/works/{id}/")
+    Call<GenericResponse> postBeforeImagesNetwork(@Header("Authorization") String accessToken,
+                                                  @Path("id") int resource_id,
+
+                                                  @Part MultipartBody.Part photoB1,
+                                                  @Part MultipartBody.Part photoB2,
+                                                  @Part MultipartBody.Part photoB3,
+                                                  @Part MultipartBody.Part photoB4,
+                                                  @Part MultipartBody.Part photoB5,
+                                                  @Part MultipartBody.Part photoB6,
+                                                  @Part MultipartBody.Part photoB,
+                                                  @Part MultipartBody.Part photoB8,
+                                                  @Part MultipartBody.Part photoA1,
+                                                  @Part MultipartBody.Part photoA2,
+                                                  @Part MultipartBody.Part photoA3,
+                                                  @Part MultipartBody.Part photoA4,
+                                                  @Part MultipartBody.Part photoA5,
+                                                  @Part MultipartBody.Part photoA6,
+                                                  @Part MultipartBody.Part photoA7,
+                                                  @Part MultipartBody.Part photoA8);
+
+    /*@Multipart
     @POST("/api/works/{id}/")
-    Call<GenericResponse> postBeforeAfterImagesNetwork(@Header("Authorization") String accessToken,
+    Call<GenericResponse> postAfterImagesNetwork(@Header("Authorization") String accessToken,
                                                        @Path("id") int resource_id,
 
                                                        @Part MultipartBody.Part photo1,
                                                        @Part MultipartBody.Part photo2,
                                                        @Part MultipartBody.Part photo3,
-                                                      /* @Part MultipartBody.Part photo4,
+                                                       @Part MultipartBody.Part photo4,
                                                        @Part MultipartBody.Part photo5,
                                                        @Part MultipartBody.Part photo6,
-                                                       @Part MultipartBody.Part photo7,*/
-                                                       @Part MultipartBody.Part photo8);
+                                                       @Part MultipartBody.Part photo7,
+                                                       @Part MultipartBody.Part photo8);*/
 }

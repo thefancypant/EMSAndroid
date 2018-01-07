@@ -57,8 +57,12 @@
         <activity
             android:name=".Views.UserSelectorActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Views.ThankYouActivity" />
-        <activity android:name=".Views.SelectImagesActivity"></activity>
+        <activity
+            android:name=".Views.ThankYouActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Views.SelectImagesActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

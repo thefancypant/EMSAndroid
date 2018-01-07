@@ -1,5 +1,6 @@
 package com.android.maintenancesolution.Views;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -115,6 +117,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 */
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                 cancel = true;
             }
             if (password.isEmpty()) {
-                mEmailView.setError(getString(R.string.error_field_required));
+                mPasswordView.setError(getString(R.string.error_field_required));
                 focusView = mEmailView;
                 cancel = true;
             }
@@ -173,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
-        } else if (response.body().getNonFieldErrors() != null) {
+        } else {
             Toast.makeText(getApplication(), "Username or Password Incorrect ", Toast.LENGTH_LONG).show();
         }
 

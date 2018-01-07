@@ -223,7 +223,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkLocationPermission();
+        // checkLocationPermission();
         //enableGps();
         getPrefUtils();
 
@@ -284,7 +284,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
                         AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
                         alertDialog.setTitle("Warning");
-                        alertDialog.setMessage("The HOP application will no longer be able to update your location, is this ok?");
+                        alertDialog.setMessage("This application will no longer be able to update your location, is this ok?");
                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
@@ -304,7 +304,6 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
                 }
                 Order item = (Order) adapter.getItem(i);
-
                 intent = new Intent(ListActivity.this, OrderDetail.class);
                 intent.putExtra("Order", item);
                 Date currentTime = Calendar.getInstance().getTime();
@@ -313,7 +312,10 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 calendar.setTime(date);   // assigns calendar to given date
                 int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                 int minutes = calendar.get(Calendar.MINUTE);
+
                 postLocationNetwork(hours, minutes, item.getId());
+
+
                 /*Order item = (Order) adapter.getItem(i);
                 final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
                 intent.putExtra("Order", item);

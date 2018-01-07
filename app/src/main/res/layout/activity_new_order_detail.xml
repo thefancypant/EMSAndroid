@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_page_background">
@@ -15,6 +16,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+
+    <ProgressBar
+        android:id="@+id/order_detail_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="566dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:elevation="1dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.26" />
 
     <TextView
         android:id="@+id/textViewTitle"
@@ -36,29 +54,42 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="8dp"
+
         android:background="@drawable/edittext_background_normal"
 
-        android:dropDownSelector="@color/colorPrimaryDark"
+
         android:ems="10"
-        android:paddingStart="40dp"
         app:layout_constraintDimensionRatio="h,6:0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
     <ImageView
-        android:id="@+id/imageViewUsername"
+        android:id="@+id/imageViewTools"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/gray_tools"
         app:layout_constraintBottom_toBottomOf="@+id/spinnerWorkType"
         app:layout_constraintStart_toStartOf="@+id/spinnerWorkType"
-        app:layout_constraintTop_toTopOf="@+id/spinnerWorkType"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/spinnerWorkType" />
+
+    <ImageView
+        android:id="@+id/imageViewArrow"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+
+        android:src="@drawable/arrow_down"
+        app:layout_constraintBottom_toBottomOf="@+id/spinnerWorkType"
+        app:layout_constraintEnd_toEndOf="@+id/spinnerWorkType"
+        app:layout_constraintTop_toTopOf="@+id/spinnerWorkType" />
 
     <ListView
         android:id="@+id/listViewSelectedJobs"
@@ -79,12 +110,16 @@
         android:background="@color/white"
         android:ems="10"
         android:gravity="left|top"
-        android:hint="@string/job_details"
+        android:hint="@string/report"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine"
         android:lines="8"
         android:maxLines="10"
         android:minLines="4"
+        android:paddingEnd="5dp"
+        android:paddingStart="8dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@+id/spinnerWorkType"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/spinnerWorkType"
@@ -107,16 +142,16 @@
         android:id="@+id/buttonAddImages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:background="@color/green"
         android:text="@string/select_images"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/buttonSubmitRequest"
         app:layout_constraintDimensionRatio="h,6:0.8"
         app:layout_constraintEnd_toEndOf="@id/editTextDescription"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/editTextDescription" />
+        app:layout_constraintStart_toStartOf="@id/editTextDescription"
+        app:layout_constraintTop_toBottomOf="@id/editTextDescription" />
 
 
     <Button
@@ -124,6 +159,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
         android:background="@color/colorPrimaryDark"
         android:text="@string/submit_request"
         android:textAllCaps="false"
@@ -141,8 +177,7 @@
         android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="@id/buttonSubmitRequest"
         app:layout_constraintEnd_toEndOf="@id/buttonSubmitRequest"
-        app:layout_constraintTop_toTopOf="@id/buttonSubmitRequest"
-        app:layout_constraintVertical_bias="0.391" />
+        app:layout_constraintTop_toTopOf="@id/buttonSubmitRequest" />
 
 
 </android.support.constraint.ConstraintLayout>

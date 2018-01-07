@@ -1,12 +1,22 @@
 package com.android.maintenancesolution.Views;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -22,53 +33,108 @@ import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Token;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.Utils.FileUtils;
+import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.WorkTypeAdapater;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CustomerRequestForm extends AppCompatActivity {
 
+    private static int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
+    final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
+
     List<Job> workTypesList = new ArrayList<>();
-    ListView mWorkTypesListView;
-    EditText mPhoneNumberEditText;
-    EditText mEmailEditText;
-    EditText mNotesEditText;
-    Spinner mJobsSpinner;
-    Button submitButton;
     WorkTypeAdapater workTypeAdapater;
-
     ArrayList<String> spinnerArray = new ArrayList<>();
-
-    ConstraintLayout mConstraintLayout;
+    @BindView(R.id.textViewName)
+    EditText mNameEditText;
+    @BindView(R.id.imageViewName)
+    ImageView imageViewName;
+    @BindView(R.id.textViewAddress)
+    EditText mAddressEditText;
+    @BindView(R.id.imageViewAddress)
+    ImageView imageViewAddress;
+    @BindView(R.id.textViewEmail)
+    EditText mEmailEditText;
+    @BindView(R.id.imageViewEmail)
+    ImageView imageViewEmail;
+    @BindView(R.id.editTextPhoneNumber)
+    EditText mPhoneNumberEditText;
+    @BindView(R.id.imageViewPhone)
+    ImageView imageViewPhone;
+    @BindView(R.id.imageViewPhoto1)
+    ImageView imageViewPhoto1;
+    @BindView(R.id.imageViewPhoto2)
+    ImageView imageViewPhoto2;
+    @BindView(R.id.imageViewPhoto1Logo)
+    ImageView imageViewPhoto1Logo;
+    @BindView(R.id.imageViewPhoto2Logo)
+    ImageView imageViewPhoto2Logo;
+    @BindView(R.id.spinnerWorkType)
+    Spinner mJobsSpinner;
+    @BindView(R.id.imageViewTools)
+    ImageView imageViewTools;
+    @BindView(R.id.imageViewArrow)
+    ImageView imageViewArrow;
+    @BindView(R.id.listViewSelectedJobs)
+    ListView mWorkTypesListView;
+    @BindView(R.id.editTextDescription)
+    EditText mNotesEditText;
+    @BindView(R.id.imageViewDescription)
+    ImageView imageViewDescription;
+    @BindView(R.id.buttonSubmitRequest)
+    Button submitButton;
+    GeneralUtils generalUtils;
     private ArrayList<String> jobsSelectedList = new ArrayList<>();
+    private String cameraImage;
+    private File cameraFile;
+    private File cameraCompressedFile;
+    private ImageView selectedImageView;
+    private File compressedFileOne;
+    private File compressedFileTwo;
+    private File galleryFile;
+    private File galleryCompressedFile;
+    private MultipartBody.Part photoPart1;
+    private MultipartBody.Part photoPart2;
     //private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_request_form);
-        /*Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-*/
-        submitButton = findViewById(R.id.buttonSubmitRequest);
+        ButterKnife.bind(this);
 
-        mEmailEditText = findViewById(R.id.textViewEmail);
-        mPhoneNumberEditText = findViewById(R.id.editTextPhoneNumber);
-        mJobsSpinner = findViewById(R.id.spinnerWorkType);
-        mWorkTypesListView = findViewById(R.id.listViewSelectedJobs);
+        generalUtils = new GeneralUtils(CustomerRequestForm.this);
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-
+        generalUtils.setEditTextUI(mEmailEditText, R.drawable.gray_email, R.drawable.blue_email, imageViewEmail);
+        generalUtils.setEditTextUI(mPhoneNumberEditText, R.drawable.gray_phone, R.drawable.blue_phone, imageViewPhone);
+        generalUtils.setEditTextUI(mNotesEditText, R.drawable.gray_request, R.drawable.blue_request, imageViewDescription);
+        generalUtils.setEditTextUI(mNameEditText);
+        generalUtils.setEditTextUI(mAddressEditText);
         mNotesEditText = findViewById(R.id.editTextDescription);
         mNotesEditText.setMaxLines(4);
         mNotesEditText.setHorizontallyScrolling(false);
 
         mJobsSpinner.setEnabled(false);
         getJobs();
-
 
         mWorkTypesListView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
@@ -220,7 +286,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                 .getJobTypes()
                 .enqueue(new Callback<List<Job>>() {
                     @Override
-                    public void onResponse(Call<List<Job>> call, retrofit2.Response<List<Job>> response) {
+                    public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
                         processJobs(response.body());
                     }
 
@@ -257,13 +323,6 @@ public class CustomerRequestForm extends AppCompatActivity {
                         mWorkTypesListView.setAdapter(workTypeAdapater);
 
                         workTypeAdapater.notifyDataSetChanged();
-                   /* mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            jobsSelectedList.remove(i);
-                            workTypeAdapater.notifyDataSetChanged();
-                        }
-                    });*/
 
                     }
                 }
@@ -360,6 +419,16 @@ public class CustomerRequestForm extends AppCompatActivity {
             focusView = mEmailEditText;
             cancel = true;
         }
+        if (mNameEditText.toString().trim().equals("")) {
+            mNameEditText.setError(getString(R.string.error_field_required));
+            focusView = mNameEditText;
+            cancel = true;
+        }
+        if (mAddressEditText.toString().trim().equals("")) {
+            mAddressEditText.setError(getString(R.string.error_field_required));
+            focusView = mAddressEditText;
+            cancel = true;
+        }
         if (mPhoneNumberEditText.toString().trim().equals("")) {
             mPhoneNumberEditText.setError(getString(R.string.error_field_required));
             focusView = mPhoneNumberEditText;
@@ -375,7 +444,6 @@ public class CustomerRequestForm extends AppCompatActivity {
             typesFlag = true;
 
         }
-
 
 
         if (cancel || typesFlag) {
@@ -417,16 +485,42 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
 
         Log.d("jobTypes", jobTypes);
-        CustomerRequest customerRequest = new CustomerRequest(mEmailEditText.getText().toString().trim()
+        CustomerRequest customerRequest = new CustomerRequest(
+                mNameEditText.getText().toString().trim()
+                , mAddressEditText.getText().toString().trim()
+                , mEmailEditText.getText().toString().trim()
                 , mPhoneNumberEditText.getText().toString().trim()
                 , mNotesEditText.getText().toString().trim(), jobTypes);
 
+        if (compressedFileOne != null) {
+            RequestBody imageFileBody =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileOne);
+            photoPart1 = MultipartBody
+                    .Part
+                    .createFormData("photo1", compressedFileOne.getName(), imageFileBody);
+
+        }
+        if (compressedFileTwo != null) {
+            RequestBody imageFileBody =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileTwo);
+            photoPart2 = MultipartBody
+                    .Part
+                    .createFormData("photo2", compressedFileTwo.getName(), imageFileBody);
+        }
+
+
         NetworkService
                 .getInstance()
-                .customerFormSubmit(customerRequest)
+                .customerFormSubmit(
+                        mNameEditText.getText().toString().trim(),
+                        mAddressEditText.getText().toString().trim(),
+                        mEmailEditText.getText().toString().trim(),
+                        mPhoneNumberEditText.getText().toString().trim(),
+                        mNotesEditText.getText().toString().trim(),
+                        "7", photoPart1, photoPart2)
                 .enqueue(new Callback<Token>() {
                     @Override
-                    public void onResponse(Call<Token> call, retrofit2.Response<Token> response) {
+                    public void onResponse(Call<Token> call, Response<Token> response) {
                         Log.d("jobTypes", "Successful");
                         AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
                         alertDialog.setTitle("Success!");
@@ -461,4 +555,189 @@ public class CustomerRequestForm extends AppCompatActivity {
     }
 
 
+    @OnClick({R.id.imageViewPhoto1
+            , R.id.imageViewPhoto2
+    })
+    public void click(ImageView imageView) {
+        Log.d("id", "doSomething: clicked ID" + Integer.toString(imageView.getId()));
+        Log.d("id", "doSomething: firstitem ID" + Integer.toString(R.id.imageViewBeforeOne));
+
+        switch (imageView.getId()) {
+            case R.id.imageViewPhoto1:
+                selectedImageView = imageViewPhoto1;
+
+                showPickImageDialog();
+
+
+                break;
+            case R.id.imageViewPhoto2:
+                selectedImageView = imageViewPhoto2;
+                imageViewPhoto2Logo.setVisibility(View.GONE);
+                showPickImageDialog();
+
+                break;
+        }
+    }
+
+    private void showPickImageDialog() {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(CustomerRequestForm.this);
+        builderSingle.setTitle("Select One Option");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                CustomerRequestForm.this,
+                android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("Gallery");
+        arrayAdapter.add("Camera");
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            /*Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(pickPhoto , 1);//one can be replaced with any action code*/
+                            /*Intent pickPhoto = new Intent();
+                            pickPhoto.setType("image*//*");
+                            pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(pickPhoto,"Select a picture"), 1);*/
+                            //Picking image from gallery
+                            if (ContextCompat
+                                    .checkSelfPermission(getApplicationContext(),
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat
+                                        .requestPermissions(CustomerRequestForm.this
+                                                , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                                                , MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+
+
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
+
+                        }
+                        if (which == 1) {
+                            //Getting Image from camera
+                            /*Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code*/
+
+                            if (ContextCompat
+                                    .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat
+                                        .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+
+                            cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                            File folder = new File(dir);
+                            cameraFile = new File(cameraImage);
+                            try {
+                                folder.mkdirs();
+                                cameraFile.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            // Uri outputFileUri = Uri.fromFile(cameraFile);
+                            Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
+                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            startActivityForResult(cameraIntent, 0);
+                        }
+                    }
+                });
+        builderSingle.show();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode != 1) {
+
+            Log.i("Demo Pic", Long.toString(cameraFile.getTotalSpace()));
+            try {
+                cameraCompressedFile = new Compressor(getApplicationContext())
+                        .setQuality(50)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(cameraFile);
+                Log.i("Demo Pic", Long.toString(cameraCompressedFile.length()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            switch (selectedImageView.getId()) {
+
+                ////////// Camera Images////////////
+                case R.id.imageViewPhoto1:
+                    imageViewPhoto1Logo.setVisibility(View.GONE);
+
+                    Picasso.with(getApplicationContext())
+                            .load(cameraCompressedFile)
+                            .into(imageViewPhoto1);
+                    compressedFileOne = cameraCompressedFile;
+
+
+                    break;
+                case R.id.imageViewPhoto2:
+                    imageViewPhoto2Logo.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext())
+                            .load(cameraCompressedFile)
+                            .into(imageViewPhoto2);
+                    compressedFileTwo = cameraCompressedFile;
+                    break;
+            }
+
+
+        }
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            final Uri imageUri = data.getData();
+            final InputStream imageStream;
+
+            Uri uriPhoto = data.getData();
+            String imageFilePath = FileUtils.getPath(CustomerRequestForm.this, uriPhoto);
+
+            galleryFile = new File(imageFilePath);
+            Log.d("OrderDetail", "onActivityResult: " + String.valueOf(galleryFile.length()));
+
+            try {
+                galleryCompressedFile = new Compressor(getApplicationContext())
+                        .setQuality(50)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(galleryFile);
+                Log.i("Demo Pic", Long.toString(galleryCompressedFile.length()));
+            } catch (Exception e) {
+            }
+            //compressedBitmap = BitmapFactory.decodeFile(compressedFile.getAbsolutePath());
+
+            switch (selectedImageView.getId()) {
+
+                ////////// Gallery Images//////////
+                case R.id.imageViewPhoto1:
+                    imageViewPhoto1Logo.setVisibility(View.GONE);
+
+                    Picasso.with(getApplicationContext())
+                            .load(galleryCompressedFile)
+                            .into(imageViewPhoto1);
+                    compressedFileOne = galleryCompressedFile;
+
+
+                    break;
+                case R.id.imageViewPhoto2:
+                    imageViewPhoto2Logo.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext())
+                            .load(galleryCompressedFile)
+                            .into(imageViewPhoto2);
+                    compressedFileTwo = galleryCompressedFile;
+
+                    break;
+            }
+
+            selectedImageView = null;
+        }
+
+
+    }
+
 }
+
+
+

@@ -60,9 +60,9 @@ public class OrderListAdapter extends BaseAdapter {
         Order order = (Order) getItem(i);
         // 2
         textViewAddress.setText(order.getAddress());
-        textViewDate.setText(order.getDate());
-        textViewTime.setText(order.getRegisterTime());
-        textViewJob.setText(order.getProject().toString());
+        textViewDate.setText(order.getDateTime().getDate());
+        textViewTime.setText(order.getDateTime().getTime());
+        textViewJob.setText(order.getProject().getName());
         return rowView;
     }
 

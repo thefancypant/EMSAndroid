@@ -1,12 +1,14 @@
 package com.android.maintenancesolution.Views;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,11 +20,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.android.maintenancesolution.CustomerFeedbackActivity;
 import com.android.maintenancesolution.Models.GenericResponse;
+import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.FileUtils;
@@ -43,12 +49,13 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SelectImagesActivity extends AppCompatActivity {
 
 
     private static int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
-    final String dir = Environment.getExternalStoragePublicDirectory(".HopConsulting") + "/Folder/";
+    final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
     @BindView(R.id.imageViewBeforeOne)
     ImageView imageViewBeforeOne;
     @BindView(R.id.imageViewBeforeTwo)
@@ -87,6 +94,54 @@ public class SelectImagesActivity extends AppCompatActivity {
     ConstraintLayout afterLayout;
     @BindView(R.id.buttonDone)
     Button buttonDone;
+    @BindView(R.id.imageViewBeforeOneIcon)
+    ImageView imageViewBeforeOneIcon;
+    @BindView(R.id.imageViewBeforeTwoIcon)
+    ImageView imageViewBeforeTwoIcon;
+    @BindView(R.id.imageViewBeforeThreeIcon)
+    ImageView imageViewBeforeThreeIcon;
+    @BindView(R.id.imageViewBeforeFourIcon)
+    ImageView imageViewBeforeFourIcon;
+    @BindView(R.id.imageViewBeforeFiveIcon)
+    ImageView imageViewBeforeFiveIcon;
+    @BindView(R.id.imageViewBeforeSixIcon)
+    ImageView imageViewBeforeSixIcon;
+    @BindView(R.id.imageViewBeforeSevenIcon)
+    ImageView imageViewBeforeSevenIcon;
+    @BindView(R.id.imageViewBeforeEightIcon)
+    ImageView imageViewBeforeEightIcon;
+    @BindView(R.id.imageViewAfterOneIcon)
+    ImageView imageViewAfterOneIcon;
+    @BindView(R.id.imageViewAfterTwoIcon)
+    ImageView imageViewAfterTwoIcon;
+    @BindView(R.id.imageViewAfterThreeIcon)
+    ImageView imageViewAfterThreeIcon;
+    @BindView(R.id.imageViewAfterFourIcon)
+    ImageView imageViewAfterFourIcon;
+    @BindView(R.id.imageViewAfterFiveIcon)
+    ImageView imageViewAfterFiveIcon;
+    @BindView(R.id.imageViewAfterSixIcon)
+    ImageView imageViewAfterSixIcon;
+    @BindView(R.id.imageViewAfterSevenIcon)
+    ImageView imageViewAfterSevenIcon;
+    @BindView(R.id.imageViewAfterEightIcon)
+    ImageView imageViewAfterEightIcon;
+    MultipartBody.Part partBOne;
+    MultipartBody.Part partBTwo;
+    MultipartBody.Part partBThree;
+    MultipartBody.Part partBFour;
+    MultipartBody.Part partBFive;
+    MultipartBody.Part partBSix;
+    MultipartBody.Part partBSeven;
+    MultipartBody.Part partBEight;
+    MultipartBody.Part partAOne;
+    MultipartBody.Part partATwo;
+    MultipartBody.Part partAThree;
+    MultipartBody.Part partAFour;
+    MultipartBody.Part partAFive;
+    MultipartBody.Part partASix;
+    MultipartBody.Part partASeven;
+    MultipartBody.Part partAEight;
     private File compressedFileBOne;
     private File compressedFileBTwo;
     private File compressedFileBThree;
@@ -111,6 +166,10 @@ public class SelectImagesActivity extends AppCompatActivity {
     private File galleryCompressedFile;
     private PreferenceUtils preferenceUtils;
     private String header;
+    private Order order;
+    private ConstraintLayout constraint_layout;
+    private ProgressBar mProgressView;
+    private boolean progress;
 
 
     @Override
@@ -118,6 +177,10 @@ public class SelectImagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_images);
         ButterKnife.bind(this);
+
+        order = getIntent().getParcelableExtra("Order");
+        /*mProgressView = (ProgressBar) findViewById(R.id.list_progress_bar);
+        mProgressView.setVisibility(View.VISIBLE);*/
 
 
     }
@@ -318,6 +381,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeOne);
+                    imageViewBeforeOneIcon.setVisibility(View.INVISIBLE);
                     compressedFileBOne = cameraCompressedFile;
 
 
@@ -326,6 +390,8 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeTwo);
+                    imageViewBeforeTwoIcon.setVisibility(View.INVISIBLE);
+
                     compressedFileBTwo = cameraCompressedFile;
 
                     break;
@@ -334,6 +400,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeThree);
+                    imageViewBeforeThreeIcon.setVisibility(View.INVISIBLE);
                     compressedFileBThree = cameraCompressedFile;
 
                     break;
@@ -342,6 +409,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeFour);
+                    imageViewBeforeFourIcon.setVisibility(View.INVISIBLE);
                     compressedFileBFour = cameraCompressedFile;
 
                     break;
@@ -349,25 +417,29 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeFive);
+                    imageViewBeforeFiveIcon.setVisibility(View.INVISIBLE);
                     compressedFileBFive = cameraCompressedFile;
                     break;
                 case R.id.imageViewBeforeSix:
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeSix);
+                    imageViewBeforeSixIcon.setVisibility(View.INVISIBLE);
                     compressedFileBSix = cameraCompressedFile;
                     break;
                 case R.id.imageViewBeforeSeven:
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeSeven);
+                    imageViewBeforeSevenIcon.setVisibility(View.INVISIBLE);
                     compressedFileBSeven = cameraCompressedFile;
                     break;
                 case R.id.imageViewBeforeEight:
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
-                            .into(imageViewBeforeSeven);
-                    compressedFileBSeven = cameraCompressedFile;
+                            .into(imageViewBeforeEight);
+                    imageViewBeforeEightIcon.setVisibility(View.INVISIBLE);
+                    compressedFileBEight = cameraCompressedFile;
                     break;
 
                 ////////After Camera images//////////
@@ -375,6 +447,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterOne);
+                    imageViewAfterOneIcon.setVisibility(View.INVISIBLE);
                     compressedFileAOne = cameraCompressedFile;
 
 
@@ -383,6 +456,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterTwo);
+                    imageViewAfterTwoIcon.setVisibility(View.INVISIBLE);
                     compressedFileATwo = cameraCompressedFile;
 
                     break;
@@ -391,6 +465,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterThree);
+                    imageViewAfterThreeIcon.setVisibility(View.INVISIBLE);
                     compressedFileAThree = cameraCompressedFile;
 
                     break;
@@ -399,6 +474,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterFour);
+                    imageViewAfterFourIcon.setVisibility(View.INVISIBLE);
                     compressedFileAFour = cameraCompressedFile;
 
                     break;
@@ -406,12 +482,16 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterFive);
+                    imageViewAfterFiveIcon.setVisibility(View.INVISIBLE);
+
                     compressedFileAFive = cameraCompressedFile;
                     break;
                 case R.id.imageViewAfterSix:
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterSix);
+                    imageViewAfterSixIcon.setVisibility(View.INVISIBLE);
+
                     compressedFileASix = cameraCompressedFile;
                     break;
 
@@ -419,13 +499,17 @@ public class SelectImagesActivity extends AppCompatActivity {
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewAfterSeven);
+                    imageViewAfterSevenIcon.setVisibility(View.INVISIBLE);
+
                     compressedFileASeven = cameraCompressedFile;
                     break;
                 case R.id.imageViewAfterEight:
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
-                            .into(imageViewAfterSeven);
-                    compressedFileASeven = cameraCompressedFile;
+                            .into(imageViewAfterEight);
+                    imageViewAfterEightIcon.setVisibility(View.INVISIBLE);
+
+                    compressedFileAEight = cameraCompressedFile;
                     break;
             }
 
@@ -581,14 +665,72 @@ public class SelectImagesActivity extends AppCompatActivity {
     @OnClick(R.id.buttonDone)
     public void sendImages() {
         getPrefUtils();
-        RequestBody imageFileBody =
-                RequestBody.create(MediaType.parse("image/*"), compressedFileBOne);
+
+        showProgress(true);
+
+        makeNetworkParts();
+        /*RequestBody imageFileBody =
+                RequestBody.create(MediaType.parse("image*//*"), compressedFileBOne);
         MultipartBody.Part icon = MultipartBody
                 .Part
-                .createFormData("photo1", compressedFileBOne.getName(), imageFileBody);
+                .createFormData("photo1", compressedFileBOne.getName(), imageFileBody);*/
         NetworkService
                 .getInstance()
-                .postBeforeAfterImagesNetwork(header, 902, icon, null, null, null)
+                .postBeforeImagesNetwork(header
+                        , order.getId()
+                        , partBOne
+                        , partBTwo
+                        , partBThree
+                        , partBFour
+                        , partBFive
+                        , partBSix
+                        , partBSeven
+                        , partBEight
+                        , partAOne
+                        , partATwo
+                        , partAThree
+                        , partAFour
+                        , partAFive
+                        , partASix
+                        , partASeven
+                        , partAEight)
+                .enqueue(new Callback<GenericResponse>() {
+                    @Override
+                    public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                        Log.d("SendImage", "onResponse: ");
+                        processSendImages(response);
+                    }
+
+
+                    @Override
+                    public void onFailure(Call<GenericResponse> call, Throwable t) {
+                        showProgress(false);
+                        AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
+                        Log.d("SendImage", "onFailure: ");
+                    }
+                });
+
+        /*NetworkService
+                .getInstance()
+                .postAfterImagesNetwork(header
+                        , 49
+                        , partAOne
+                        , partATwo
+                        , partAThree
+                        , partAFour
+                        ,partAFive
+                        ,partASix
+                        ,partASeven
+                        ,partAEight)
                 .enqueue(new Callback<GenericResponse>() {
                     @Override
                     public void onResponse(Call<GenericResponse> call, retrofit2.Response<GenericResponse> response) {
@@ -599,8 +741,205 @@ public class SelectImagesActivity extends AppCompatActivity {
                     public void onFailure(Call<GenericResponse> call, Throwable t) {
                         Log.d("SendImage", "onFailure: ");
                     }
-                });
+                });*/
 
     }
+
+    private void processSendImages(Response<GenericResponse> response) {
+        if (response.body().getMessage().equals("Success")) {
+            showProgress(false);
+            Intent intent = new Intent(SelectImagesActivity.this, CustomerFeedbackActivity.class);
+            intent.putExtra("Order", order);
+            startActivity(intent);
+        }
+    }
+
+    public void makeNetworkParts() {
+        if (compressedFileBOne != null) {
+            RequestBody requestBodyBOne =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBOne);
+
+            partBOne = MultipartBody
+                    .Part
+                    .createFormData("before_photo1", compressedFileBOne.getName(), requestBodyBOne);
+        }
+
+        if (compressedFileBTwo != null) {
+            RequestBody requestBodyBTwo =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBTwo);
+            partBTwo = MultipartBody
+                    .Part
+                    .createFormData("before_photo2", compressedFileBTwo.getName(), requestBodyBTwo);
+        }
+
+        if (compressedFileBThree != null) {
+            RequestBody requestBodyBThree =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBThree);
+            partBThree = MultipartBody
+                    .Part
+                    .createFormData("before_photo3", compressedFileBThree.getName(), requestBodyBThree);
+        }
+
+        if (compressedFileBFour != null) {
+            RequestBody requestBodyBFour =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBFour);
+            partBFour = MultipartBody
+                    .Part
+                    .createFormData("before_photo4", compressedFileBFour.getName(), requestBodyBFour);
+        }
+
+        if (compressedFileBFive != null) {
+            RequestBody requestBodyBFive =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBFive);
+            partBFive = MultipartBody
+                    .Part
+                    .createFormData("before_photo5", compressedFileBFive.getName(), requestBodyBFive);
+        }
+
+        if (compressedFileBSix != null) {
+            RequestBody requestBodyBSix =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBSix);
+            partBSix = MultipartBody
+                    .Part
+                    .createFormData("before_photo6", compressedFileBSix.getName(), requestBodyBSix);
+        }
+
+        if (compressedFileBSeven != null) {
+            RequestBody requestBodyBSeven =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBSeven);
+            partBSeven = MultipartBody
+                    .Part
+                    .createFormData("before_photo7", compressedFileBSeven.getName(), requestBodyBSeven);
+        }
+
+        if (compressedFileBEight != null) {
+            RequestBody requestBodyBEight =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileBEight);
+            partBEight = MultipartBody
+                    .Part
+                    .createFormData("before_photo8", compressedFileBEight.getName(), requestBodyBEight);
+        }
+
+
+        if (compressedFileAOne != null) {
+            RequestBody requestBodyAOne =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileAOne);
+
+            partAOne = MultipartBody
+                    .Part
+                    .createFormData("after_photo1", compressedFileAOne.getName(), requestBodyAOne);
+        }
+
+        if (compressedFileATwo != null) {
+            RequestBody requestBodyATwo =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileATwo);
+            partATwo = MultipartBody
+                    .Part
+                    .createFormData("after_photo2", compressedFileATwo.getName(), requestBodyATwo);
+        }
+
+        if (compressedFileAThree != null) {
+            RequestBody requestBodyAThree =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileAThree);
+            partAThree = MultipartBody
+                    .Part
+                    .createFormData("after_photo3", compressedFileAThree.getName(), requestBodyAThree);
+        }
+
+        if (compressedFileAFour != null) {
+            RequestBody requestBodyAFour =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileAFour);
+            partAFour = MultipartBody
+                    .Part
+                    .createFormData("after_photo4", compressedFileAFour.getName(), requestBodyAFour);
+        }
+
+        if (compressedFileAFive != null) {
+            RequestBody requestBodyAFive =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileAFive);
+            partAFive = MultipartBody
+                    .Part
+                    .createFormData("after_photo5", compressedFileAFive.getName(), requestBodyAFive);
+        }
+
+        if (compressedFileASix != null) {
+            RequestBody requestBodyASix =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileASix);
+            partASix = MultipartBody
+                    .Part
+                    .createFormData("after_photo6", compressedFileASix.getName(), requestBodyASix);
+        }
+
+        if (compressedFileASeven != null) {
+            RequestBody requestBodyASeven =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileASeven);
+            partASeven = MultipartBody
+                    .Part
+                    .createFormData("after_photo7", compressedFileASeven.getName(), requestBodyASeven);
+        }
+
+        if (compressedFileAEight != null) {
+            RequestBody requestBodyAEight =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileAEight);
+            partAEight = MultipartBody
+                    .Part
+                    .createFormData("after_photo8", compressedFileAEight.getName(), requestBodyAEight);
+        }
+
+
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        // Setup Progress View
+        //progress = !show;
+        constraint_layout = findViewById(R.id.list_constraint_layout);
+        mProgressView = findViewById(R.id.list_progress_bar);
+        if (show) {
+            constraint_layout.setVisibility(View.GONE);
+            mProgressView.setVisibility(View.VISIBLE);
+            mProgressView.animate();
+        } else {
+            constraint_layout.setVisibility(View.VISIBLE);
+            mProgressView.animate().cancel();
+            mProgressView.setVisibility(View.GONE);
+
+        }
+    }
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+
+            constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+            constraint_layout.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }*/
+
 }
 
