@@ -16,14 +16,17 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -34,6 +37,7 @@ import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.OrderDetail;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
+import com.android.maintenancesolution.Views.UserSelectorActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,174 +59,33 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     LocationManager locationManager;
     PreferenceUtils preferenceUtils;
     Intent intent;
+    MenuInflater inflater;
+    ImageView imageView;
     private String header;
     private Button refreshButton;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                this.makeRequest();
-                return true;
-            case R.id.action_logout:
-                //Logout logic goes here
-                PreferenceManager.getDefaultSharedPreferences(this).edit().remove("MYTOKEN").apply();
-                final Intent intent = new Intent(ListActivity.this, UserSelectorActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
-
-  /*  public void makeRequest() {
-        showProgress(true);
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+    private android.support.v7.widget.Toolbar toolbar;
 
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = getString(R.string.global_url) + "/user_works/";
-        JsonArrayRequest localJReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        showProgress(false);
-                        final ArrayList<Order> orderList = Order.getOrdersFromJsonArray(response);
-                        final OrderAdapter adapter = new OrderAdapter(getBaseContext(), orderList);
-                        mListView.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                                if (ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    if (!checkLocationPermission()) {
 
-                                        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
-                                        alertDialog.setTitle("Warning");
-                                        alertDialog.setMessage("The HOP application will no longer be able to update your location, is this ok?");
-                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                    }
-                                                });
-                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        checkLocationPermission();
-                                                    }
-                                                });
-                                        alertDialog.show();
-                                    } else {
-                                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
-                                    }
-                                } else {
-                                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
-                                }
-                                Order item = (Order) adapter.getItem(i);
-                                final Intent intent = new Intent(ListActivity.this, OrderDetail.class);
-                                intent.putExtra("Order", item);
-                                Date currentTime = Calendar.getInstance().getTime();
-                                Date date = new Date();   // given date
-                                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-                                calendar.setTime(date);   // assigns calendar to given date
-                                int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-                                int minutes = calendar.get(Calendar.MINUTE);
-                                String url = getString(R.string.global_url) + "/works/" + item.id + "/";
-                                JSONObject jsonBody = new JSONObject();
-                                try {
-                                    jsonBody.put("latitude", ListActivity.this.lattiude);
-                                    jsonBody.put("longitude", ListActivity.this.longitude);
-                                    jsonBody.put("register_time", hours + ":" + minutes);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                                        (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
-
-                                            @Override
-                                            public void onResponse(JSONObject response) {
-                                                showProgress(false);
-                                                startActivity(intent);
-                                            }
-
-
-                                        }, new Response.ErrorListener() {
-
-                                            @Override
-                                            public void onErrorResponse(VolleyError error) {
-                                                // TODO Auto-generated method stub
-                                                AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
-                                                alertDialog.setTitle("Failure");
-                                                alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
-                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                //
-                                                            }
-                                                        });
-                                                alertDialog.show();
-                                            }
-                                        }) {
-                                    @Override
-                                    public Map<String, String> getHeaders() throws AuthFailureError {
-                                        Map<String, String> params = new HashMap<String, String>();
-                                        params.put("Authorization", "JWT " + PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
-                                        return params;
-                                    }
-                                };
-                                requestQueue.add(jsObjRequest);
-                            }
-                        });
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // this is an error
-                        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
-                        alertDialog.setTitle("Failure");
-                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //
-                                    }
-                                });
-                        alertDialog.show();
-                    }
-                }) {//here before semicolon ; and use { }.
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", "JWT " + PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
-                return params;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return super.getBodyContentType();
-
-            }
-        };
-
-        requestQueue.add(localJReq);
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //imageView = findViewById(R.id.logout);
+
+       /* getSupportActionBar().setCustomView(R.layout.tool_bar);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                preferenceUtils.saveAuthToken("");
+                final Intent intent = new Intent(ListActivity.this, UserSelectorActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });*/
+        // getSupportActionBar().setDisplayShowCustomEnabled(true);
         // checkLocationPermission();
         //enableGps();
         getPrefUtils();
@@ -231,14 +94,46 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         mListView = findViewById(R.id.recipe_list_view);
         refreshButton = findViewById(R.id.buttonRefresh);
         // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
+        toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
         makeRequest();
-        //this.makeRequest();
+
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 makeRequest();
             }
         });
+        //this.makeRequest();
+
+        // Set the list's click listener
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        getPrefUtils();
+        // Handle item selection
+        switch (item.getItemId()) {
+           /* case R.id.action_refresh:
+                this.makeRequest();
+                return true;*/
+            case R.id.action_logout:
+                //Logout logic goes here
+                preferenceUtils.saveAuthToken("");
+                final Intent intent = new Intent(ListActivity.this, UserSelectorActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void makeRequest() {
@@ -313,66 +208,14 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                 int minutes = calendar.get(Calendar.MINUTE);
 
-                postLocationNetwork(hours, minutes, item.getId());
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
+                    postLocationNetwork(hours, minutes, item.getId());
+                } else {
 
-                /*Order item = (Order) adapter.getItem(i);
-                final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
-                intent.putExtra("Order", item);
-                Date currentTime = Calendar.getInstance().getTime();
-                Date date = new Date();   // given date
-                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-                calendar.setTime(date);   // assigns calendar to given date
-                int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-                int minutes = calendar.get(Calendar.MINUTE);
-                String url = getString(R.string.global_url) + "/works/"+item.id+"/";
-                JSONObject jsonBody = new JSONObject();
-                try {
-                    jsonBody.put("latitude", ListActivity.this.lattiude);
-                    jsonBody.put("longitude", ListActivity.this.longitude);
-                    jsonBody.put("register_time", hours+":"+minutes);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    enableGps();
                 }
 
-
-                JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                        (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                showProgress(false);
-                                startActivity(intent);
-                            }
-
-
-
-                        }, new Response.ErrorListener() {
-
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // TODO Auto-generated method stub
-                                AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
-                                alertDialog.setTitle("Failure");
-                                alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //
-                                            }
-                                        });
-                                alertDialog.show();
-                            }
-                        }){
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
-                        return params;
-                    }
-                };
-                requestQueue.add(jsObjRequest);*/
             }
         });
 

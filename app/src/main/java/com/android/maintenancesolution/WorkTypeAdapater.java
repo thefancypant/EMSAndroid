@@ -73,11 +73,23 @@ public class WorkTypeAdapater extends BaseAdapter {
                 if (mDataSource.size() == 0) {
                     if (orderDetail != null) {
                         if (mDataSource.size() == 0) {
+
                             orderDetail.getListViewSelectedJobs().setVisibility(View.GONE);
                             orderDetail.setSpinnerUi();
                         } else {
                             orderDetail.getListViewSelectedJobs().setVisibility(View.VISIBLE);
                             orderDetail.setSpinnerUi();
+                        }
+                    }
+
+                    if (customerRequestForm != null) {
+                        if (mDataSource.size() == 0) {
+
+                            customerRequestForm.getListViewSelectedJobs().setVisibility(View.GONE);
+                            customerRequestForm.setSpinnerUi();
+                        } else {
+                            customerRequestForm.getListViewSelectedJobs().setVisibility(View.VISIBLE);
+                            customerRequestForm.setSpinnerUi();
                         }
                     }
                 }

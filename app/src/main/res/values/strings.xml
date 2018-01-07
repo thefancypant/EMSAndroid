@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Maintenance Solution</string>
+    <string name="app_name">EMS</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>

@@ -5,14 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/login_page_background">
 
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/tool_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </include>
     <ProgressBar
         android:id="@+id/list_progress_bar"
         style="android:attr/progressBarStyleLarge"
         android:layout_width="42dp"
         android:layout_height="37dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="40dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,8 +26,12 @@
     <android.support.constraint.ConstraintLayout
 
         android:id="@+id/list_constraint_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar">
 
 
         <ImageView
@@ -30,7 +39,7 @@
             android:layout_width="142dp"
             android:layout_height="47dp"
             android:layout_marginStart="36dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/entiremaintenancesolutionslogo" />

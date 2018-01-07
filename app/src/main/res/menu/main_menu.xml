@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+    <!--<item
         android:id="@+id/action_refresh"
+
         android:orderInCategory="100"
-        android:title="Refresh" />
+        android:title="Refresh"
+        android:icon="@drawable/ic_more_vert_white_24dp"
+        app:showAsAction="never"
+        />-->
     <item
         android:id="@+id/action_logout"
+        android:icon="@drawable/ic_more_vert_white_24dp"
         android:orderInCategory="100"
-        android:title="Log out" />
+        android:title="Log out"
+        app:showAsAction="never"
+
+        />
+    <!-- <item
+         android:id="@+id/overflow_menu"
+         android:icon="@drawable/ic_more_vert_white_24dp"
+         android:title="Overflow"
+         app:showAsAction="always">
+         <menu>
+             <item
+                 android:id="@+id/action_refresh"
+                 android:title="Item 1">
+             </item>
+             <item
+                 android:id="@+id/action_logout"
+                 android:title="Item 2">
+             </item>
+         </menu>
+     </item>-->
 </menu>

@@ -17,7 +17,6 @@ import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -44,6 +43,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                 //Create an Intent that will start the Menu-Activity.
                 if (!GeneralUtils.isNetworkAvailable(getApplication())) {
                     preferenceUtils.saveAuthToken(null);
+                    /*AlertDialog alertDialog = new AlertDialog.Builder(SplashScreenActivity.this).create();
+                    alertDialog.setTitle("Internet Connection");
+                    alertDialog.setMessage("Something went wrong.Please check your network connection.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                    alertDialog.show();*/
                     Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
                     goToNextActivity.putExtra("internet", 2);
                     goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -95,7 +103,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Token> call, Throwable t) {
-
+                        Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
+                        goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(goToNextActivity);
                     }
                 });
 
@@ -106,14 +116,13 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void processVerify(Response<Token> response) {
         if (response.code() >= 200 && response.code() < 300) {
             preferenceUtils.saveAuthToken(response.body().getToken());
-            Timber.e("Token vaild");
             Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
 
         } else {
             preferenceUtils.saveAuthToken(null);
-            Timber.e("Token not vaild");
+
             Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);

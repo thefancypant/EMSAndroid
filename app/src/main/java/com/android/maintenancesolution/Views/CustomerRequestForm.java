@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -114,6 +115,8 @@ public class CustomerRequestForm extends AppCompatActivity {
     private File galleryCompressedFile;
     private MultipartBody.Part photoPart1;
     private MultipartBody.Part photoPart2;
+    private int MY_PERMISSIONS_CAMERA = 1;
+    private int MY_PERMISSIONS_GALLERY = 2;
     //private View mProgressView;
 
     @Override
@@ -134,6 +137,9 @@ public class CustomerRequestForm extends AppCompatActivity {
         mNotesEditText.setHorizontallyScrolling(false);
 
         mJobsSpinner.setEnabled(false);
+        imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
+        mWorkTypesListView.setVisibility(View.GONE);
+
         getJobs();
 
         mWorkTypesListView.setOnTouchListener(new View.OnTouchListener() {
@@ -309,7 +315,7 @@ public class CustomerRequestForm extends AppCompatActivity {
 
 
         mJobsSpinner.setEnabled(true);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_background, R.id.textViewJob, spinnerArray);
         mJobsSpinner.setAdapter(arrayAdapter);
 
         mJobsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -323,7 +329,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         mWorkTypesListView.setAdapter(workTypeAdapater);
 
                         workTypeAdapater.notifyDataSetChanged();
-
+                        setSpinnerUi();
                     }
                 }
 
@@ -414,28 +420,28 @@ public class CustomerRequestForm extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid email address.
-        if (mEmailEditText.toString().trim().equals("")) {
+        if (mEmailEditText.getText().toString().trim().equals("")) {
             mEmailEditText.setError(getString(R.string.error_field_required));
             focusView = mEmailEditText;
             cancel = true;
         }
-        if (mNameEditText.toString().trim().equals("")) {
+        if (mNameEditText.getText().toString().trim().equals("")) {
             mNameEditText.setError(getString(R.string.error_field_required));
             focusView = mNameEditText;
             cancel = true;
         }
-        if (mAddressEditText.toString().trim().equals("")) {
+        if (mAddressEditText.getText().toString().trim().equals("")) {
             mAddressEditText.setError(getString(R.string.error_field_required));
             focusView = mAddressEditText;
             cancel = true;
         }
-        if (mPhoneNumberEditText.toString().trim().equals("")) {
+        if (mPhoneNumberEditText.getText().toString().trim().equals("")) {
             mPhoneNumberEditText.setError(getString(R.string.error_field_required));
             focusView = mPhoneNumberEditText;
             cancel = true;
         }
 
-        if (mNotesEditText.toString().trim().equals("")) {
+        if (mNotesEditText.getText().toString().trim().equals("")) {
             mNotesEditText.setError(getString(R.string.error_field_required));
             focusView = mNotesEditText;
             cancel = true;
@@ -473,7 +479,7 @@ public class CustomerRequestForm extends AppCompatActivity {
 
     private void makeRequest() {
 
-        String jobTypes = "";
+        String jobTypes = new String();
         for (int i = 0; i < jobsSelectedList.size(); i++) {
             for (int j = 0; j < workTypesList.size(); j++) {
                 if (workTypesList.get(j).getName().equals(jobsSelectedList.get(i))) {
@@ -517,7 +523,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         mEmailEditText.getText().toString().trim(),
                         mPhoneNumberEditText.getText().toString().trim(),
                         mNotesEditText.getText().toString().trim(),
-                        "7", photoPart1, photoPart2)
+                        jobTypes, photoPart1, photoPart2)
                 .enqueue(new Callback<Token>() {
                     @Override
                     public void onResponse(Call<Token> call, Response<Token> response) {
@@ -572,7 +578,6 @@ public class CustomerRequestForm extends AppCompatActivity {
                 break;
             case R.id.imageViewPhoto2:
                 selectedImageView = imageViewPhoto2;
-                imageViewPhoto2Logo.setVisibility(View.GONE);
                 showPickImageDialog();
 
                 break;
@@ -608,14 +613,15 @@ public class CustomerRequestForm extends AppCompatActivity {
                                 ActivityCompat
                                         .requestPermissions(CustomerRequestForm.this
                                                 , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-                                                , MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                                , MY_PERMISSIONS_GALLERY);
+                            } else {
+
+
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
                             }
-
-
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
 
                         }
                         if (which == 1) {
@@ -626,24 +632,25 @@ public class CustomerRequestForm extends AppCompatActivity {
                             if (ContextCompat
                                     .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat
-                                        .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                            }
+                                        .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_CAMERA);
+                            } else {
 
-                            cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
-                            File folder = new File(dir);
-                            cameraFile = new File(cameraImage);
-                            try {
-                                folder.mkdirs();
-                                cameraFile.createNewFile();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                                File folder = new File(dir);
+                                cameraFile = new File(cameraImage);
+                                try {
+                                    folder.mkdirs();
+                                    cameraFile.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                // Uri outputFileUri = Uri.fromFile(cameraFile);
+                                Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                                cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                startActivityForResult(cameraIntent, 0);
                             }
-                            // Uri outputFileUri = Uri.fromFile(cameraFile);
-                            Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
-                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            startActivityForResult(cameraIntent, 0);
                         }
                     }
                 });
@@ -712,8 +719,8 @@ public class CustomerRequestForm extends AppCompatActivity {
 
                 ////////// Gallery Images//////////
                 case R.id.imageViewPhoto1:
-                    imageViewPhoto1Logo.setVisibility(View.GONE);
 
+                    imageViewPhoto1Logo.setVisibility(View.GONE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewPhoto1);
@@ -722,7 +729,9 @@ public class CustomerRequestForm extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewPhoto2:
-                    imageViewPhoto2Logo.setVisibility(View.GONE);
+                    if (galleryCompressedFile.length() != 0)
+
+                        imageViewPhoto2Logo.setVisibility(View.GONE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewPhoto2);
@@ -735,6 +744,134 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 1: {
+                //Camera Permission result
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                    File folder = new File(dir);
+                    cameraFile = new File(cameraImage);
+                    try {
+                        folder.mkdirs();
+                        cameraFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Uri outputFileUri = Uri.fromFile(cameraFile);
+                    Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                    cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivityForResult(cameraIntent, 0);
+
+
+                } else {
+
+                    final AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("We need your permission to upload images.Do you want give this app the permissions?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    alertDialog.dismiss();
+                                    if (ContextCompat
+                                            .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat
+                                                .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_CAMERA);
+                                    }
+                                    //
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.show();
+                }
+                return;
+            }
+
+            case 2: {
+
+                //Gallery Permission result
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    final AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("We need your permission to upload images.Do you want give this app the permissions?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    alertDialog.dismiss();
+                                    if (ContextCompat
+                                            .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat
+                                                .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_GALLERY);
+                                    }
+                                    //
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    public void setSpinnerUi() {
+        if (jobsSelectedList.size() == 0) {
+            mWorkTypesListView.setVisibility(View.GONE);
+            mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_normal));
+            imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
+            imageViewTools.setColorFilter(getResources().getColor(R.color.login_page_background));
+
+        } else {
+            mWorkTypesListView.setVisibility(View.VISIBLE);
+            mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
+            imageViewArrow.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+            imageViewTools.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+        }
+    }
+
+    public ListView getListViewSelectedJobs() {
+        return mWorkTypesListView;
     }
 
 }

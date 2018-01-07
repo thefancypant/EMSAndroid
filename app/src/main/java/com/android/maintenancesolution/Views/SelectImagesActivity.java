@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +27,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.android.maintenancesolution.CustomerFeedbackActivity;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkService;
@@ -170,6 +170,9 @@ public class SelectImagesActivity extends AppCompatActivity {
     private ConstraintLayout constraint_layout;
     private ProgressBar mProgressView;
     private boolean progress;
+    private int MY_PERMISSIONS_GALLERY = 2;
+    private int MY_PERMISSIONS_CAMERA = 1;
+
 
 
     @Override
@@ -320,13 +323,13 @@ public class SelectImagesActivity extends AppCompatActivity {
                             if (ContextCompat
                                     .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat
-                                        .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                        .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_GALLERY);
+                            } else {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
                             }
-                            Intent intent = new Intent();
-                            intent.setType("image/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
-
                         }
                         if (which == 1) {
                             //Getting Image from camera
@@ -336,24 +339,24 @@ public class SelectImagesActivity extends AppCompatActivity {
                             if (ContextCompat
                                     .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat
-                                        .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                                        .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_CAMERA);
+                            } else {
+                                cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                                File folder = new File(dir);
+                                cameraFile = new File(cameraImage);
+                                try {
+                                    folder.mkdirs();
+                                    cameraFile.createNewFile();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                // Uri outputFileUri = Uri.fromFile(cameraFile);
+                                Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                                cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                startActivityForResult(cameraIntent, 0);
                             }
-
-                            cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
-                            File folder = new File(dir);
-                            cameraFile = new File(cameraImage);
-                            try {
-                                folder.mkdirs();
-                                cameraFile.createNewFile();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            // Uri outputFileUri = Uri.fromFile(cameraFile);
-                            Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
-                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                            startActivityForResult(cameraIntent, 0);
                         }
                     }
                 });
@@ -368,6 +371,8 @@ public class SelectImagesActivity extends AppCompatActivity {
                 cameraCompressedFile = new Compressor(getApplicationContext())
                         .setQuality(50)
                         .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(cameraFile);
+                System.gc();
+
                 Log.i("Demo Pic", Long.toString(cameraCompressedFile.length()));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -378,6 +383,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                 //////////Before Camera Images////////////
                 case R.id.imageViewBeforeOne:
+
                     Picasso.with(getApplicationContext())
                             .load(cameraCompressedFile)
                             .into(imageViewBeforeOne);
@@ -529,6 +535,7 @@ public class SelectImagesActivity extends AppCompatActivity {
                 galleryCompressedFile = new Compressor(getApplicationContext())
                         .setQuality(50)
                         .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(galleryFile);
+                System.gc();
                 Log.i("Demo Pic", Long.toString(galleryCompressedFile.length()));
             } catch (Exception e) {
             }
@@ -538,6 +545,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                 //////////Before Gallery Images//////////
                 case R.id.imageViewBeforeOne:
+                    imageViewBeforeOneIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeOne);
@@ -546,6 +554,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewBeforeTwo:
+                    imageViewBeforeTwoIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeTwo);
@@ -553,7 +562,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewBeforeThree:
-
+                    imageViewBeforeThreeIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeThree);
@@ -561,7 +570,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewBeforeFour:
-
+                    imageViewBeforeFourIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeFour);
@@ -569,32 +578,37 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewBeforeFive:
+                    imageViewBeforeFiveIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeFive);
                     compressedFileBFive = galleryCompressedFile;
                     break;
                 case R.id.imageViewBeforeSix:
+                    imageViewBeforeSixIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeSix);
                     compressedFileBSix = galleryCompressedFile;
                     break;
                 case R.id.imageViewBeforeSeven:
+                    imageViewBeforeSevenIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewBeforeSeven);
                     compressedFileBSeven = galleryCompressedFile;
                     break;
                 case R.id.imageViewBeforeEight:
+                    imageViewBeforeEightIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
-                            .into(imageViewBeforeSeven);
-                    compressedFileBSeven = galleryCompressedFile;
+                            .into(imageViewBeforeEight);
+                    compressedFileBEight = galleryCompressedFile;
                     break;
 
                 /////////After Gallery Images///////////
                 case R.id.imageViewAfterOne:
+                    imageViewAfterOneIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewAfterOne);
@@ -602,6 +616,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewAfterTwo:
+                    imageViewAfterTwoIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewAfterTwo);
@@ -609,6 +624,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewAfterThree:
+                    imageViewAfterThreeIcon.setVisibility(View.INVISIBLE);
 
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
@@ -617,6 +633,7 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewAfterFour:
+                    imageViewAfterFourIcon.setVisibility(View.INVISIBLE);
 
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
@@ -625,12 +642,16 @@ public class SelectImagesActivity extends AppCompatActivity {
 
                     break;
                 case R.id.imageViewAfterFive:
+                    imageViewAfterFiveIcon.setVisibility(View.INVISIBLE);
+
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewAfterFive);
                     compressedFileAFive = galleryCompressedFile;
                     break;
                 case R.id.imageViewAfterSix:
+                    imageViewAfterSixIcon.setVisibility(View.INVISIBLE);
+
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewAfterSix);
@@ -638,16 +659,19 @@ public class SelectImagesActivity extends AppCompatActivity {
                     break;
 
                 case R.id.imageViewAfterSeven:
+                    imageViewAfterSevenIcon.setVisibility(View.INVISIBLE);
+
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewAfterSeven);
                     compressedFileASeven = galleryCompressedFile;
                     break;
                 case R.id.imageViewAfterEight:
+                    imageViewAfterEightIcon.setVisibility(View.INVISIBLE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
-                            .into(imageViewAfterSeven);
-                    compressedFileASeven = galleryCompressedFile;
+                            .into(imageViewAfterEight);
+                    compressedFileAEight = galleryCompressedFile;
                     break;
             }
 
@@ -749,6 +773,8 @@ public class SelectImagesActivity extends AppCompatActivity {
         if (response.body().getMessage().equals("Success")) {
             showProgress(false);
             Intent intent = new Intent(SelectImagesActivity.this, CustomerFeedbackActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
             intent.putExtra("Order", order);
             startActivity(intent);
         }
@@ -940,6 +966,115 @@ public class SelectImagesActivity extends AppCompatActivity {
             constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }*/
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 1: {
+                //Camera Permission result
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                    File folder = new File(dir);
+                    cameraFile = new File(cameraImage);
+                    try {
+                        folder.mkdirs();
+                        cameraFile.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Uri outputFileUri = Uri.fromFile(cameraFile);
+                    Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                    cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivityForResult(cameraIntent, 0);
+
+
+                } else {
+
+                    final AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("We need your permission to upload images.Do you want give this app the permissions?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    alertDialog.dismiss();
+                                    if (ContextCompat
+                                            .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat
+                                                .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_CAMERA);
+                                    }
+                                    //
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.show();
+                }
+                return;
+            }
+
+            case 2: {
+
+                //Gallery Permission result
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    final AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("We need your permission to upload images.Do you want give this app the permissions?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    alertDialog.dismiss();
+                                    if (ContextCompat
+                                            .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat
+                                                .requestPermissions(SelectImagesActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_GALLERY);
+                                    }
+                                    //
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alertDialog.show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
 }
 
