@@ -27,6 +27,7 @@ import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
+import com.android.maintenancesolution.Views.CustomerFeedbackActivity;
 import com.android.maintenancesolution.Views.SelectImagesActivity;
 
 import java.io.File;
@@ -181,9 +182,11 @@ public class OrderDetail extends AppCompatActivity {
                 intent.putExtra("Order", order);
                 startActivity(intent);
             } else {
-               /* showProgress(false);
+                showProgress(false);
+                clickSubmit = false;
                 Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
-                startActivity(intent);*/
+                intent.putExtra("Order", order);
+                startActivity(intent);
 
             }
         } else {
