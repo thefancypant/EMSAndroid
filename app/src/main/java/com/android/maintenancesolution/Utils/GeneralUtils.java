@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.android.maintenancesolution.R;
 
+import java.io.File;
+
 /**
  * Created by kalyan on 12/18/17.
  */
@@ -140,5 +142,21 @@ public class GeneralUtils {
             }
         });
 
+    }
+
+    public boolean deleteTempFolder(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        deleteTempFolder(f);
+                    } else {
+                        f.delete();
+                    }
+                }
+            }
+        }
+        return file.delete();
     }
 }

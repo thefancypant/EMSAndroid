@@ -32,6 +32,7 @@ import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.FileUtils;
+import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 import com.squareup.picasso.Picasso;
 
@@ -1076,5 +1077,17 @@ public class SelectImagesActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        final String dire = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
+
+        File file = new File(dire);
+        new GeneralUtils(SelectImagesActivity.this).deleteTempFolder(file);
+
+
+    }
 }
 
