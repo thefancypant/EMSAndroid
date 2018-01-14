@@ -185,6 +185,7 @@ public class OrderDetail extends AppCompatActivity {
                 showProgress(false);
                 clickSubmit = false;
                 Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("Order", order);
                 startActivity(intent);
 
