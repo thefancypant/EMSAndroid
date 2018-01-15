@@ -81,8 +81,9 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
-                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                /*goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
 
                 String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/";
@@ -261,6 +262,6 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        super.onBackPressed();
     }
 }

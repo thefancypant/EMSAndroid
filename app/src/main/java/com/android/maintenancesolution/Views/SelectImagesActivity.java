@@ -774,7 +774,7 @@ public class SelectImagesActivity extends AppCompatActivity {
         if (response.body().getMessage().equals("Success")) {
             showProgress(false);
             Intent intent = new Intent(SelectImagesActivity.this, CustomerFeedbackActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             intent.putExtra("Order", order);
             startActivity(intent);

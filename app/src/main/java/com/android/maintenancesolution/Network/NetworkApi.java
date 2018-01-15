@@ -52,6 +52,14 @@ public interface NetworkApi {
             @Part("types") String types,
             @Part MultipartBody.Part photo1,
             @Part MultipartBody.Part photo2);
+
+
+   /* @POST("/gm/post_job_requests/")
+    Call<Token> customerFormSubmit(
+            );*/
+    /*@POST("/gm/post_job_requests/")
+    Call<Token> customerFormSubmit(
+            @Body CustomerRequest customerRequest);*/
    /*
     @Headers("Content-Type: application/json")
     @POST("/api/users_register/")

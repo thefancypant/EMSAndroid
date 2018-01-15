@@ -3,6 +3,8 @@ package com.android.maintenancesolution.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
+
 /**
  * Created by kalyan on 12/21/17.
  */
@@ -31,14 +33,34 @@ public class CustomerRequest {
     @Expose
     private String message;
 
-    public CustomerRequest(String name, String address, String email, String phone, String notes, String types) {
+   /* @SerializedName("photo1")
+    @Expose
+    private File photoPart1;
+
+    @SerializedName("photo2")
+    @Expose
+    private File photoPart2;*/
+
+    public CustomerRequest(String name, String address, String email, String phone, String notes, String types, File photoPart1, File photoPart2) {
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
         this.notes = notes;
         this.types = types;
+        /*this.photoPart1 = photoPart1;
+        this.photoPart2 = photoPart2;*/
     }
+
+
+   /*public CustomerRequest(String name, String address, String email, String phone, String notes, String types) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.notes = notes;
+        this.types = types;
+    }*/
 
     public String getEmail() {
         return email;
@@ -79,4 +101,6 @@ public class CustomerRequest {
     public void setMessage(String message) {
         this.message = message;
     }
+
+
 }

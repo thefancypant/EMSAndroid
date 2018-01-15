@@ -104,6 +104,7 @@ public class CustomerRequestForm extends AppCompatActivity {
     @BindView(R.id.buttonSubmitRequest)
     Button submitButton;
     GeneralUtils generalUtils;
+    CustomerRequest customerRequest;
     private ArrayList<String> jobsSelectedList = new ArrayList<>();
     private String cameraImage;
     private File cameraFile;
@@ -117,6 +118,7 @@ public class CustomerRequestForm extends AppCompatActivity {
     private MultipartBody.Part photoPart2;
     private int MY_PERMISSIONS_CAMERA = 1;
     private int MY_PERMISSIONS_GALLERY = 2;
+
     //private View mProgressView;
 
     @Override
@@ -477,6 +479,40 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
     }
 
+   /* private void sendData(CustomerRequest customerRequest){
+
+
+        NetworkService
+                .getInstance()
+                .customerFormSubmit(customerRequest)
+                .enqueue(new Callback<Token>() {
+                    @Override
+                    public void onResponse(Call<Token> call, Response<Token> response) {
+
+                        Log.d("jobTypes", "Successful");
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Success!");
+                        alertDialog.setMessage("You have successfully submitted your request!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
+                                        goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(goToNextActivity);
+                                        finish();
+                                    }
+                                });
+                        alertDialog.show();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Token> call, Throwable t) {
+
+                    }
+                });
+    }*/
+
     private void makeRequest() {
 
         String jobTypes = new String();
@@ -491,12 +527,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
 
         Log.d("jobTypes", jobTypes);
-        CustomerRequest customerRequest = new CustomerRequest(
-                mNameEditText.getText().toString().trim()
-                , mAddressEditText.getText().toString().trim()
-                , mEmailEditText.getText().toString().trim()
-                , mPhoneNumberEditText.getText().toString().trim()
-                , mNotesEditText.getText().toString().trim(), jobTypes);
+
 
         if (compressedFileOne != null) {
             RequestBody imageFileBody =
@@ -512,8 +543,19 @@ public class CustomerRequestForm extends AppCompatActivity {
             photoPart2 = MultipartBody
                     .Part
                     .createFormData("photo2", compressedFileTwo.getName(), imageFileBody);
+
+
         }
 
+        customerRequest = new CustomerRequest(
+                mNameEditText.getText().toString().trim()
+                , mAddressEditText.getText().toString().trim()
+                , mEmailEditText.getText().toString().trim()
+                , mPhoneNumberEditText.getText().toString().trim()
+                , mNotesEditText.getText().toString().trim(), jobTypes, compressedFileOne, compressedFileTwo);
+
+
+        Log.d("test", "makeRequest: " + mNameEditText.getText().toString().trim());
 
         NetworkService
                 .getInstance()
@@ -527,6 +569,8 @@ public class CustomerRequestForm extends AppCompatActivity {
                 .enqueue(new Callback<Token>() {
                     @Override
                     public void onResponse(Call<Token> call, Response<Token> response) {
+                        //sendData(customerRequest);
+
                         Log.d("jobTypes", "Successful");
                         AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
                         alertDialog.setTitle("Success!");
@@ -541,6 +585,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                                     }
                                 });
                         alertDialog.show();
+
                     }
 
                     @Override
