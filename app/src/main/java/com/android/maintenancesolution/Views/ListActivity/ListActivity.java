@@ -156,6 +156,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                     @Override
                     public void onFailure(Call<List<Order>> call, Throwable t) {
                         showProgress(false);
+                        Log.d("make request", "onFailure: " + t.toString());
                         showErrorDialog();
 
                     }
@@ -438,4 +439,9 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
+    @Override
+    protected void onPostResume() {
+        makeRequest();
+        super.onPostResume();
+    }
 }

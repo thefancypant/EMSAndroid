@@ -161,7 +161,7 @@
         android:layout_marginBottom="32dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimaryDark"
-        android:text="@string/submit_request"
+        android:text="@string/save_request"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

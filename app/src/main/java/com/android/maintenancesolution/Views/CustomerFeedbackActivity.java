@@ -56,8 +56,10 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
     RatingBar ratingBar;
     @BindView(R.id.signature_pad)
     SignaturePad signaturePad;
-    @BindView(R.id.buttonSubmitRequest)
-    Button buttonSubmitRequest;
+    /*@BindView(R.id.buttonSubmitRequest)
+    Button buttonSubmitRequest;*/
+    @BindView(R.id.buttonSubmitToSupervisor)
+    Button buttonSubmitToSupervisor;
     @BindView(R.id.customer_feedback_constraint_layout)
     ConstraintLayout mConstraintLayout;
     Order order;
@@ -160,7 +162,97 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                 showProgress(true);
             }
         });
+
+
+        buttonSubmitToSupervisor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                /*goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
+
+
+                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/";
+                Log.d("FinalUrl", "onClick: " + url);
+                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        String resultResponse = new String(response.data);
+                        // parse success output
+                        showProgress(false);
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerFeedbackActivity.this).create();
+                        alertDialog.setTitle("Thank you!");
+                        alertDialog.setMessage("Your Order has been completed");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                        startActivity(goToNextActivity);
+                                        finish();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerFeedbackActivity.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        showProgress(false);
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        Date date = new Date();   // given date
+                        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                        calendar.setTime(date);   // assigns calendar to given date
+                        int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+                        int minutes = calendar.get(Calendar.MINUTE);
+                        params.put("end_time", Integer.toString(hours) + ":" + Integer.toString(minutes));
+                        params.put("evaluation", String.valueOf(Math.round(ratingBar.getRating())));
+                        params.put("submitted_to_supervisor", "true");
+                        return params;
+                    }
+
+                    @Override
+                    protected Map<String, DataPart> getByteData() {
+                        Map<String, DataPart> params = new HashMap<>();
+                        Bitmap bmp = signaturePad.getSignatureBitmap();
+                        if (bmp != null) {
+                            params.put("sign", new DataPart("sign.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp), "image/png"));
+                        }
+                        return params;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Authorization", header);
+                        return params;
+                    }
+                };
+                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                showProgress(true);
+
+            }
+        });
+
     }
+
 
     private void getPrefUtils() {
         preferenceUtils = new PreferenceUtils(CustomerFeedbackActivity.this);

@@ -160,6 +160,38 @@ public class CustomerRequestForm extends AppCompatActivity {
             }
         });
 
+       /* mEmailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Toast.makeText(getApplicationContext(),charSequence.toString(),Toast.LENGTH_LONG).show();
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+
+
+
+            }
+        });*/
+        mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focusBoolean) {
+                if (!focusBoolean) {
+                    //Toast.makeText(getApplicationContext(),mEmailEditText.getText().toString(),Toast.LENGTH_LONG).show();
+                    getCustomerInfo(mEmailEditText.getText().toString());
+
+                }
+            }
+        });
+
         /*mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -286,6 +318,31 @@ public class CustomerRequestForm extends AppCompatActivity {
         });*/
 
 
+    }
+
+    private void getCustomerInfo(String s) {
+        NetworkService
+                .getInstance()
+                .getCustomerInfo(s)
+                .enqueue(new Callback<List<CustomerRequest>>() {
+                    @Override
+                    public void onResponse(Call<List<CustomerRequest>> call, Response<List<CustomerRequest>> response) {
+                        if (response.code() == 200) {
+                            processCustomerInfo(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CustomerRequest>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void processCustomerInfo(List<CustomerRequest> body) {
+
+        mNameEditText.setText(body.get(0).getName());
+        mPhoneNumberEditText.setText(body.get(0).getPhone());
     }
 
     private void getJobs() {

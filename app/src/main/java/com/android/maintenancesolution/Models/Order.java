@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Order implements Parcelable {
 
+
     public static final Creator<Order> CREATOR = new Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel in) {
@@ -28,8 +29,6 @@ public class Order implements Parcelable {
     @SerializedName("id")
     @Expose
     private Integer id;
-
-
     @SerializedName("project")
     @Expose
     private Project project;
@@ -47,22 +46,25 @@ public class Order implements Parcelable {
     private List<Object> supporters = null;
     @SerializedName("register_time")
     @Expose
-    private String registerTime;
+    private RegisterTime registerTime;
     @SerializedName("latitude_register")
     @Expose
     private Float latitudeRegister;
     @SerializedName("longitude_register")
     @Expose
     private Float longitudeRegister;
-    @SerializedName("end_time")
+    /*@SerializedName("end_time")
     @Expose
-    private String endTime;
+    private String endTime;*/
     @SerializedName("report")
     @Expose
     private String report;
     @SerializedName("job_types")
     @Expose
     private String jobtypes;
+    @SerializedName("types")
+    @Expose
+    private List<Type> types;
     @SerializedName("before_photo1")
     @Expose
     private String beforePhoto1;
@@ -127,6 +129,7 @@ public class Order implements Parcelable {
     @Expose
     private String sign;
 
+
     public Order() {
 
         //Empty Constructor
@@ -139,7 +142,6 @@ public class Order implements Parcelable {
             id = in.readInt();
         }
         address = in.readString();
-        registerTime = in.readString();
         if (in.readByte() == 0) {
             latitudeRegister = null;
         } else {
@@ -150,9 +152,10 @@ public class Order implements Parcelable {
         } else {
             longitudeRegister = in.readFloat();
         }
-        endTime = in.readString();
+        //endTime = in.readString();
         report = in.readString();
         jobtypes = in.readString();
+        types = in.createTypedArrayList(Type.CREATOR);
         beforePhoto1 = in.readString();
         beforePhoto2 = in.readString();
         beforePhoto3 = in.readString();
@@ -178,6 +181,14 @@ public class Order implements Parcelable {
             evaluation = in.readInt();
         }
         sign = in.readString();
+    }
+
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<Type> types) {
+        this.types = types;
     }
 
     public Integer getId() {
@@ -228,11 +239,11 @@ public class Order implements Parcelable {
         this.supporters = supporters;
     }
 
-    public String getRegisterTime() {
+    public RegisterTime getRegisterTime() {
         return registerTime;
     }
 
-    public void setRegisterTime(String registerTime) {
+    public void setRegisterTime(RegisterTime registerTime) {
         this.registerTime = registerTime;
     }
 
@@ -252,13 +263,13 @@ public class Order implements Parcelable {
         this.longitudeRegister = longitudeRegister;
     }
 
-    public String getEndTime() {
+   /*public String getEndTime() {
         return endTime;
     }
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
+    }*/
 
     public String getReport() {
         return report;
@@ -467,7 +478,6 @@ public class Order implements Parcelable {
             parcel.writeInt(id);
         }
         parcel.writeString(address);
-        parcel.writeString(registerTime);
         if (latitudeRegister == null) {
             parcel.writeByte((byte) 0);
         } else {
@@ -480,9 +490,10 @@ public class Order implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeFloat(longitudeRegister);
         }
-        parcel.writeString(endTime);
+        //parcel.writeString(endTime);
         parcel.writeString(report);
         parcel.writeString(jobtypes);
+        parcel.writeTypedList(types);
         parcel.writeString(beforePhoto1);
         parcel.writeString(beforePhoto2);
         parcel.writeString(beforePhoto3);

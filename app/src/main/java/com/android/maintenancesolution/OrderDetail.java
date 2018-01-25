@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -92,6 +93,7 @@ public class OrderDetail extends AppCompatActivity {
         order = getIntent().getParcelableExtra("Order");
 
 
+
         spinnerWorkType = findViewById(R.id.spinnerWorkType);
         listViewSelectedJobs = findViewById(R.id.listViewSelectedJobs);
         editTextDescription = findViewById(R.id.editTextDescription);
@@ -128,6 +130,28 @@ public class OrderDetail extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void setUI(Order order) {
+        if (order.getReport() != null && !order.getReport().equals("")) {
+            editTextDescription.setText(order.getReport());
+        }
+        if (order.getTypes().size() != 0) {
+
+            for (int i = 0; i < order.getTypes().size(); i++) {
+                jobsSelectedList.add(order.getTypes().get(i).getName());
+            }
+
+        }
+        Log.d("setUI", "setUI: " + jobsSelectedList.toString());
+        workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, jobsSelectedList, null, OrderDetail.this);
+        listViewSelectedJobs.setAdapter(workTypeAdapater);
+
+        workTypeAdapater.notifyDataSetChanged();
+
+
+        setSpinnerUi();
 
     }
 
@@ -232,12 +256,14 @@ public class OrderDetail extends AppCompatActivity {
     }
 
     private void processJobs(List<Job> jobList) {
+
         workTypesList = jobList;
         spinnerArray.add("Select Work Type");
         //spinnerArray.add("Select Work Type");
         for (int i = 0; i < jobList.size(); i++) {
             spinnerArray.add(jobList.get(i).getName());
         }
+
 
 
         spinnerWorkType.setEnabled(true);
@@ -250,7 +276,9 @@ public class OrderDetail extends AppCompatActivity {
                 if (position != 0) {
                     spinnerWorkType.setSelection(0);
                     if (!spinnerArray.get(position).equals("Select Work Type")) {
-                        jobsSelectedList.add(spinnerArray.get(position));
+                        if (!jobsSelectedList.contains(spinnerArray.get(position))) {
+                            jobsSelectedList.add(spinnerArray.get(position));
+                        }
 
                         workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, jobsSelectedList, null, OrderDetail.this);
                         listViewSelectedJobs.setAdapter(workTypeAdapater);
@@ -277,6 +305,9 @@ public class OrderDetail extends AppCompatActivity {
 
             }
         });
+        setUI(order);
+        //workTypeAdapater.notifyDataSetChanged();
+
     }
 
     public void setSpinnerUi() {
@@ -415,6 +446,7 @@ public class OrderDetail extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        OrderDetail.this.finish();
         /*if (progress) {
             super.onBackPressed();
         }

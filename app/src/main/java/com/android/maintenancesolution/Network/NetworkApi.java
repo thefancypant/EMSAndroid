@@ -1,5 +1,6 @@
 package com.android.maintenancesolution.Network;
 
+import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Order;
@@ -20,6 +21,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * NetworkAPi interface contains the Network API Calls
@@ -52,6 +54,10 @@ public interface NetworkApi {
             @Part("types") String types,
             @Part MultipartBody.Part photo1,
             @Part MultipartBody.Part photo2);
+
+    @GET("/app/customers/")
+    Call<List<CustomerRequest>> getCustomerInfo(@Query("search") String email);
+
 
 
    /* @POST("/gm/post_job_requests/")
@@ -86,6 +92,9 @@ public interface NetworkApi {
                                           @Part MultipartBody.Part sign);
                                          /*  @Body RequestBody a);*/
 
+    @GET("/gm/works/{id}/")
+    Call<Order> getSelectedUserWork(@Header("Authorization") String accessToken,
+                                    @Path("id") Integer resource_id);
 
     @POST("/gm/works/{id}/")
     Call<GenericResponse> postTypesReport(@Header("Authorization") String accessToken,

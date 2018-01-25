@@ -26,9 +26,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Order;
+import com.android.maintenancesolution.Network.NetworkContract;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.FileUtils;
@@ -183,10 +185,113 @@ public class SelectImagesActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         order = getIntent().getParcelableExtra("Order");
+        getWork(order.getId());
         /*mProgressView = (ProgressBar) findViewById(R.id.list_progress_bar);
         mProgressView.setVisibility(View.VISIBLE);*/
 
 
+    }
+
+    private void setUI(Order order) {
+
+        if (order.getBeforePhoto1() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto1())
+                    .into(imageViewBeforeOne);
+            imageViewBeforeOneIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto2() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto2())
+                    .into(imageViewBeforeTwo);
+            imageViewBeforeTwoIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto3() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto3())
+                    .into(imageViewBeforeThree);
+            imageViewBeforeThreeIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto4() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto4())
+                    .into(imageViewBeforeFour);
+            imageViewBeforeFourIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto5() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto5())
+                    .into(imageViewBeforeFive);
+            imageViewBeforeFiveIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto6() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto6())
+                    .into(imageViewBeforeSix);
+            imageViewBeforeSixIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto7() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto7())
+                    .into(imageViewBeforeSeven);
+            imageViewBeforeSevenIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getBeforePhoto8() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getBeforePhoto8())
+                    .into(imageViewBeforeEight);
+            imageViewBeforeEightIcon.setVisibility(View.INVISIBLE);
+        }
+
+
+        if (order.getAfterPhoto1() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto1())
+                    .into(imageViewAfterOne);
+            imageViewAfterOneIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto2() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto2())
+                    .into(imageViewAfterTwo);
+            imageViewAfterTwoIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto3() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto3())
+                    .into(imageViewAfterThree);
+            imageViewAfterThreeIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto4() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto4())
+                    .into(imageViewAfterFour);
+            imageViewAfterFourIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto5() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto5())
+                    .into(imageViewAfterFive);
+            imageViewAfterFiveIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto6() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto6())
+                    .into(imageViewAfterSix);
+            imageViewAfterSixIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto7() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto7())
+                    .into(imageViewAfterSeven);
+            imageViewAfterSevenIcon.setVisibility(View.INVISIBLE);
+        }
+        if (order.getAfterPhoto8() != null) {
+            Picasso.with(getApplicationContext())
+                    .load(NetworkContract.BASE_URL + order.getAfterPhoto8())
+                    .into(imageViewAfterEight);
+            imageViewAfterEightIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
     //@O
@@ -688,12 +793,44 @@ public class SelectImagesActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.buttonDone)
+    public void checkImages() {
+        makeNetworkParts();
+
+        if (partBOne == null
+                && partBTwo == null
+                && partBThree == null
+                && partBFour == null
+                && partBFive == null
+                && partBSix == null
+                && partBSeven == null
+                && partBEight == null
+                && partAOne == null
+                && partATwo == null
+                && partAThree == null
+                && partAFour == null
+                && partAFive == null
+                && partASix == null
+                && partASeven == null
+                && partAEight == null) {
+            Toast.makeText(getApplicationContext(), "noBone", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(SelectImagesActivity.this, CustomerFeedbackActivity.class);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            intent.putExtra("Order", order);
+            startActivity(intent);
+        } else {
+
+            sendImages();
+        }
+
+    }
+
     public void sendImages() {
         getPrefUtils();
 
         showProgress(true);
 
-        makeNetworkParts();
         /*RequestBody imageFileBody =
                 RequestBody.create(MediaType.parse("image*//*"), compressedFileBOne);
         MultipartBody.Part icon = MultipartBody
@@ -730,17 +867,31 @@ public class SelectImagesActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<GenericResponse> call, Throwable t) {
                         showProgress(false);
-                        AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
-                        alertDialog.setTitle("Failure");
-                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //
-                                    }
-                                });
-                        alertDialog.show();
-                        Log.d("SendImage", "onFailure: ");
+                        if (t.toString().equals("java.lang.IllegalStateException: Multipart body must have at least one part.")) {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
+                            alertDialog.setTitle("Failure");
+                            alertDialog.setMessage("Please select atleast one image");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //
+                                        }
+                                    });
+                            alertDialog.show();
+                        } else {
+                            AlertDialog alertDialog = new AlertDialog.Builder(SelectImagesActivity.this).create();
+                            alertDialog.setTitle("Failure");
+                            alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                        Log.d("SendImage", "onFailure: " + t.toString());
                     }
                 });
 
@@ -1088,6 +1239,36 @@ public class SelectImagesActivity extends AppCompatActivity {
         new GeneralUtils(SelectImagesActivity.this).deleteTempFolder(file);
 
 
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        // getWork(order.getId());
+
+    }
+
+    private void getWork(Integer id) {
+        NetworkService
+                .getInstance()
+                .getSelectedUserWork(header, id)
+                .enqueue(new Callback<Order>() {
+                    @Override
+                    public void onResponse(Call<Order> call, Response<Order> response) {
+                        processSelectedUser(response);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Order> call, Throwable t) {
+
+                    }
+                });
+
+    }
+
+    private void processSelectedUser(Response<Order> response) {
+        order = response.body();
+        setUI(order);
     }
 }
 

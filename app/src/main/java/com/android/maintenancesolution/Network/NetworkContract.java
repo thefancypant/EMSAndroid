@@ -9,6 +9,7 @@ public class NetworkContract {
 
 
     //public final static String BASE_URL = "https://app.hopcontracting.net";
-    public final static String BASE_URL = "http://ems.jgmsystems.com";
+    //public final static String BASE_URL = "http://ems.jgmsystems.com";
+    public final static String BASE_URL = "http://app.entiremaintenance.com";
 
 }
