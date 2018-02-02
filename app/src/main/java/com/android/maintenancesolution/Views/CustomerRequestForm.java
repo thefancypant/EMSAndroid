@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.android.maintenancesolution.Misc.WorkTypeAdapater;
 import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Token;
@@ -36,7 +37,6 @@ import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.FileUtils;
 import com.android.maintenancesolution.Utils.GeneralUtils;
-import com.android.maintenancesolution.WorkTypeAdapater;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

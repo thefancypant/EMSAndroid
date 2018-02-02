@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Misc;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

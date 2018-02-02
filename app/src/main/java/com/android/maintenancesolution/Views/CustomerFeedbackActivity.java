@@ -18,14 +18,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
-import com.android.maintenancesolution.AppHelper;
+import com.android.maintenancesolution.Misc.AppHelper;
+import com.android.maintenancesolution.Misc.VolleyMultipartRequest;
+import com.android.maintenancesolution.Misc.VolleySingleton;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkContract;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 import com.android.maintenancesolution.Views.ListActivity.ListActivity;
-import com.android.maintenancesolution.VolleyMultipartRequest;
-import com.android.maintenancesolution.VolleySingleton;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;

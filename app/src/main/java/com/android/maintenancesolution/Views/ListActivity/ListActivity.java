@@ -34,9 +34,9 @@ import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
 import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Network.NetworkService;
-import com.android.maintenancesolution.OrderDetail;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
+import com.android.maintenancesolution.Views.OrderDetail;
 import com.android.maintenancesolution.Views.UserSelectorActivity;
 
 import java.util.Calendar;

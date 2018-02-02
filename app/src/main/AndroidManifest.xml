@@ -15,7 +15,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
@@ -48,7 +47,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OrderDetail"
+            android:name=".Views.OrderDetail"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
@@ -67,7 +66,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Views.SelectImagesActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Views.DashboardActivity.DashboardActivity"></activity>
     </application>
 
 </manifest>

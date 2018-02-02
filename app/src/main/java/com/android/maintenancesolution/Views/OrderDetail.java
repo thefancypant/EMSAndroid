@@ -1,4 +1,4 @@
-package com.android.maintenancesolution;
+package com.android.maintenancesolution.Views;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -23,13 +23,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.android.maintenancesolution.Misc.WorkTypeAdapater;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Network.NetworkService;
+import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
-import com.android.maintenancesolution.Views.CustomerFeedbackActivity;
-import com.android.maintenancesolution.Views.SelectImagesActivity;
 
 import java.io.File;
 import java.util.ArrayList;

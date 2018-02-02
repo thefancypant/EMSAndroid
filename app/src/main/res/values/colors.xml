@@ -10,6 +10,7 @@
     <color name="green">#6AB344</color>
     <color name="ratingBar_Yellow">#ee9205</color>
     <color name="default_hint_color">#808080</color>
+    <color name="inventory_item_background">#E6E6E6</color>
     <color name="transparent">#80FFFFFF</color>
 
 
