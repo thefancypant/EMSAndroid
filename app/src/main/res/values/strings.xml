@@ -55,4 +55,7 @@
     <string name="report">Report</string>
     <string name="submit_to_supervisor">Submit to supervisor</string>
     <string name="save_request">Save request</string>
+    <string name="clock_in">Clock In</string>
+    <string name="lunch_in">Lunch In</string>
+    <string name="lunch">Lunch</string>
 </resources>

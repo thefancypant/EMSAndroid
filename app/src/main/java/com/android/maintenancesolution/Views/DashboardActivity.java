@@ -1,4 +1,4 @@
-package com.android.maintenancesolution.Views.DashboardActivity;
+package com.android.maintenancesolution.Views;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

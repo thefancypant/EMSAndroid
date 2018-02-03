@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_page_background">
+
+    <!--  <include
+          android:id="@+id/my_toolbar"
+          layout="@layout/tool_bar"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent">
+
+      </include>
+      <ProgressBar
+          android:id="@+id/list_progress_bar"
+          style="android:attr/progressBarStyleLarge"
+          android:layout_width="42dp"
+          android:layout_height="37dp"
+          android:layout_marginTop="40dp"
+          android:visibility="invisible"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="@+id/list_constraint_layout" />-->
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/list_constraint_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="142dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/worker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView5" />
+
+        <TextView
+            android:id="@+id/hoursTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="12:"
+            android:textColor="@color/hours_color"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/minutesTextView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+        <TextView
+            android:id="@+id/minutesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="00"
+            android:textColor="@color/minutes_color"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/hoursTextView"
+            app:layout_constraintEnd_toStartOf="@+id/amPmTextView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/hoursTextView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+        <TextView
+            android:id="@+id/amPmTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="AM"
+            android:textColor="@color/hours_color"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/minutesTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/minutesTextView" />
+
+        <TextView
+            android:id="@+id/dayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="THU JANUARY 18"
+            android:textColor="@color/day_color"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hoursTextView"
+            tools:layout_editor_absoluteY="319dp" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/buttonClockIn"
+            app:layout_constraintStart_toStartOf="@+id/buttonClockIn"
+            app:layout_constraintTop_toBottomOf="@id/dayTextView"></Spinner>
+
+        <ImageView
+            android:id="@+id/imageViewArrow"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/arrow_down"
+            app:layout_constraintBottom_toBottomOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintTop_toTopOf="@+id/spinner" />
+
+        <Button
+            android:id="@+id/buttonClockIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="@string/clock_in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintDimensionRatio="6:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+        <Button
+            android:id="@+id/buttonLunchIn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/green"
+            android:gravity="center"
+            android:text="@string/lunch_in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintDimensionRatio="6:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonClockIn" />
+
+        <TextView
+            android:id="@+id/selectedCenterTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="The Dolphin"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/buttonLunchIn"
+            app:layout_constraintTop_toBottomOf="@+id/buttonLunchIn" />
+
+        <TextView
+            android:id="@+id/clockInTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/clock_in"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/lunchTextView"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/buttonLunchIn"
+            app:layout_constraintTop_toBottomOf="@+id/selectedCenterTextview" />
+
+        <TextView
+            android:id="@+id/lunchTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lunch"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/clockOutTextView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/clockInTextView"
+            app:layout_constraintTop_toTopOf="@+id/clockInTextView" />
+
+        <TextView
+            android:id="@+id/clockOutTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clock Out"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/buttonLunchIn"
+            app:layout_constraintStart_toEndOf="@+id/lunchTextView"
+            app:layout_constraintTop_toTopOf="@+id/clockInTextView" />
+
+        <TextView
+            android:id="@+id/clockInTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12:00pm"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/clockInTextView"
+            app:layout_constraintStart_toStartOf="@+id/clockInTextView"
+            app:layout_constraintTop_toBottomOf="@id/clockInTextView" />
+
+        <TextView
+            android:id="@+id/lunchInTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12:00pm"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/lunchTextView"
+            app:layout_constraintStart_toStartOf="@+id/lunchTextView"
+            app:layout_constraintTop_toBottomOf="@id/lunchTextView" />
+
+        <TextView
+            android:id="@+id/lunchOutTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12:00pm"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/lunchTextView"
+            app:layout_constraintStart_toStartOf="@+id/lunchTextView"
+            app:layout_constraintTop_toBottomOf="@id/lunchInTimeTextView" />
+
+        <TextView
+            android:id="@+id/clockOutTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12:00pm"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@id/clockOutTextView"
+            app:layout_constraintStart_toStartOf="@+id/clockOutTextView"
+            app:layout_constraintTop_toBottomOf="@id/clockOutTextView" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

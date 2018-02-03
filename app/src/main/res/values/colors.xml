@@ -12,6 +12,9 @@
     <color name="default_hint_color">#808080</color>
     <color name="inventory_item_background">#E6E6E6</color>
     <color name="transparent">#80FFFFFF</color>
+    <color name="hours_color">#2C3E50</color>
+    <color name="minutes_color">#29ABE2</color>
+    <color name="day_color">#B3B3B3</color>
 
 
 </resources>

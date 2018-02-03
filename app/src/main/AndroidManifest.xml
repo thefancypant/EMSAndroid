@@ -67,7 +67,12 @@
         <activity
             android:name=".Views.SelectImagesActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Views.DashboardActivity.DashboardActivity"></activity>
+        <activity android:name=".Views.DashboardActivity" />
+        <activity android:name=".Views.ClockActivity"></activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
