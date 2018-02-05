@@ -20,11 +20,11 @@
         <activity
             android:name=".Views.SplashScreenActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <provider
@@ -68,7 +68,15 @@
             android:name=".Views.SelectImagesActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".Views.DashboardActivity" />
-        <activity android:name=".Views.ClockActivity"></activity>
+        <activity
+            android:name=".Views.ClockActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"
