@@ -198,7 +198,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/buttonLunchIn"
+            app:layout_constraintStart_toStartOf="@+id/clockInTextView"
             app:layout_constraintTop_toBottomOf="@+id/buttonLunchIn" />
 
         <TextView
@@ -210,8 +210,8 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/lunchTextView"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="@+id/buttonLunchIn"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectedCenterTextview" />
 
         <TextView
@@ -230,10 +230,11 @@
             android:id="@+id/clockOutTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Clock Out"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/buttonLunchIn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/lunchTextView"
             app:layout_constraintTop_toTopOf="@+id/clockInTextView" />
 

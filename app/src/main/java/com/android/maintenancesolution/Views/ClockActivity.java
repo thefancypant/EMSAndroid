@@ -1,7 +1,6 @@
 package com.android.maintenancesolution.Views;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,19 +16,32 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.maintenancesolution.Models.ActiveClockResponse;
+import com.android.maintenancesolution.Models.Center;
+import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.Utils.PreferenceUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ClockActivity extends AppCompatActivity implements LocationListener {
@@ -37,12 +49,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static IntentFilter s_intentFilter;
 
-    static {
-        s_intentFilter = new IntentFilter();
-        s_intentFilter.addAction(Intent.ACTION_TIME_TICK);
-        s_intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        s_intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-    }
+
 
     private final String TAG = "ClockActivity";
     @BindView(R.id.hoursTextView)
@@ -53,17 +60,6 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     TextView amPmTextView;
     @BindView(R.id.dayTextView)
     TextView dayTextView;
-    private final BroadcastReceiver m_timeChangedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-
-            if (action.equals(Intent.ACTION_TIME_CHANGED) ||
-                    action.equals(Intent.ACTION_TIMEZONE_CHANGED)) {
-                setClock();
-            }
-        }
-    };
     @BindView(R.id.spinner)
     Spinner spinner;
     @BindView(R.id.buttonClockIn)
@@ -86,62 +82,197 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     TextView lunchOutTimeTextView;
     @BindView(R.id.clockOutTimeTextView)
     TextView clockOutTimeTextView;
-    double lattiude;
-    double longitude;
+    private double lattiude;
+    private double longitude;
     private LocationManager locationManager;
+    private PreferenceUtils preferenceUtils;
+    private String header;
+    private String selectedCenter;
+    private String LUNCHIN = "LUNCHIN";
+    private String LUNCHOUT = "LUNCHOUT";
+    private String CLOCKOUT = "CLOCKOUT";
+    private String CLOCKIN = "CLOCKIN";
+
+    private String clockinStatus;
+    private String lunchInStatus;
+    private String clockIntime = "";
+    private String clockOuttime = "";
+    private String LunchIntime = "";
+    private String LunchOuttime = "";
+    private ActiveClockResponse activeClockResponse = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock);
         ButterKnife.bind(this);
-        registerReceiver(m_timeChangedReceiver, s_intentFilter);
-
-
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         //enableGps();
+        spinner.setEnabled(false);
+        getPrefUtils();
+        setEmptyUI();
+        getActiveClock();
         checkGpsPermissions();
         setClock();
+        getCenters();
 
+    }
+
+    private void setEmptyUI() {
+        buttonLunchIn.setVisibility(View.GONE);
+        selectedCenterTextview.setVisibility(View.GONE);
+        clockInTextView.setVisibility(View.GONE);
+        clockInTimeTextView.setVisibility(View.GONE);
+        lunchTextView.setVisibility(View.GONE);
+        lunchInTimeTextView.setVisibility(View.GONE);
+        lunchOutTimeTextView.setVisibility(View.GONE);
+        clockOutTextView.setVisibility(View.GONE);
+        clockOutTimeTextView.setVisibility(View.GONE);
+    }
+
+    private void getActiveClock() {
+        NetworkService
+                .getInstance()
+                .getActiveColck(header)
+                .enqueue(new Callback<ActiveClockResponse>() {
+                    @Override
+                    public void onResponse(Call<ActiveClockResponse> call, Response<ActiveClockResponse> response) {
+                        processActiveClock(response);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ActiveClockResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.toString());
+
+                    }
+                });
+    }
+
+
+    private void processActiveClock(Response<ActiveClockResponse> response) {
+
+        activeClockResponse = response.body();
+        if (response.code() >= 200 && response.code() < 300) {
+            if (response.body() != null) {
+                if (response.body().getCenter() != null) {
+                    selectedCenterTextview.setVisibility(View.VISIBLE);
+                    selectedCenterTextview.setText(response.body().getCenter().getName());
+                }
+                if (/*response.body().getClockOutDatetime()!=null ||*/
+                        response.body().getClockInDatetime() != null ||
+                                response.body().getLunchInDatetime() != null ||
+                                response.body().getLunchOutDatetime() != null
+                            /*response.body().getClockOutDatetime()!=null*/) {
+                    lunchTextView.setVisibility(View.VISIBLE);
+                    clockOutTextView.setVisibility(View.VISIBLE);
+                    clockInTextView.setVisibility(View.VISIBLE);
+                }
+
+                if (response.body().getClockInDatetime() != null) {
+                    buttonClockIn.setText("Clock out");
+                    clockInTimeTextView.setVisibility(View.VISIBLE);
+                    clockIntime = response.body().getClockInDatetime().getTime();
+                    clockInTimeTextView.setText(response.body().getClockInDatetime().getTime());
+                }
+                if (response.body().getLunchInDatetime() != null) {
+                    lunchInTimeTextView.setVisibility(View.VISIBLE);
+                    LunchIntime = response.body().getLunchInDatetime().getTime();
+                    lunchInTimeTextView.setText(response.body().getLunchInDatetime().getTime());
+                } else {
+                    // if ()
+                    buttonLunchIn.setVisibility(View.VISIBLE);
+
+                }
+
+                if (response.body().getLunchOutDatetime() != null) {
+                    lunchOutTimeTextView.setVisibility(View.VISIBLE);
+                    LunchOuttime = response.body().getLunchOutDatetime().getTime();
+                    lunchOutTimeTextView.setText(response.body().getLunchOutDatetime().getTime());
+                }
+
+
+            } else {
+
+            }
+
+        }
+    }
+
+    private void getCenters() {
+        NetworkService
+                .getInstance()
+                .getCenters(header)
+                .enqueue(new Callback<List<Center>>() {
+                    @Override
+                    public void onResponse(Call<List<Center>> call, Response<List<Center>> response) {
+                        processCenters(response);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Center>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void processCenters(Response<List<Center>> response) {
+        if (response.code() >= 200 && response.code() < 300) {
+            final ArrayList<String> spinnerArray = new ArrayList<>();
+            spinnerArray.add("Select a center");
+
+            for (int i = 0; i < response.body().size(); i++) {
+                spinnerArray.add(response.body().get(i).getName());
+            }
+
+            spinner.setEnabled(true);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+            spinner.setAdapter(arrayAdapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                    if (position != 0) {
+                        if (!spinnerArray.get(position).equals("Select Work Type")) {
+                            selectedCenter = Integer.toString(position);
+                            Log.d(TAG, "onItemSelected: " + selectedCenter);
+                        }
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+        }
     }
 
     private void setClock() {
 
-        /*Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("hh aa");
-        Log.d(TAG, "setClock: "+currentTime.toString());
-        //Date date = new Date();   // given date
-        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(currentTime);   // assigns calendar to given date
-        int hours = calendar.get(Calendar.HOUR); // gets hour in 24h format
-        int minutes = calendar.get(Calendar.MINUTE);
-        int am_pm = calendar.get(Calendar.AM_PM);
-        calendar.get(Calendar.Mont)*/
         Calendar calendar = GregorianCalendar.getInstance();
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
         SimpleDateFormat amPmFormat = new SimpleDateFormat("a");
         SimpleDateFormat dayOfWeekFormat = new SimpleDateFormat("E");
         SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
         SimpleDateFormat minutesFormat = new SimpleDateFormat("m");
+        SimpleDateFormat hoursFormat = new SimpleDateFormat("hh");
 
         Date date = new Date();
         String month = monthFormat.format(date).toString();
-        String hour = Integer.toString(calendar.get(Calendar.HOUR));        // gets hour in 12h format
+        //String hour = Integer.toString(calendar.get(Calendar.HOUR));        // gets hour in 12h format
         //String minutes =Integer.toString(calendar.get(Calendar.MINUTE));
+        String hour = hoursFormat.format(new Date()).toString();
         String minutes = minutesFormat.format(new Date()).toString();
         String am_pm = amPmFormat.format(date).toString();
         String dayOfWeek = dayOfWeekFormat.format(date).toString();
         String year = yearFormat.format(date).toString();
 
-        //hoursTextView.setText(hour+":");
-        // minutesTextView.setText(minutes);
-        //amPmTextView.setText(am_pm);
         dayTextView.setText(dayOfWeek.toUpperCase() + " " + month.toUpperCase() + " " + year);
 
-
         Log.d(TAG, "setClock: " + hour + ":" + minutes + " " + am_pm + " " + dayOfWeek + " " + month + " " + year);
-
 
     }
 
@@ -157,6 +288,11 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
         }
 
+    }
+
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(ClockActivity.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
     }
 
     private void gpsIsEnabled() {
@@ -187,6 +323,77 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
             getLocation();
         }
+
+    }
+
+    @OnClick(R.id.buttonClockIn)
+    public void buttonClockIn() {
+        if (clockIntime == "") {
+            lunchTextView.setVisibility(View.VISIBLE);
+            clockOutTextView.setVisibility(View.VISIBLE);
+            clockInTextView.setVisibility(View.VISIBLE);
+
+            clockInTimeTextView.setVisibility(View.VISIBLE);
+            clockIntime = getTime();
+            clockInTimeTextView.setText(getTime());
+
+        } else {
+            clockOuttime = getTime();
+            clockOutTimeTextView.setVisibility(View.VISIBLE);
+            clockOutTimeTextView.setText(clockOuttime);
+        }
+
+    }
+
+    @OnClick(R.id.buttonLunchIn)
+    public void buttonLunchIn() {
+        if (LunchIntime == "") {
+            LunchIntime = getTime();
+            lunchInTimeTextView.setVisibility(View.VISIBLE);
+            lunchInTimeTextView.setText(LunchIntime);
+            buttonLunchIn.setText("Lunch out");
+
+        } else if (LunchOuttime == "") {
+            LunchOuttime = getTime();
+            lunchOutTimeTextView.setVisibility(View.VISIBLE);
+            lunchOutTimeTextView.setText(LunchOuttime);
+            buttonLunchIn.setClickable(false);
+            buttonClockIn.setClickable(true);
+            buttonLunchIn.setVisibility(View.GONE);
+
+
+        }
+
+    }
+
+    private String getTime() {
+        Calendar calendar = GregorianCalendar.getInstance();
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat amPmFormat = new SimpleDateFormat("a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+        SimpleDateFormat minutesFormat = new SimpleDateFormat("mm");
+        SimpleDateFormat hoursFormat = new SimpleDateFormat("hh");
+        //yyyy.MM.dd
+
+        Date date = new Date();
+        String month = monthFormat.format(date).toString();
+        String hour = hoursFormat.format(new Date()).toString();
+        //String minutes =Integer.toString(calendar.get(Calendar.MINUTE));
+        String minutes = minutesFormat.format(new Date()).toString();
+        String am_pm = amPmFormat.format(date).toString();
+        String dayOfMonth = dateFormat.format(date).toString();
+        String year = yearFormat.format(date).toString();
+
+        //dayTextView.setText(dayOfWeek.toUpperCase() + " " + month.toUpperCase() + " " + year);
+
+        String dateObject = month + "/" + dayOfMonth + "/" + year + " " + hour + ":" + minutes + am_pm;
+        String time = hour + ":" + minutes + am_pm;
+        Log.d(TAG, "getTime: " + dateObject);
+        //Log.d(TAG, "setClock: " + hour + ":" + minutes + " " + am_pm + " " + dayOfWeek + " " + month + " " + year);
+
+        return time;
+
 
     }
 

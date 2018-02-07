@@ -1,5 +1,7 @@
 package com.android.maintenancesolution.Network;
 
+import com.android.maintenancesolution.Models.ActiveClockResponse;
+import com.android.maintenancesolution.Models.Center;
 import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
@@ -125,6 +127,12 @@ public interface NetworkApi {
                                                   @Part MultipartBody.Part photoA6,
                                                   @Part MultipartBody.Part photoA7,
                                                   @Part MultipartBody.Part photoA8);
+
+    @GET("/gm/centers/")
+    Call<List<Center>> getCenters(@Header("Authorization") String accessToken);
+
+    @GET("/app/timeclock/active/")
+    Call<ActiveClockResponse> getActiveColck(@Header("Authorization") String accessToken);
 
     /*@Multipart
     @POST("/api/works/{id}/")
