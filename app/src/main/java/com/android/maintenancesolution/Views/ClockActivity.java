@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.android.maintenancesolution.Models.ActiveClockResponse;
 import com.android.maintenancesolution.Models.Center;
+import com.android.maintenancesolution.Models.UpdateTimeRequest;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
@@ -93,14 +94,18 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     private String CLOCKOUT = "CLOCKOUT";
     private String CLOCKIN = "CLOCKIN";
 
-    private String clockinStatus;
-    private String lunchInStatus;
+
     private String clockIntime = "";
     private String clockOuttime = "";
     private String LunchIntime = "";
     private String LunchOuttime = "";
-    private ActiveClockResponse activeClockResponse = null;
 
+    private String clockIntimefull = "";
+    private String clockOuttimefull = "";
+    private String LunchIntimefull = "";
+    private String LunchOuttimefull = "";
+    private ActiveClockResponse activeClockResponse = null;
+    private String selectedCenterCode = "";
 
 
     @Override
@@ -111,10 +116,11 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //enableGps();
         spinner.setEnabled(false);
+        checkGpsPermissions();
         getPrefUtils();
         setEmptyUI();
         getActiveClock();
-        checkGpsPermissions();
+
         setClock();
         getCenters();
 
@@ -135,7 +141,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     private void getActiveClock() {
         NetworkService
                 .getInstance()
-                .getActiveColck(header)
+                .getActiveClock(header)
                 .enqueue(new Callback<ActiveClockResponse>() {
                     @Override
                     public void onResponse(Call<ActiveClockResponse> call, Response<ActiveClockResponse> response) {
@@ -153,10 +159,13 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
     private void processActiveClock(Response<ActiveClockResponse> response) {
 
+
         activeClockResponse = response.body();
         if (response.code() >= 200 && response.code() < 300) {
+            // Log.d(TAG, "processActiveClock: "+response.);
             if (response.body() != null) {
-                if (response.body().getCenter() != null) {
+                if (response.body().getCenter() != null && response.body().getCenter() != null) {
+                    selectedCenterCode = Integer.toString(response.body().getCenter().getId());
                     selectedCenterTextview.setVisibility(View.VISIBLE);
                     selectedCenterTextview.setText(response.body().getCenter().getName());
                 }
@@ -174,11 +183,16 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     buttonClockIn.setText("Clock out");
                     clockInTimeTextView.setVisibility(View.VISIBLE);
                     clockIntime = response.body().getClockInDatetime().getTime();
+                    clockIntimefull = response.body().getClockInDatetime().getFull();
                     clockInTimeTextView.setText(response.body().getClockInDatetime().getTime());
                 }
                 if (response.body().getLunchInDatetime() != null) {
                     lunchInTimeTextView.setVisibility(View.VISIBLE);
+                    buttonLunchIn.setVisibility(View.VISIBLE);
+                    buttonLunchIn.setText(R.string.lunch_out);
                     LunchIntime = response.body().getLunchInDatetime().getTime();
+                    LunchIntimefull = response.body().getLunchInDatetime().getFull();
+
                     lunchInTimeTextView.setText(response.body().getLunchInDatetime().getTime());
                 } else {
                     // if ()
@@ -189,11 +203,20 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 if (response.body().getLunchOutDatetime() != null) {
                     lunchOutTimeTextView.setVisibility(View.VISIBLE);
                     LunchOuttime = response.body().getLunchOutDatetime().getTime();
+                    LunchOuttimefull = response.body().getLunchOutDatetime().getFull();
+                    buttonLunchIn.setVisibility(View.GONE);
+
                     lunchOutTimeTextView.setText(response.body().getLunchOutDatetime().getTime());
+                } else if (response.body().getClockInDatetime() == null) {
+                    buttonLunchIn.setVisibility(View.GONE);
+
                 }
 
 
             } else {
+
+                buttonLunchIn.setVisibility(View.GONE);
+
 
             }
 
@@ -217,7 +240,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 });
     }
 
-    private void processCenters(Response<List<Center>> response) {
+    private void processCenters(final Response<List<Center>> response) {
         if (response.code() >= 200 && response.code() < 300) {
             final ArrayList<String> spinnerArray = new ArrayList<>();
             spinnerArray.add("Select a center");
@@ -236,6 +259,14 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     if (position != 0) {
                         if (!spinnerArray.get(position).equals("Select Work Type")) {
                             selectedCenter = Integer.toString(position);
+
+                            // for (int i = 0; i < response.body().size(); i++) {
+
+                            if (position != 0) {
+                                selectedCenterCode = Integer.toString(response.body().get(position - 1).getId());
+
+                            }
+                            //}
                             Log.d(TAG, "onItemSelected: " + selectedCenter);
                         }
                     }
@@ -243,6 +274,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
+                    selectedCenter = "Select Work Type";
 
                 }
             });
@@ -329,18 +361,52 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     @OnClick(R.id.buttonClockIn)
     public void buttonClockIn() {
         if (clockIntime == "") {
-            lunchTextView.setVisibility(View.VISIBLE);
-            clockOutTextView.setVisibility(View.VISIBLE);
-            clockInTextView.setVisibility(View.VISIBLE);
+            if (selectedCenterCode != "") {
+                lunchTextView.setVisibility(View.VISIBLE);
+                clockOutTextView.setVisibility(View.VISIBLE);
+                clockInTextView.setVisibility(View.VISIBLE);
 
-            clockInTimeTextView.setVisibility(View.VISIBLE);
-            clockIntime = getTime();
-            clockInTimeTextView.setText(getTime());
+                clockInTimeTextView.setVisibility(View.VISIBLE);
+                clockIntime = getTime().get(1);
+                clockIntimefull = getTime().get(0);
+                clockInTimeTextView.setText(getTime().get(1));
+                buttonLunchIn.setVisibility(View.VISIBLE);
+
+                postTime();
+            } else {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Center not Selected");
+                builder.setMessage("Please Select a center"); // Want to enable?
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
 
         } else {
-            clockOuttime = getTime();
-            clockOutTimeTextView.setVisibility(View.VISIBLE);
-            clockOutTimeTextView.setText(clockOuttime);
+            if (selectedCenterCode != "") {
+                clockOuttime = getTime().get(1);
+                clockOuttimefull = getTime().get(0);
+
+                clockOutTimeTextView.setVisibility(View.VISIBLE);
+                clockOutTimeTextView.setText(clockOuttime);
+                updateTime();
+            } else {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Center not Selected");
+                builder.setMessage("Please Select a center"); // Want to enable?
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
+
         }
 
     }
@@ -348,25 +414,171 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     @OnClick(R.id.buttonLunchIn)
     public void buttonLunchIn() {
         if (LunchIntime == "") {
-            LunchIntime = getTime();
-            lunchInTimeTextView.setVisibility(View.VISIBLE);
-            lunchInTimeTextView.setText(LunchIntime);
-            buttonLunchIn.setText("Lunch out");
+            if (selectedCenterCode != "") {
+                LunchIntime = getTime().get(1);
+                LunchIntimefull = getTime().get(0);
+
+                lunchInTimeTextView.setVisibility(View.VISIBLE);
+                lunchInTimeTextView.setText(LunchIntime);
+                buttonLunchIn.setText("Lunch out");
+                updateTime();
+            } else {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Center not Selected");
+                builder.setMessage("Please Select a center"); // Want to enable?
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
 
         } else if (LunchOuttime == "") {
-            LunchOuttime = getTime();
-            lunchOutTimeTextView.setVisibility(View.VISIBLE);
-            lunchOutTimeTextView.setText(LunchOuttime);
-            buttonLunchIn.setClickable(false);
-            buttonClockIn.setClickable(true);
-            buttonLunchIn.setVisibility(View.GONE);
+            if (selectedCenterCode != "") {
+                LunchOuttime = getTime().get(1);
+                LunchOuttimefull = getTime().get(0);
+                lunchOutTimeTextView.setVisibility(View.VISIBLE);
+                lunchOutTimeTextView.setText(LunchOuttime);
+                buttonLunchIn.setClickable(false);
+                buttonClockIn.setClickable(true);
+                buttonLunchIn.setVisibility(View.GONE);
+                updateTime();
+            } else {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Center not Selected");
+                builder.setMessage("Please Select a center"); // Want to enable?
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
 
 
         }
 
     }
 
-    private String getTime() {
+    private void postTime() {
+        final UpdateTimeRequest updateTimeRequest = new UpdateTimeRequest();
+        updateTimeRequest.setCenter(selectedCenter);
+        if (clockIntimefull != null) {
+            updateTimeRequest.setClockInDatetime(clockIntimefull);
+            getLocation();
+            updateTimeRequest.setClockInLatitude(Double.toString(lattiude));
+            updateTimeRequest.setClockInLongitude(Double.toString(longitude));
+        }
+        if (LunchIntimefull != null) {
+            updateTimeRequest.setLunchInDatetime(LunchIntimefull);
+        }
+
+        if (LunchOuttimefull != null) {
+            updateTimeRequest.setLunchInDatetime(LunchOuttimefull);
+        }
+
+        if (clockOuttimefull != null && clockOuttimefull != "") {
+            updateTimeRequest.setClockOutDatetime(clockOuttimefull);
+            getLocation();
+            updateTimeRequest.setClockOutLatitude(Double.toString(lattiude));
+            updateTimeRequest.setClockOutLongitude(Double.toString(longitude));
+        }
+
+        NetworkService
+                .getInstance()
+                .postTimeClock(header, updateTimeRequest)
+                .enqueue(new Callback<ActiveClockResponse>() {
+                    @Override
+                    public void onResponse(Call<ActiveClockResponse> call, Response<ActiveClockResponse> response) {
+                        processPostTime(response);
+                    }
+
+                    @Override
+                    public void onFailure(Call<ActiveClockResponse> call, Throwable t) {
+
+                        Log.d(TAG, "onFailure: post time failed " + updateTimeRequest.toString() + " " + t.toString());
+                    }
+                });
+    }
+
+    private void processPostTime(Response<ActiveClockResponse> response) {
+
+        if (response.code() >= 200 && response.code() < 300) {
+            activeClockResponse = response.body();
+
+            if (activeClockResponse.getClockInDatetime() != null && !activeClockResponse.getClockInDatetime().equals("")) {
+                clockIntime = activeClockResponse.getClockInDatetime().getTime();
+                clockIntimefull = activeClockResponse.getClockInDatetime().getFull();
+                clockInTimeTextView.setVisibility(View.VISIBLE);
+                clockInTimeTextView.setText(clockIntime);
+            }
+            if (activeClockResponse.getLunchInDatetime() != null && !activeClockResponse.getLunchInDatetime().equals("")) {
+                LunchIntime = activeClockResponse.getClockInDatetime().getTime();
+                LunchIntimefull = activeClockResponse.getLunchInDatetime().getFull();
+                lunchInTimeTextView.setVisibility(View.VISIBLE);
+                lunchInTimeTextView.setText(clockIntime);
+            }
+            if (activeClockResponse.getLunchOutDatetime() != null && !activeClockResponse.getLunchOutDatetime().equals("")) {
+                LunchOuttime = activeClockResponse.getLunchOutDatetime().getTime();
+                LunchOuttimefull = activeClockResponse.getLunchOutDatetime().getFull();
+                lunchOutTimeTextView.setVisibility(View.VISIBLE);
+                lunchInTimeTextView.setText(clockIntime);
+            }
+
+
+        }
+    }
+
+    private void updateTime() {
+        final UpdateTimeRequest updateTimeRequest = new UpdateTimeRequest();
+
+        updateTimeRequest.setCenter(Integer.toString(activeClockResponse.getCenter().getId()));
+        if (clockIntimefull != null) {
+            updateTimeRequest.setClockInDatetime(clockIntimefull);
+            getLocation();
+            updateTimeRequest.setClockInLatitude(Double.toString(lattiude));
+            updateTimeRequest.setClockInLongitude(Double.toString(longitude));
+        }
+        if (LunchIntimefull != null) {
+            updateTimeRequest.setLunchInDatetime(LunchIntimefull);
+        }
+
+        if (LunchOuttimefull != null) {
+            updateTimeRequest.setLunchOutDatetime(LunchOuttimefull);
+        }
+
+        if (clockOuttimefull != null) {
+            updateTimeRequest.setClockOutDatetime(clockOuttimefull);
+            getLocation();
+            updateTimeRequest.setClockOutLatitude(Double.toString(lattiude));
+            updateTimeRequest.setClockOutLongitude(Double.toString(longitude));
+        }
+
+
+        NetworkService
+                .getInstance()
+                .updateTimeClock(header, updateTimeRequest, activeClockResponse.getId())
+                .enqueue(new Callback<ActiveClockResponse>() {
+                    @Override
+                    public void onResponse(Call<ActiveClockResponse> call, Response<ActiveClockResponse> response) {
+
+                        processPostTime(response);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ActiveClockResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: updateTime Failed" + updateTimeRequest.toString() + " " + t.toString());
+                    }
+                });
+
+    }
+
+    private List<String> getTime() {
+        List<String> list = new ArrayList<>();
         Calendar calendar = GregorianCalendar.getInstance();
         SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat amPmFormat = new SimpleDateFormat("a");
@@ -391,8 +603,9 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         String time = hour + ":" + minutes + am_pm;
         Log.d(TAG, "getTime: " + dateObject);
         //Log.d(TAG, "setClock: " + hour + ":" + minutes + " " + am_pm + " " + dayOfWeek + " " + month + " " + year);
-
-        return time;
+        list.add(dateObject);
+        list.add(time);
+        return list;
 
 
     }

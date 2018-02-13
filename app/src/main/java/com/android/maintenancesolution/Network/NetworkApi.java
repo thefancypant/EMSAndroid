@@ -9,6 +9,7 @@ import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
 import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Models.Token;
+import com.android.maintenancesolution.Models.UpdateTimeRequest;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -132,7 +134,13 @@ public interface NetworkApi {
     Call<List<Center>> getCenters(@Header("Authorization") String accessToken);
 
     @GET("/app/timeclock/active/")
-    Call<ActiveClockResponse> getActiveColck(@Header("Authorization") String accessToken);
+    Call<ActiveClockResponse> getActiveClock(@Header("Authorization") String accessToken);
+
+    @POST("/app/timeclocks/")
+    Call<ActiveClockResponse> postTimeClock(@Header("Authorization") String accessToken, @Body UpdateTimeRequest updateTimeRequest);
+
+    @PUT("/app/timeclocks/{id}/")
+    Call<ActiveClockResponse> updateTimeClock(@Header("Authorization") String accessToken, @Body UpdateTimeRequest updateTimeRequest, @Path("id") String id);
 
     /*@Multipart
     @POST("/api/works/{id}/")
