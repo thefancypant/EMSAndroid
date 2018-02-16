@@ -12,7 +12,6 @@ import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
-import com.android.maintenancesolution.Views.ListActivity.ListActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -116,7 +115,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void processVerify(Response<Token> response) {
         if (response.code() >= 200 && response.code() < 300) {
             preferenceUtils.saveAuthToken(response.body().getToken());
-            Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+            Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
 

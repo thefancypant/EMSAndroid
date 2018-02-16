@@ -74,6 +74,11 @@ dependencies {
     //Signature Drawing
     compile 'com.github.gcacace:signature-pad:1.2.1'
 
+    //QR and Barcode scanner
+    //compile 'me.dm7.barcodescanner:zxing:1.9.8'
+    compile 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
+
+
     //Logging
     compile 'com.jakewharton.timber:timber:4.6.0'
 

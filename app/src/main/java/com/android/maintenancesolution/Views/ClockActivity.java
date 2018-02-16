@@ -390,6 +390,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             if (selectedCenterCode != "") {
                 clockOuttime = getTime().get(1);
                 clockOuttimefull = getTime().get(0);
+                buttonLunchIn.setVisibility(View.GONE);
 
                 clockOutTimeTextView.setVisibility(View.VISIBLE);
                 clockOutTimeTextView.setText(clockOuttime);

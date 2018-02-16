@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_page_background">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="142dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+
+    <TextView
+        android:id="@+id/textViewScanInventory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/scan_inventory"
+        android:textColor="@color/text_black"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+    <com.dlazaro66.qrcodereaderview.QRCodeReaderView
+        android:id="@+id/scanner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewScanInventory" />
+
+
+    <TextView
+        android:id="@+id/scanBarcodeaboveTextview"
+        android:layout_width="393dp"
+        android:layout_height="348dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/white"
+        android:elevation="5dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/scan_barcode_above"
+        android:textColor="@color/grey"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- <android.support.constraint.ConstraintLayout
+         android:id="@+id/itemdescriptionLayout"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+         android:layout_marginBottom="24dp"
+         android:layout_marginEnd="24dp"
+         android:background="@color/white"
+         android:layout_marginStart="24dp"
+         android:layout_marginTop="8dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/scanBarcodeaboveTextview">
+
+         <ImageView
+             android:id="@+id/descriptionImageView"
+             android:layout_width="65dp"
+             android:layout_height="65dp"
+             android:layout_marginStart="16dp"
+             android:layout_marginTop="16dp"
+             android:src="@drawable/worker"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/responsibleHeadingTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:layout_marginTop="16dp"
+             android:text="Responsible"
+             android:textSize="12sp"
+
+             android:textStyle="bold"
+             app:layout_constraintStart_toEndOf="@id/descriptionImageView"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/responsibleTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:textColor="@color/text_black"
+             android:textStyle="bold"
+             android:text="John Doe"
+             android:textSize="12sp"
+             app:layout_constraintStart_toEndOf="@id/descriptionImageView"
+             app:layout_constraintTop_toBottomOf="@+id/responsibleHeadingTextView"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/areaHeadingTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:text="Area"
+             android:textStyle="bold"
+
+             android:textSize="12sp"
+             android:layout_marginTop="5dp"
+             app:layout_constraintStart_toEndOf="@id/descriptionImageView"
+             app:layout_constraintTop_toBottomOf="@+id/responsibleTextView"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/areaTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="8dp"
+             android:text="Warehouse"
+             android:textColor="@color/text_black"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintStart_toEndOf="@id/descriptionImageView"
+             app:layout_constraintTop_toBottomOf="@+id/areaHeadingTextView"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/descriptionHeadingTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
+             android:layout_marginTop="10dp"
+             android:text="Description"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/descriptionImageView"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/descriptionTextView"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:layout_marginBottom="8dp"
+             android:layout_marginEnd="16dp"
+             android:layout_marginStart="16dp"
+             android:text="Warehouse"
+
+             android:textColor="@color/text_black"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toTopOf="@+id/codeHeadingTextView"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@+id/descriptionHeadingTextView"
+             app:layout_constraintVertical_bias="1.0"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/codeHeadingTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
+             android:text="Code"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toTopOf="@+id/codeTextView"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/codeTextView"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="8dp"
+             android:layout_marginEnd="16dp"
+             android:layout_marginStart="16dp"
+             android:text="adc-def-ghi-jkl"
+             android:textColor="@color/text_black"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toTopOf="@+id/typeHeadingTextView"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_goneMarginTop="10dp" />
+
+
+         <TextView
+             android:id="@+id/typeHeadingTextView"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
+             android:text="Type"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toTopOf="@+id/typeTextView"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_goneMarginTop="10dp" />
+
+         <TextView
+             android:id="@+id/typeTextView"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="16dp"
+             android:layout_marginEnd="16dp"
+             android:layout_marginStart="16dp"
+             android:text="Vacuum Cleaner"
+             android:textColor="@color/text_black"
+             android:textSize="12sp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_goneMarginTop="10dp" />
+
+
+
+     </android.support.constraint.ConstraintLayout>
+ -->
+
+
+</android.support.constraint.ConstraintLayout>
