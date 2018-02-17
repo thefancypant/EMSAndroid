@@ -11,6 +11,7 @@ import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
 import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Models.Token;
+import com.android.maintenancesolution.Models.UpdateAssetLocationRequest;
 import com.android.maintenancesolution.Models.UpdateTimeRequest;
 
 import java.util.List;
@@ -150,6 +151,11 @@ public interface NetworkApi {
 
     @GET("/inv/assets/{id}/")
     Call<Asset> getAsset(@Header("Authorization") String accessToken, @Path("id") String id);
+
+    @POST("/inv/assets/{id}/")
+    Call<Asset> updateAssetLocation(@Header("Authorization") String accessToken, @Path("id") String id, @Body UpdateAssetLocationRequest updateAssetLocationRequest);
+
+
 
 
     /*@Multipart

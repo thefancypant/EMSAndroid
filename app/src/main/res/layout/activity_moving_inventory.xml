@@ -81,7 +81,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/currentareaSpinner"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <GridView
+            <com.android.maintenancesolution.Utils.ExpandableHeightGridView
                 android:id="@+id/codeGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/scanner">
 
-            </GridView>
+            </com.android.maintenancesolution.Utils.ExpandableHeightGridView>
 
             <TextView
                 android:id="@+id/sendingAreaHeadingTextView"
