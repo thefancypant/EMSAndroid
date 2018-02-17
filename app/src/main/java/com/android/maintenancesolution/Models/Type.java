@@ -40,6 +40,9 @@ public class Type implements Parcelable {
     @SerializedName("num_works_complete")
     @Expose
     private Integer numWorksComplete;
+    @SerializedName("num_assets")
+    @Expose
+    private Integer numAssets;
 
     protected Type(Parcel in) {
         if (in.readByte() == 0) {
@@ -68,6 +71,14 @@ public class Type implements Parcelable {
         } else {
             numWorksComplete = in.readInt();
         }
+    }
+
+    public Integer getNumAssets() {
+        return numAssets;
+    }
+
+    public void setNumAssets(Integer numAssets) {
+        this.numAssets = numAssets;
     }
 
     public Integer getId() {

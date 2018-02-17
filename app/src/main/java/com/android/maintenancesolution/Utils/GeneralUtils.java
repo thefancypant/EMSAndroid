@@ -159,4 +159,22 @@ public class GeneralUtils {
         }
         return file.delete();
     }
+
+   /* public Dialog showLoadingGif(Context context)
+    {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View promptView = layoutInflater.inflate(R.layout.loader, null);
+        final Dialog alertD = new Dialog(context, R.style.MyTheme);
+        int divierId = alertD.getContext().getResources()
+                .getIdentifier("android:id/titleDivider", null, null);
+        View divider = alertD.findViewById(divierId);
+        divider.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ProgressBar progressBar = (ProgressBar) promptView.findViewById(R.id.progressDrawable);
+        progressBar.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.loading));
+        alertD.setContentView(promptView);
+        alertD.setCanceledOnTouchOutside(false);
+        alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        return alertD;
+    }*/
 }

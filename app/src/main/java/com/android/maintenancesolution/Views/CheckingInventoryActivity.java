@@ -10,14 +10,14 @@ import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-//import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanInventoryActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+public class CheckingInventoryActivity extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
+
 
     @BindView(R.id.scanner)
     // ZXingScannerView mScannerView;
             QRCodeReaderView mScannerView;
-    private String TAG = "ScanInventoryActivity";
+    private String TAG = "CheckingInventoryActivity";
     //private ZXingScannerView mScannerView;
 
     @Override
@@ -57,33 +57,4 @@ public class ScanInventoryActivity extends AppCompatActivity implements QRCodeRe
         super.onPause();
         mScannerView.stopCamera();
     }
-
-   /* @Override
-    public void handleResult(Result rawResult) {
-        // Do something with the result here
-        Log.v(TAG, rawResult.getText()); // Prints scan results
-        Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-
-        // If you would like to resume scanning, call this method below:
-        mScannerView.resumeCameraPreview(this);
-
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-        mScannerView.startCamera();          // Start camera on resume
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mScannerView.stopCamera();           // Stop camera on pause
-    }*/
 }

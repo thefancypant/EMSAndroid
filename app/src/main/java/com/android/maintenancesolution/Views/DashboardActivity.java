@@ -55,4 +55,16 @@ public class DashboardActivity extends AppCompatActivity {
         Intent startListActivity = new Intent(getApplicationContext(), ScanInventoryActivity.class);
         startActivity(startListActivity);
     }
+
+    @OnClick(R.id.InventoryCardItemOne)
+    public void inventoryCardItemOne() {
+        Intent startListActivity = new Intent(getApplicationContext(), MovingInventoryActivity.class);
+        startActivity(startListActivity);
+    }
+
+    @OnClick(R.id.InventoryCardItemTwo)
+    public void inventoryCardItemTwo() {
+        Intent startListActivity = new Intent(getApplicationContext(), CheckingInventoryActivity.class);
+        startActivity(startListActivity);
+    }
 }

@@ -71,13 +71,15 @@
         <activity android:name=".Views.DashboardActivity" />
         <activity
             android:name=".Views.ClockActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Views.ScanInventoryActivity"></activity>
+        <activity android:name=".Views.ScanInventoryActivity" />
+        <activity android:name=".Views.CheckingInventoryActivity" />
+        <activity android:name=".Views.MovingInventoryActivity"></activity>
     </application>
 
 </manifest>

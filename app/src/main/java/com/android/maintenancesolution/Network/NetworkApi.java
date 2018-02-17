@@ -1,6 +1,8 @@
 package com.android.maintenancesolution.Network;
 
 import com.android.maintenancesolution.Models.ActiveClockResponse;
+import com.android.maintenancesolution.Models.Area;
+import com.android.maintenancesolution.Models.Asset;
 import com.android.maintenancesolution.Models.Center;
 import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.GenericResponse;
@@ -141,6 +143,14 @@ public interface NetworkApi {
 
     @PUT("/app/timeclocks/{id}/")
     Call<ActiveClockResponse> updateTimeClock(@Header("Authorization") String accessToken, @Body UpdateTimeRequest updateTimeRequest, @Path("id") String id);
+
+
+    @GET("/inv/areas/")
+    Call<List<Area>> getAreas(@Header("Authorization") String accessToken);
+
+    @GET("/inv/assets/{id}/")
+    Call<Asset> getAsset(@Header("Authorization") String accessToken, @Path("id") String id);
+
 
     /*@Multipart
     @POST("/api/works/{id}/")
