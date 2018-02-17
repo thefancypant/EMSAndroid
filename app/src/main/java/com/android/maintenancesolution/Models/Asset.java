@@ -23,12 +23,13 @@ public class Asset {
     @SerializedName("value")
     @Expose
     private String value;
-    /* @SerializedName("type")
+    @SerializedName("type")
      @Expose
-     private Type type;*/
+    private Type type;
     @SerializedName("area")
     @Expose
     private Area area;
+
 
     public String getId() {
         return id;
@@ -70,13 +71,13 @@ public class Asset {
         this.value = value;
     }
 
-    /*public Type getType() {
+    public Type getType() {
         return type;
     }
 
     public void setType(Type type) {
         this.type = type;
-    }*/
+    }
 
     public Area getArea() {
         return area;
