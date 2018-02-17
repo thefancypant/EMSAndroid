@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/textViewCheckingInventory" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/assetLayout"
         android:layout_width="match_parent"
         android:layout_height="325dp"
         android:background="@color/login_page_background"
@@ -132,7 +133,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/typeTextView" />
 
-        <EditText
+        <Spinner
+            android:id="@+id/currentareaSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
