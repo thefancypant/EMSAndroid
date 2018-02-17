@@ -81,8 +81,8 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
     }
 
     private void setupGridview() {
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, assetCodesList);
+        adapter = new ArrayAdapter<String>(this, R.layout.gridview_item, R.id.textViewJob, assetCodesList);
+
         //adapter.
         codeGridView.setExpanded(true);
         codeGridView.setAdapter(adapter);
@@ -208,6 +208,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
     private void processAssetCode(Response<Asset> response) {
 
+        codeGridView.setVisibility(View.VISIBLE);
         if (response.code() >= 200 && response.code() < 300) {
             if (assetCodesList.size() == 0) {
                 assetIdList.add(response.body().getId());

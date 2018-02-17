@@ -36,7 +36,6 @@ import com.android.maintenancesolution.Models.PostLocationResponse;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
-import com.android.maintenancesolution.Views.ClockActivity;
 import com.android.maintenancesolution.Views.OrderDetail;
 import com.android.maintenancesolution.Views.UserSelectorActivity;
 
@@ -103,11 +102,11 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             @Override
             public void onClick(View view) {
                 //TODO Uncomment next line
-                //makeRequest();
+                makeRequest();
                 //TODO Comment next line
 
-                Intent intent = new Intent(ListActivity.this, ClockActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(ListActivity.this, ClockActivity.class);
+                //startActivity(intent);
 
 
 

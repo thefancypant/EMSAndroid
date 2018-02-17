@@ -370,6 +370,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 clockIntime = getTime().get(1);
                 clockIntimefull = getTime().get(0);
                 clockInTimeTextView.setText(getTime().get(1));
+                buttonClockIn.setText("Clock out");
                 buttonLunchIn.setVisibility(View.VISIBLE);
 
                 postTime();
@@ -443,6 +444,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 lunchOutTimeTextView.setVisibility(View.VISIBLE);
                 lunchOutTimeTextView.setText(LunchOuttime);
                 buttonLunchIn.setClickable(false);
+                buttonClockIn.setText("Clock out");
                 buttonClockIn.setClickable(true);
                 buttonLunchIn.setVisibility(View.GONE);
                 updateTime();
