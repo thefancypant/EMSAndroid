@@ -49,6 +49,8 @@ public class ScanInventoryActivity extends AppCompatActivity implements QRCodeRe
         getPrefUtils();
         assetLayout.setVisibility(View.INVISIBLE);
         mScannerView.setOnQRCodeReadListener(this);
+        mScannerView.setAutofocusInterval(2000L);
+
 
         //mScannerView = new ZXingScannerView(this);// Programmatically initialize the scanner view
         //setContentView(mScannerView);                        // Set the scanner view as the content view

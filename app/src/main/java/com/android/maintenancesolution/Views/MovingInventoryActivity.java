@@ -76,6 +76,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
         setupAreas();
         setupGridview();
         mScannerView.setOnQRCodeReadListener(this);
+        mScannerView.setAutofocusInterval(2000L);
        /* mScannerView.setQRDecodingEnabled(true);
 
         // Use this function to change the autofocus interval (default is 5 secs)

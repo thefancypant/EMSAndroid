@@ -49,6 +49,8 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
     ExpandableHeightGridView codeGridView;
     @BindView(R.id.buttonSubmitRequest)
     Button buttonSubmitRequest;
+    @BindView(R.id.numberOfItemsTextView)
+    TextView numbeOfitems;
     private PreferenceUtils preferenceUtils;
     private String header;
     private String qrCode = "";
@@ -69,6 +71,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
 
 
         scanner.setOnQRCodeReadListener(this);
+        scanner.setAutofocusInterval(2000L);
         //scanner.setAu
 
 
@@ -76,7 +79,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
 
     private void setupGridview() {
         adapter = new ArrayAdapter<String>(this, R.layout.gridview_item, R.id.textViewJob, assetCodesList);
-
+        numbeOfitems.setText(Integer.toString(assetCodesList.size()));
         //adapter.
         codeGridView.setExpanded(true);
         codeGridView.setAdapter(adapter);
@@ -243,6 +246,8 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                     assetCodesList.add(response.body().getCode());
                     adapter.notifyDataSetChanged();
                 }
+                numbeOfitems.setText(Integer.toString(assetCodesList.size()));
+
 
             }
 
