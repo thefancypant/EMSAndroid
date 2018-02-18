@@ -18,7 +18,8 @@ import android.widget.TextView;
 
 import com.android.maintenancesolution.Models.Area;
 import com.android.maintenancesolution.Models.Asset;
-import com.android.maintenancesolution.Models.UpdateAssetLocationRequest;
+import com.android.maintenancesolution.Models.CheckAssetRequest;
+import com.android.maintenancesolution.Models.MoveAssetsRequest;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
 import com.android.maintenancesolution.Utils.ExpandableHeightGridView;
@@ -61,6 +62,8 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
     private String selectedSendingAreaId = null;
     private List<String> assetIdList = new ArrayList<>();
     private int updateCallNumber = 0;
+    private String qrCode = "";
+    private String asset_ids = "";
     //private ZXingScannerView mScannerView;
 
 
@@ -91,12 +94,105 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
         Log.d(TAG, "onQRCodeRead: " + text);
-        //mScannerView.startCamera();
-        //if (!qrCodeList.contains(text)) {
-            qrCodeList.add(text);
-        //mScannerView.stopCamera();
-            getAssetCode(text);
-        //}
+
+        //getAssetCode(text);
+        if (!qrCode.equals(text)) {
+            qrCode = text;
+            if (selectedCurrentAreaId != null) {
+                //qrCode = text;
+                checkArea(text);
+            } else {
+
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
+                final AlertDialog alertD = new AlertDialog.Builder(this).create();
+                TextView message = promptView.findViewById(R.id.textViewMessage);
+                message.setText("Please select a valid area");
+                Button btnOk = promptView.findViewById(R.id.buttonOk);
+                //setBtnOk(btnOk);
+                alertD.setView(promptView);
+                alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertD.setCanceledOnTouchOutside(false);
+                alertD.show();
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        alertD.dismiss();
+                        //finish();
+                    }
+                });
+            }
+        }
+
+    }
+
+
+    private void checkArea(String text) {
+        CheckAssetRequest checkAssetRequest = new CheckAssetRequest(text, selectedCurrentAreaId);
+
+        NetworkService
+                .getInstance()
+                .checkAsset(header, checkAssetRequest)
+                .enqueue(new Callback<Asset>() {
+                    @Override
+                    public void onResponse(Call<Asset> call, Response<Asset> response) {
+
+                        processCheckAsset(response);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Asset> call, Throwable t) {
+
+                    }
+                });
+
+    }
+
+    private void processCheckAsset(Response<Asset> response) {
+
+        if (response.code() >= 200 && response.code() < 300) {
+            Asset asset = response.body();
+            if (asset.getMessage() != null && asset.getMessage().equals("failure")) {
+                //if(qrCode)
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
+                final AlertDialog alertD = new AlertDialog.Builder(this).create();
+                TextView message = promptView.findViewById(R.id.textViewMessage);
+                message.setText("Asset does not belong to this area");
+                Button btnOk = promptView.findViewById(R.id.buttonOk);
+                //setBtnOk(btnOk);
+                alertD.setView(promptView);
+                alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertD.setCanceledOnTouchOutside(false);
+                alertD.show();
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        alertD.dismiss();
+                        //finish();
+                    }
+                });
+
+            } else {
+                codeGridView.setVisibility(View.VISIBLE);
+
+                if (assetCodesList.size() == 0) {
+                    assetIdList.add(response.body().getId());
+                    assetCodesList.add(response.body().getCode());
+                    adapter.notifyDataSetChanged();
+                } else if (!assetCodesList.contains(response.body().getCode())) {
+                    assetIdList.add(response.body().getId());
+                    assetCodesList.add(response.body().getCode());
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+        }
+
     }
 
 
@@ -144,6 +240,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                         if (!spinnerArray.get(position).equals("Select a center")) {
 
                             selectedCurrentAreaId = Integer.toString(response.body().get(position - 1).getId());
+                            qrCode = "";
                             Log.d(TAG, "onItemSelected: " + response.body().get(position - 1).getName());
                             Log.d(TAG, "onItemSelected: " + selectedCurrentAreaId.toString());
                         }
@@ -229,13 +326,38 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
     @OnClick(R.id.buttonSubmitRequest)
     public void buttonSubmitRequest() {
-        if (selectedCurrentAreaId != null && selectedSendingAreaId != null) {
+        if (selectedCurrentAreaId != null && selectedSendingAreaId != null && !selectedSendingAreaId.equals(selectedCurrentAreaId)) {
             if (assetIdList.size() != 0) {
-                for (int i = 0; i < assetIdList.size(); i++) {
-                    updateCallNumber = i + 1;
-                    updateAssetLocation(assetIdList.get(i), i + 1);
-                }
+                if (assetIdList.size() == 1) {
 
+                    asset_ids = assetIdList.get(0);
+                } else {
+                    for (int i = 0; i < assetIdList.size(); i++) {
+
+                        asset_ids = asset_ids + "," + assetIdList.get(i);
+
+                    }
+                }
+                MoveAssetsRequest moveAssetsRequest = new MoveAssetsRequest(asset_ids, selectedSendingAreaId);
+
+
+                NetworkService
+                        .getInstance()
+                        .moveAssets(header, moveAssetsRequest)
+                        .enqueue(new Callback<Asset>() {
+                            @Override
+                            public void onResponse(Call<Asset> call, Response<Asset> response) {
+
+                                processAssetMovement(response);
+
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Asset> call, Throwable t) {
+                                Log.d(TAG, "onFailure: " + t.toString());
+                            }
+                        });
             } else {
                 Dialog dialog = new GeneralUtils(this).showValidationPopup(this, getString(R.string.scan_assets));
                 dialog.show();
@@ -251,7 +373,40 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
     }
 
-    private void updateAssetLocation(String assetId, int i) {
+    private void processAssetMovement(Response<Asset> response) {
+        if (response.code() >= 200 && response.code() < 300) {
+
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
+            final AlertDialog alertD = new AlertDialog.Builder(this).create();
+            TextView message = promptView.findViewById(R.id.textViewMessage);
+            message.setText("Inventory moved succesfully");
+            Button btnOk = promptView.findViewById(R.id.buttonOk);
+            //setBtnOk(btnOk);
+            alertD.setView(promptView);
+            alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alertD.setCanceledOnTouchOutside(false);
+            alertD.show();
+            btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    alertD.dismiss();
+                    finish();
+                }
+            });
+
+
+        } else {
+
+
+            Dialog dialog = new GeneralUtils(this).showValidationPopup(this, "Inventory moving failed.Please try again.");
+            dialog.show();
+
+        }
+    }
+
+    /*private void updateAssetLocation(String assetId, int i) {
         UpdateAssetLocationRequest updateAssetLocationRequest = new UpdateAssetLocationRequest(selectedSendingAreaId);
         final int ii = i;
         NetworkService
@@ -276,7 +431,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
     private void processUpdateLocation(Response<Asset> response) {
         if (updateCallNumber == assetIdList.size()) {
-            /*GeneralUtils generalUtils = new GeneralUtils(this);
+            *//*GeneralUtils generalUtils = new GeneralUtils(this);
             Dialog dialog = generalUtils.showValidationPopup(this,getString(R.string.select_sending_to_and_current_area));
             generalUtils.getBtnOk().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -285,7 +440,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 }
             });
 
-            dialog.show();*/
+            dialog.show();*//*
             LayoutInflater layoutInflater = LayoutInflater.from(this);
             View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
             final AlertDialog alertD = new AlertDialog.Builder(this).create();
@@ -311,7 +466,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
         Log.d(TAG, "updateAssets onResponse: " + Integer.toString(response.code()));
     }
 
-
+*/
     @Override
     protected void onResume() {
         super.onResume();

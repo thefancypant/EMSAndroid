@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -121,6 +124,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         setEmptyUI();
         getActiveClock();
 
+
         setClock();
         getCenters();
 
@@ -184,12 +188,14 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     clockInTimeTextView.setVisibility(View.VISIBLE);
                     clockIntime = response.body().getClockInDatetime().getTime();
                     clockIntimefull = response.body().getClockInDatetime().getFull();
+                    buttonClockIn.setClickable(false);
                     clockInTimeTextView.setText(response.body().getClockInDatetime().getTime());
                 }
                 if (response.body().getLunchInDatetime() != null) {
                     lunchInTimeTextView.setVisibility(View.VISIBLE);
                     buttonLunchIn.setVisibility(View.VISIBLE);
                     buttonLunchIn.setText(R.string.lunch_out);
+                    buttonClockIn.setClickable(false);
                     LunchIntime = response.body().getLunchInDatetime().getTime();
                     LunchIntimefull = response.body().getLunchInDatetime().getFull();
 
@@ -204,6 +210,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     lunchOutTimeTextView.setVisibility(View.VISIBLE);
                     LunchOuttime = response.body().getLunchOutDatetime().getTime();
                     LunchOuttimefull = response.body().getLunchOutDatetime().getFull();
+                    buttonClockIn.setClickable(true);
                     buttonLunchIn.setVisibility(View.GONE);
 
                     lunchOutTimeTextView.setText(response.body().getLunchOutDatetime().getTime());
@@ -252,6 +259,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             spinner.setEnabled(true);
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
             spinner.setAdapter(arrayAdapter);
+
 
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -365,7 +373,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 lunchTextView.setVisibility(View.VISIBLE);
                 clockOutTextView.setVisibility(View.VISIBLE);
                 clockInTextView.setVisibility(View.VISIBLE);
-
+                buttonClockIn.setClickable(false);
                 clockInTimeTextView.setVisibility(View.VISIBLE);
                 clockIntime = getTime().get(1);
                 clockIntimefull = getTime().get(0);
@@ -419,6 +427,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             if (selectedCenterCode != "") {
                 LunchIntime = getTime().get(1);
                 LunchIntimefull = getTime().get(0);
+                buttonClockIn.setClickable(false);
 
                 lunchInTimeTextView.setVisibility(View.VISIBLE);
                 lunchInTimeTextView.setText(LunchIntime);
@@ -443,9 +452,8 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 LunchOuttimefull = getTime().get(0);
                 lunchOutTimeTextView.setVisibility(View.VISIBLE);
                 lunchOutTimeTextView.setText(LunchOuttime);
-                buttonLunchIn.setClickable(false);
-                buttonClockIn.setText("Clock out");
                 buttonClockIn.setClickable(true);
+                buttonClockIn.setText("Clock out");
                 buttonLunchIn.setVisibility(View.GONE);
                 updateTime();
             } else {
@@ -468,7 +476,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
     private void postTime() {
         final UpdateTimeRequest updateTimeRequest = new UpdateTimeRequest();
-        updateTimeRequest.setCenter(selectedCenter);
+        updateTimeRequest.setCenter(selectedCenterCode);
         if (clockIntimefull != null) {
             updateTimeRequest.setClockInDatetime(clockIntimefull);
             getLocation();
@@ -519,17 +527,41 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 clockInTimeTextView.setText(clockIntime);
             }
             if (activeClockResponse.getLunchInDatetime() != null && !activeClockResponse.getLunchInDatetime().equals("")) {
-                LunchIntime = activeClockResponse.getClockInDatetime().getTime();
+                LunchIntime = activeClockResponse.getLunchInDatetime().getTime();
                 LunchIntimefull = activeClockResponse.getLunchInDatetime().getFull();
                 lunchInTimeTextView.setVisibility(View.VISIBLE);
-                lunchInTimeTextView.setText(clockIntime);
+                lunchInTimeTextView.setText(LunchIntime);
             }
             if (activeClockResponse.getLunchOutDatetime() != null && !activeClockResponse.getLunchOutDatetime().equals("")) {
                 LunchOuttime = activeClockResponse.getLunchOutDatetime().getTime();
                 LunchOuttimefull = activeClockResponse.getLunchOutDatetime().getFull();
                 lunchOutTimeTextView.setVisibility(View.VISIBLE);
-                lunchInTimeTextView.setText(clockIntime);
+                lunchInTimeTextView.setText(LunchOuttime);
             }
+
+            if (clockOuttimefull != null && clockOuttimefull != "") {
+
+                LayoutInflater layoutInflater = LayoutInflater.from(this);
+                View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
+                final android.app.AlertDialog alertD = new android.app.AlertDialog.Builder(this).create();
+                TextView message = promptView.findViewById(R.id.textViewMessage);
+                message.setText("Thank you for submitting your time card");
+                Button btnOk = promptView.findViewById(R.id.buttonOk);
+                //setBtnOk(btnOk);
+                alertD.setView(promptView);
+                alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alertD.setCanceledOnTouchOutside(false);
+                alertD.show();
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        alertD.dismiss();
+                        finish();
+                    }
+                });
+            }
+
 
 
         }

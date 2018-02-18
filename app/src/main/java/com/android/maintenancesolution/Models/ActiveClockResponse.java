@@ -26,6 +26,10 @@ public class ActiveClockResponse {
     @SerializedName("clock_in_datetime")
     @Expose
     private TimeObject clockInDatetime;
+   /* @SerializedName("clock_out_datetime")
+    @Expose
+    private TimeObject clockOutDatetime;*/
+
 
    /* @Nullable
     @SerializedName("clock_out_datetime")
@@ -82,7 +86,7 @@ public class ActiveClockResponse {
         this.clockInLongitude = clockInLongitude;
     }
 
-    /*public TimeObject getClockOutDatetime() {
+   /* public TimeObject getClockOutDatetime() {
         return clockOutDatetime;
     }
 

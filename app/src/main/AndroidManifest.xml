@@ -79,7 +79,8 @@
 
         <activity android:name=".Views.ScanInventoryActivity" />
         <activity android:name=".Views.CheckingInventoryActivity" />
-        <activity android:name=".Views.MovingInventoryActivity"></activity>
+        <activity android:name=".Views.MovingInventoryActivity" />
+        <activity android:name=".Views.CountingInventoryActivity"></activity>
     </application>
 
 </manifest>

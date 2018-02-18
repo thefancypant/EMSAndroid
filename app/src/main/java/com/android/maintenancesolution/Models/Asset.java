@@ -29,7 +29,12 @@ public class Asset {
     @SerializedName("area")
     @Expose
     private Area area;
-
+    @SerializedName("error")
+    @Expose
+    private String error;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public String getId() {
         return id;
@@ -85,5 +90,21 @@ public class Asset {
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

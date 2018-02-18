@@ -41,8 +41,8 @@ public class CheckingInventoryActivity extends AppCompatActivity implements QRCo
 
     @BindView(R.id.scanner)
     QRCodeReaderView mScannerView;
-    @BindView(R.id.codeTextView)
-    TextView codeTextView;
+    /* @BindView(R.id.codeTextView)
+     TextView codeTextView;*/
     @BindView(R.id.typeTextView)
     TextView typeTextView;
     @BindView(R.id.currentareaSpinner)
@@ -62,7 +62,7 @@ public class CheckingInventoryActivity extends AppCompatActivity implements QRCo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checking_inventory);
+        setContentView(R.layout.activity_counting_inventory);
         ButterKnife.bind(this);
         layoutEnable(false);
         assetLayout.setEnabled(false);
@@ -120,7 +120,7 @@ public class CheckingInventoryActivity extends AppCompatActivity implements QRCo
             layoutEnable(true);
             Asset asset = response.body();
             assetId = asset.getId();
-            codeTextView.setText(asset.getCode());
+            //codeTextView.setText(asset.getCode());
             typeTextView.setText(asset.getType().getName());
             currentArea = asset.getArea().getName();
         }

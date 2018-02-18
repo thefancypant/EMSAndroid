@@ -22,7 +22,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Checking Inventory"
+        android:text="Counting Inventory"
         android:textColor="@color/text_black"
         android:textSize="20dp"
         android:textStyle="bold"

@@ -4,9 +4,12 @@ import com.android.maintenancesolution.Models.ActiveClockResponse;
 import com.android.maintenancesolution.Models.Area;
 import com.android.maintenancesolution.Models.Asset;
 import com.android.maintenancesolution.Models.Center;
+import com.android.maintenancesolution.Models.CheckAssetRequest;
+import com.android.maintenancesolution.Models.CountAssetsRequest;
 import com.android.maintenancesolution.Models.CustomerRequest;
 import com.android.maintenancesolution.Models.GenericResponse;
 import com.android.maintenancesolution.Models.Job;
+import com.android.maintenancesolution.Models.MoveAssetsRequest;
 import com.android.maintenancesolution.Models.Order;
 import com.android.maintenancesolution.Models.PostLocationRequest;
 import com.android.maintenancesolution.Models.PostLocationResponse;
@@ -156,7 +159,14 @@ public interface NetworkApi {
     Call<Asset> updateAssetLocation(@Header("Authorization") String accessToken, @Path("id") String id, @Body UpdateAssetLocationRequest updateAssetLocationRequest);
 
 
+    @POST("/inv/assets_check_current_area/")
+    Call<Asset> checkAsset(@Header("Authorization") String accessToken, @Body CheckAssetRequest checkAssetRequest);
 
+    @POST("/inv/assets_counting_details_assets/")
+    Call<Asset> countAssets(@Header("Authorization") String accessToken, @Body CountAssetsRequest countAssetsRequest);
+
+    @POST("/inv/assets_moving_assets/")
+    Call<Asset> moveAssets(@Header("Authorization") String accessToken, @Body MoveAssetsRequest moveAssetsRequest);
 
     /*@Multipart
     @POST("/api/works/{id}/")
