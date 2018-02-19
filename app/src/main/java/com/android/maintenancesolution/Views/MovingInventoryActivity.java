@@ -103,7 +103,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 //qrCode = text;
                 checkArea(text);
             } else {
-
+                mScannerView.setQRDecodingEnabled(false);
                 LayoutInflater layoutInflater = LayoutInflater.from(this);
                 View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
                 final AlertDialog alertD = new AlertDialog.Builder(this).create();
@@ -118,7 +118,9 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                       // startCam();
+                       // mScannerView.setActivated(true);
+                        mScannerView.setQRDecodingEnabled(true);
                         alertD.dismiss();
                         //finish();
                     }
@@ -126,6 +128,16 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
             }
         }
 
+    }
+
+    private void startCam() {
+
+        mScannerView.startCamera();
+    }
+
+    private void stopCam() {
+
+        mScannerView.stopCamera();
     }
 
 
@@ -157,6 +169,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
             Asset asset = response.body();
             if (asset.getMessage() != null && asset.getMessage().equals("failure")) {
                 //if(qrCode)
+                mScannerView.setQRDecodingEnabled(false);
                 LayoutInflater layoutInflater = LayoutInflater.from(this);
                 View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
                 final AlertDialog alertD = new AlertDialog.Builder(this).create();
@@ -171,7 +184,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mScannerView.setQRDecodingEnabled(true);
                         alertD.dismiss();
                         //finish();
                     }
@@ -327,6 +340,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
     @OnClick(R.id.buttonSubmitRequest)
     public void buttonSubmitRequest() {
+        mScannerView.setQRDecodingEnabled(false);
         if (selectedCurrentAreaId != null && selectedSendingAreaId != null && !selectedSendingAreaId.equals(selectedCurrentAreaId)) {
             if (assetIdList.size() != 0) {
                 if (assetIdList.size() == 1) {
@@ -400,6 +414,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
 
         } else {
 
+            mScannerView.setQRDecodingEnabled(true);
 
             Dialog dialog = new GeneralUtils(this).showValidationPopup(this, "Inventory moving failed.Please try again.");
             dialog.show();
@@ -471,7 +486,9 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
     @Override
     protected void onResume() {
         super.onResume();
+       // if(mScannerView)
         mScannerView.startCamera();
+
     }
 
     @Override

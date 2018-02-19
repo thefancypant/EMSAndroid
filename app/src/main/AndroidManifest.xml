@@ -68,7 +68,8 @@
         <activity
             android:name=".Views.SelectImagesActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Views.DashboardActivity" />
+        <activity android:name=".Views.DashboardActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Views.ClockActivity"
             android:screenOrientation="portrait" />
@@ -77,10 +78,14 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Views.ScanInventoryActivity" />
-        <activity android:name=".Views.CheckingInventoryActivity" />
-        <activity android:name=".Views.MovingInventoryActivity" />
-        <activity android:name=".Views.CountingInventoryActivity"></activity>
+        <activity android:name=".Views.ScanInventoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Views.CheckingInventoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Views.MovingInventoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Views.CountingInventoryActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

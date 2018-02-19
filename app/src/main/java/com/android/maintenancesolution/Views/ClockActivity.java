@@ -1,6 +1,7 @@
 package com.android.maintenancesolution.Views;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.android.maintenancesolution.Models.Center;
 import com.android.maintenancesolution.Models.UpdateTimeRequest;
 import com.android.maintenancesolution.Network.NetworkService;
 import com.android.maintenancesolution.R;
+import com.android.maintenancesolution.Utils.GeneralUtils;
 import com.android.maintenancesolution.Utils.PreferenceUtils;
 
 import java.text.SimpleDateFormat;
@@ -52,7 +54,6 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static IntentFilter s_intentFilter;
-
 
 
     private final String TAG = "ClockActivity";
@@ -109,7 +110,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     private String LunchOuttimefull = "";
     private ActiveClockResponse activeClockResponse = null;
     private String selectedCenterCode = "";
-
+    private Dialog loadingGif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         ButterKnife.bind(this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //enableGps();
+        loadingGif= new GeneralUtils(this).showLoadingGif(this);
         spinner.setEnabled(false);
         checkGpsPermissions();
         getPrefUtils();
@@ -143,6 +145,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     }
 
     private void getActiveClock() {
+        loadingGif.show();
         NetworkService
                 .getInstance()
                 .getActiveClock(header)
@@ -163,7 +166,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
     private void processActiveClock(Response<ActiveClockResponse> response) {
 
-
+        loadingGif.dismiss();
         activeClockResponse = response.body();
         if (response.code() >= 200 && response.code() < 300) {
             // Log.d(TAG, "processActiveClock: "+response.);
@@ -248,6 +251,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     }
 
     private void processCenters(final Response<List<Center>> response) {
+        loadingGif.dismiss();
         if (response.code() >= 200 && response.code() < 300) {
             final ArrayList<String> spinnerArray = new ArrayList<>();
             spinnerArray.add("Select a center");
@@ -257,7 +261,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             }
 
             spinner.setEnabled(true);
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.clock_spinner_item, spinnerArray);
             spinner.setAdapter(arrayAdapter);
 
 
@@ -370,6 +374,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     public void buttonClockIn() {
         if (clockIntime == "") {
             if (selectedCenterCode != "") {
+                getLocation();
                 lunchTextView.setVisibility(View.VISIBLE);
                 clockOutTextView.setVisibility(View.VISIBLE);
                 clockInTextView.setVisibility(View.VISIBLE);
@@ -397,13 +402,14 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
         } else {
             if (selectedCenterCode != "") {
+                getLocation();
                 clockOuttime = getTime().get(1);
                 clockOuttimefull = getTime().get(0);
                 buttonLunchIn.setVisibility(View.GONE);
 
                 clockOutTimeTextView.setVisibility(View.VISIBLE);
                 clockOutTimeTextView.setText(clockOuttime);
-                updateTime();
+                updateTime("clock out");
             } else {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -432,7 +438,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 lunchInTimeTextView.setVisibility(View.VISIBLE);
                 lunchInTimeTextView.setText(LunchIntime);
                 buttonLunchIn.setText("Lunch out");
-                updateTime();
+                updateTime("lunch in");
             } else {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -455,7 +461,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 buttonClockIn.setClickable(true);
                 buttonClockIn.setText("Clock out");
                 buttonLunchIn.setVisibility(View.GONE);
-                updateTime();
+                updateTime("lunch out");
             } else {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -475,15 +481,16 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     }
 
     private void postTime() {
+        loadingGif.show();
         final UpdateTimeRequest updateTimeRequest = new UpdateTimeRequest();
         updateTimeRequest.setCenter(selectedCenterCode);
         if (clockIntimefull != null) {
             updateTimeRequest.setClockInDatetime(clockIntimefull);
-            getLocation();
+            //getLocation();
             updateTimeRequest.setClockInLatitude(Double.toString(lattiude));
             updateTimeRequest.setClockInLongitude(Double.toString(longitude));
         }
-        if (LunchIntimefull != null) {
+        /*if (LunchIntimefull != null) {
             updateTimeRequest.setLunchInDatetime(LunchIntimefull);
         }
 
@@ -496,7 +503,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             getLocation();
             updateTimeRequest.setClockOutLatitude(Double.toString(lattiude));
             updateTimeRequest.setClockOutLongitude(Double.toString(longitude));
-        }
+        }*/
 
         NetworkService
                 .getInstance()
@@ -516,7 +523,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     }
 
     private void processPostTime(Response<ActiveClockResponse> response) {
-
+        loadingGif.dismiss();
         if (response.code() >= 200 && response.code() < 300) {
             activeClockResponse = response.body();
 
@@ -525,6 +532,8 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 clockIntimefull = activeClockResponse.getClockInDatetime().getFull();
                 clockInTimeTextView.setVisibility(View.VISIBLE);
                 clockInTimeTextView.setText(clockIntime);
+                selectedCenterTextview.setVisibility(View.VISIBLE);
+                selectedCenterTextview.setText(response.body().getCenter().getName());
             }
             if (activeClockResponse.getLunchInDatetime() != null && !activeClockResponse.getLunchInDatetime().equals("")) {
                 LunchIntime = activeClockResponse.getLunchInDatetime().getTime();
@@ -536,7 +545,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                 LunchOuttime = activeClockResponse.getLunchOutDatetime().getTime();
                 LunchOuttimefull = activeClockResponse.getLunchOutDatetime().getFull();
                 lunchOutTimeTextView.setVisibility(View.VISIBLE);
-                lunchInTimeTextView.setText(LunchOuttime);
+                lunchOutTimeTextView.setText(LunchOuttime);
             }
 
             if (clockOuttimefull != null && clockOuttimefull != "") {
@@ -563,35 +572,44 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             }
 
 
-
         }
     }
 
-    private void updateTime() {
+    private void updateTime(String button) {
+        loadingGif.show();
         final UpdateTimeRequest updateTimeRequest = new UpdateTimeRequest();
 
         updateTimeRequest.setCenter(Integer.toString(activeClockResponse.getCenter().getId()));
-        if (clockIntimefull != null) {
-            updateTimeRequest.setClockInDatetime(clockIntimefull);
-            getLocation();
-            updateTimeRequest.setClockInLatitude(Double.toString(lattiude));
-            updateTimeRequest.setClockInLongitude(Double.toString(longitude));
-        }
-        if (LunchIntimefull != null) {
-            updateTimeRequest.setLunchInDatetime(LunchIntimefull);
-        }
+        switch (button) {
+            case "clock in":
+                if (clockIntimefull != null) {
+                    updateTimeRequest.setClockInDatetime(clockIntimefull);
+                    getLocation();
+                    updateTimeRequest.setClockInLatitude(Double.toString(lattiude));
+                    updateTimeRequest.setClockInLongitude(Double.toString(longitude));
+                }
+                break;
+            case "lunch in":
 
-        if (LunchOuttimefull != null) {
-            updateTimeRequest.setLunchOutDatetime(LunchOuttimefull);
-        }
+                if (LunchIntimefull != null) {
+                    updateTimeRequest.setLunchInDatetime(LunchIntimefull);
+                }
+                break;
+            case "lunch out":
+                if (LunchOuttimefull != null) {
+                    updateTimeRequest.setLunchOutDatetime(LunchOuttimefull);
+                }
+                break;
+            case "clock out":
 
-        if (clockOuttimefull != null) {
-            updateTimeRequest.setClockOutDatetime(clockOuttimefull);
-            getLocation();
-            updateTimeRequest.setClockOutLatitude(Double.toString(lattiude));
-            updateTimeRequest.setClockOutLongitude(Double.toString(longitude));
+                if (clockOuttimefull != null) {
+                    updateTimeRequest.setClockOutDatetime(clockOuttimefull);
+                    getLocation();
+                    updateTimeRequest.setClockOutLatitude(Double.toString(lattiude));
+                    updateTimeRequest.setClockOutLongitude(Double.toString(longitude));
+                }
+                break;
         }
-
 
         NetworkService
                 .getInstance()

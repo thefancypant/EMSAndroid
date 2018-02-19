@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.maintenancesolution.R;
@@ -160,7 +161,7 @@ public class GeneralUtils {
         return file.delete();
     }
 
-   /* public Dialog showLoadingGif(Context context)
+    public Dialog showLoadingGif(Context context)
     {
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -171,10 +172,10 @@ public class GeneralUtils {
         View divider = alertD.findViewById(divierId);
         divider.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         ProgressBar progressBar = (ProgressBar) promptView.findViewById(R.id.progressDrawable);
-        progressBar.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.loading));
+        //progressBar.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.loading));
         alertD.setContentView(promptView);
         alertD.setCanceledOnTouchOutside(false);
         alertD.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return alertD;
-    }*/
+    }
 }

@@ -102,6 +102,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                 //qrCode = text;
                 checkArea(text);
             } else {
+                scanner.setQRDecodingEnabled(false);
 
                 LayoutInflater layoutInflater = LayoutInflater.from(this);
                 View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
@@ -117,7 +118,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        scanner.setQRDecodingEnabled(true);
                         alertD.dismiss();
                         //finish();
                     }
@@ -214,6 +215,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
             Asset asset = response.body();
             if (asset.getMessage() != null && asset.getMessage().equals("failure")) {
                 //if(qrCode)
+                scanner.setQRDecodingEnabled(false);
                 LayoutInflater layoutInflater = LayoutInflater.from(this);
                 View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
                 final AlertDialog alertD = new AlertDialog.Builder(this).create();
@@ -228,7 +230,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        scanner.setQRDecodingEnabled(true);
                         alertD.dismiss();
                         //finish();
                     }
@@ -263,7 +265,9 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
 
     @OnClick(R.id.buttonSubmitRequest)
     public void Submit() {
+        scanner.setQRDecodingEnabled(false);
         if (selectedCurrentAreaId == null || assetIdList.size() == 0) {
+            scanner.setQRDecodingEnabled(false);
             LayoutInflater layoutInflater = LayoutInflater.from(this);
             View promptView = layoutInflater.inflate(R.layout.popup_validation, null);
             final AlertDialog alertD = new AlertDialog.Builder(this).create();
@@ -278,7 +282,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    scanner.setQRDecodingEnabled(true);
                     alertD.dismiss();
                     //finish();
                 }
@@ -314,6 +318,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                         @Override
                         public void onFailure(Call<Asset> call, Throwable t) {
                             Log.d(TAG, "onFailure: ");
+                            scanner.setQRDecodingEnabled(true);
                         }
                     });
         }
@@ -362,7 +367,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    scanner.setQRDecodingEnabled(true);
                     alertD.dismiss();
                     //finish();
                 }
