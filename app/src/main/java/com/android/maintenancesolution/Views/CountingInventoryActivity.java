@@ -150,7 +150,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
     private void processAreas(final Response<List<Area>> response) {
         if (response.code() >= 200 && response.code() < 300) {
             final ArrayList<String> spinnerArray = new ArrayList<>();
-            spinnerArray.add("Select a center");
+            spinnerArray.add("Select an area");
 
             for (int i = 0; i < response.body().size(); i++) {
                 spinnerArray.add(response.body().get(i).getName());
@@ -164,7 +164,7 @@ public class CountingInventoryActivity extends AppCompatActivity implements QRCo
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                     if (position != 0) {
-                        if (!spinnerArray.get(position).equals("Select a center")) {
+                        if (!spinnerArray.get(position).equals("Select an area")) {
                             qrCode = "";
                             selectedCurrentAreaId = Integer.toString(response.body().get(position - 1).getId());
                             Log.d(TAG, "onItemSelected: " + response.body().get(position - 1).getName());

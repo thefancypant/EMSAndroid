@@ -237,7 +237,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
     private void processAreas(final Response<List<Area>> response) {
         if (response.code() >= 200 && response.code() < 300) {
             final ArrayList<String> spinnerArray = new ArrayList<>();
-            spinnerArray.add("Select a center");
+            spinnerArray.add("Select an area");
 
             for (int i = 0; i < response.body().size(); i++) {
                 spinnerArray.add(response.body().get(i).getName());
@@ -251,7 +251,7 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                     if (position != 0) {
-                        if (!spinnerArray.get(position).equals("Select a center")) {
+                        if (!spinnerArray.get(position).equals("Select an area")) {
 
                             selectedCurrentAreaId = Integer.toString(response.body().get(position - 1).getId());
                             qrCode = "";
@@ -278,8 +278,8 @@ public class MovingInventoryActivity extends AppCompatActivity implements QRCode
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                     if (position != 0) {
-                        if (!spinnerArray.get(position).equals("Select a center")) {
-                            if (!spinnerArray.get(position).equals("Select a center")) {
+                        if (!spinnerArray.get(position).equals("Select an area")) {
+                            if (!spinnerArray.get(position).equals("Select an area")) {
                                 selectedSendingAreaId = Integer.toString(response.body().get(position - 1).getId());
                                 Log.d(TAG, "onItemSelected: " + response.body().get(position - 1).getName());
                                 Log.d(TAG, "onItemSelected: " + selectedSendingAreaId.toString());
