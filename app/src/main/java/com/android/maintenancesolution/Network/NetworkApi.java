@@ -47,7 +47,7 @@ public interface NetworkApi {
     @POST("/token/")
     Call<Token> authNetwork(@Field("username") String username, @Field("password") String password);
 
-    @GET("/gm/job_types/")
+    @GET("/gm/job_types/?no_pagination=True")
     Call<List<Job>> getJobTypes();
 
     @POST("/verify/")
@@ -65,7 +65,7 @@ public interface NetworkApi {
             @Part MultipartBody.Part photo1,
             @Part MultipartBody.Part photo2);
 
-    @GET("/app/customers/")
+    @GET("/app/customers/?no_pagination=True")
     Call<List<CustomerRequest>> getCustomerInfo(@Query("search") String email);
 
 
@@ -84,7 +84,7 @@ public interface NetworkApi {
     @POST("/api/students_register/")
     Call<SignupResponse> userRegisterNetwork(@Header("Authorization") String accessToken, @Body SignupRequest signupRequest);*/
 
-    @GET("/gm/user_works/")
+    @GET("/gm/user_works/?no_pagination=True")
     Call<List<Order>> getUserWorks(@Header("Authorization") String header);
 
     @POST("/gm/works/{id}/")
@@ -136,7 +136,7 @@ public interface NetworkApi {
                                                   @Part MultipartBody.Part photoA7,
                                                   @Part MultipartBody.Part photoA8);
 
-    @GET("/gm/centers/")
+    @GET("/gm/centers/?no_pagination=True")
     Call<List<Center>> getCenters(@Header("Authorization") String accessToken);
 
     @GET("/app/timeclock/active/")
@@ -149,7 +149,7 @@ public interface NetworkApi {
     Call<ActiveClockResponse> updateTimeClock(@Header("Authorization") String accessToken, @Body UpdateTimeRequest updateTimeRequest, @Path("id") String id);
 
 
-    @GET("/inv/areas/")
+    @GET("/inv/areas/?no_pagination=True")
     Call<List<Area>> getAreas(@Header("Authorization") String accessToken);
 
     @GET("/inv/assets/{id}/")
