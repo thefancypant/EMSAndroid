@@ -93,8 +93,8 @@ public class CustomerRequestForm extends AppCompatActivity {
     Spinner mJobsSpinner;
     @BindView(R.id.imageViewTools)
     ImageView imageViewTools;
-    /* @BindView(R.id.imageViewArrow)
-     ImageView imageViewArrow;*/
+    @BindView(R.id.imageViewArrow)
+    ImageView imageViewArrow;
     @BindView(R.id.listViewSelectedJobs)
     ListView mWorkTypesListView;
     @BindView(R.id.editTextDescription)
@@ -139,7 +139,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         mNotesEditText.setHorizontallyScrolling(false);
 
         mJobsSpinner.setEnabled(false);
-        // imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
+        imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
         mWorkTypesListView.setVisibility(View.GONE);
 
         getJobs();
@@ -961,13 +961,13 @@ public class CustomerRequestForm extends AppCompatActivity {
         if (jobsSelectedList.size() == 0) {
             mWorkTypesListView.setVisibility(View.GONE);
             mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_normal));
-            //imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
+            imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
             imageViewTools.setColorFilter(getResources().getColor(R.color.login_page_background));
 
         } else {
             mWorkTypesListView.setVisibility(View.VISIBLE);
             mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
-            // imageViewArrow.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+            imageViewArrow.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
             imageViewTools.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
         }
     }

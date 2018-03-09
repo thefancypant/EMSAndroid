@@ -283,6 +283,19 @@
                 app:layout_constraintStart_toStartOf="@+id/spinnerWorkType"
                 app:layout_constraintTop_toTopOf="@+id/spinnerWorkType" />
 
+            <ImageView
+                android:id="@+id/imageViewArrow"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+
+                android:src="@drawable/arrow_down"
+                app:layout_constraintBottom_toBottomOf="@+id/spinnerWorkType"
+                app:layout_constraintEnd_toEndOf="@+id/spinnerWorkType"
+                app:layout_constraintTop_toTopOf="@+id/spinnerWorkType" />
+
 
 
             <ListView
