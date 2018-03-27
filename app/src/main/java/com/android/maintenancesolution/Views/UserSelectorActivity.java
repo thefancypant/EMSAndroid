@@ -68,7 +68,7 @@ public class UserSelectorActivity extends AppCompatActivity {
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat
                             .requestPermissions(UserSelectorActivity.this
-                                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}
                                     , MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 } else {
                     Intent goToNextActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
@@ -89,7 +89,7 @@ public class UserSelectorActivity extends AppCompatActivity {
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat
                             .requestPermissions(UserSelectorActivity.this
-                                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                                    , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}
                                     , MY_PERMISSIONS_REQUEST_READ_CONTACTS);
                 }
                 Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);

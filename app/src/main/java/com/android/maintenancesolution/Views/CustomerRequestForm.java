@@ -340,9 +340,11 @@ public class CustomerRequestForm extends AppCompatActivity {
     }
 
     private void processCustomerInfo(List<CustomerRequest> body) {
+        if (body.size() != 0) {
 
-        mNameEditText.setText(body.get(0).getName());
-        mPhoneNumberEditText.setText(body.get(0).getPhone());
+            mNameEditText.setText(body.get(0).getName());
+            mPhoneNumberEditText.setText(body.get(0).getPhone());
+        }
     }
 
     private void getJobs() {
@@ -734,7 +736,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                             if (ContextCompat
                                     .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                 ActivityCompat
-                                        .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_CAMERA);
+                                        .requestPermissions(CustomerRequestForm.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_CAMERA);
                             } else {
 
                                 cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
