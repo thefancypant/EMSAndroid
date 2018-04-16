@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.maintenancesolution">
+    package="com.maintenancesolution">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,13 +13,13 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ems_app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".Views.SplashScreenActivity"
+            android:name=".ems.Views.SplashScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,52 +39,57 @@
         </provider>
 
         <activity
-            android:name=".Views.LoginActivity"
+            android:name=".ems.Views.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Views.ListActivity.ListActivity"
+            android:name=".ems.Views.ListActivity.ListActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Views.OrderDetail"
+            android:name=".ems.Views.OrderDetail"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".Views.CustomerRequestForm"
+            android:name=".ems.Views.CustomerRequestForm"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Views.CustomerFeedbackActivity"
+            android:name=".ems.Views.CustomerFeedbackActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".Views.UserSelectorActivity"
+            android:name=".ems.Views.UserSelectorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Views.ThankYouActivity"
+            android:name=".ems.Views.ThankYouActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Views.SelectImagesActivity"
+            android:name=".ems.Views.SelectImagesActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Views.DashboardActivity"
+        <activity
+            android:name=".ems.Views.DashboardActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Views.ClockActivity"
+            android:name=".ems.Views.ClockActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Views.ScanInventoryActivity"
+        <activity
+            android:name=".ems.Views.ScanInventoryActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Views.CheckingInventoryActivity"
+        <activity
+            android:name=".ems.Views.CheckingInventoryActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Views.MovingInventoryActivity"
+        <activity
+            android:name=".ems.Views.MovingInventoryActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".Views.CountingInventoryActivity"
+        <activity
+            android:name=".ems.Views.CountingInventoryActivity"
             android:screenOrientation="portrait"></activity>
     </application>
 
