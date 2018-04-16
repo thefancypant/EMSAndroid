@@ -9,8 +9,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Button;
 
 import com.maintenancesolution.R;
+import com.maintenancesolution.ems.Utils.PreferenceUtils;
 import com.maintenancesolution.ems.Views.ListActivity.ListActivity;
 
 import butterknife.BindView;
@@ -24,8 +29,6 @@ public class DashboardActivity extends AppCompatActivity {
     ConstraintLayout generalMaintenanceLayout;
     @BindView(R.id.timeCardLayout)
     ConstraintLayout timeCardLayout;
-    @BindView(R.id.InventoryCardLayout)
-    ConstraintLayout InventoryCardLayout;
     @BindView(R.id.InventoryCardItemZero)
     ConstraintLayout InventoryCardItemLayout;
     @BindView(R.id.InventoryCardItemOne)
@@ -34,15 +37,54 @@ public class DashboardActivity extends AppCompatActivity {
     ConstraintLayout InventoryCardItemTwo;
     @BindView(R.id.list_constraint_layout)
     ConstraintLayout listConstraintLayout;
+    MenuInflater inflater;
     private String TAG = "DashboardActivity";
+    private android.support.v7.widget.Toolbar toolbar;
+    private Button refreshButton;
+    private PreferenceUtils preferenceUtils;
+    private String header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+        getPrefUtils();
         checkCameraPermissions();
 
+        // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
+
+        toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        getPrefUtils();
+        // Handle item selection
+        switch (item.getItemId()) {
+           /* case R.id.action_refresh:
+                this.makeRequest();
+                return true;*/
+            case R.id.action_logout:
+                //Logout logic goes here
+                preferenceUtils.saveAuthToken("");
+                final Intent intent = new Intent(DashboardActivity.this, UserSelectorActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void checkCameraPermissions() {
@@ -90,6 +132,12 @@ public class DashboardActivity extends AppCompatActivity {
         Intent startListActivity = new Intent(getApplicationContext(), CountingInventoryActivity.class);
         startActivity(startListActivity);
     }
+
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(DashboardActivity.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
+    }
+
 
 
     @Override

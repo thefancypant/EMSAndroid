@@ -20,9 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -37,7 +35,6 @@ import com.maintenancesolution.ems.Models.PostLocationResponse;
 import com.maintenancesolution.ems.Network.NetworkService;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
 import com.maintenancesolution.ems.Views.OrderDetail;
-import com.maintenancesolution.ems.Views.UserSelectorActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -114,7 +111,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         // Set the list's click listener
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
@@ -126,9 +123,9 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         getPrefUtils();
         // Handle item selection
         switch (item.getItemId()) {
-           /* case R.id.action_refresh:
+           *//* case R.id.action_refresh:
                 this.makeRequest();
-                return true;*/
+                return true;*//*
             case R.id.action_logout:
                 //Logout logic goes here
                 preferenceUtils.saveAuthToken("");
@@ -139,7 +136,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
     private void makeRequest() {
         showProgress(true);

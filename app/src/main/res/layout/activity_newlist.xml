@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/login_page_background">
 
-    <include
+    <!--<include
         android:id="@+id/my_toolbar"
         layout="@layout/tool_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-    </include>
+    </include>-->
     <ProgressBar
         android:id="@+id/list_progress_bar"
         style="android:attr/progressBarStyleLarge"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/my_toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
