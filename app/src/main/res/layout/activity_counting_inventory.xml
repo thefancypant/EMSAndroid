@@ -13,7 +13,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+        app:srcCompat="@drawable/emslogo" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                 app:layout_constraintStart_toEndOf="@+id/numberOfItemsHeadingTextView"
                 app:layout_constraintTop_toBottomOf="@+id/scanner" />
 
-            <com.android.maintenancesolution.Utils.ExpandableHeightGridView
+            <com.maintenancesolution.ems.Utils.ExpandableHeightGridView
                 android:id="@+id/codeGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/numberOfItemsHeadingTextView">
 
-            </com.android.maintenancesolution.Utils.ExpandableHeightGridView>
+            </com.maintenancesolution.ems.Utils.ExpandableHeightGridView>
 
 
             <Button

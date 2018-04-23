@@ -10,7 +10,7 @@
         android:layout_width="289dp"
         android:layout_height="83dp"
         android:layout_marginTop="36dp"
-        android:src="@drawable/entiremaintenancesolutionslogo"
+        android:src="@drawable/emslogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"

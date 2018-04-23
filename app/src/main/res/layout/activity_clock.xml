@@ -44,7 +44,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/entiremaintenancesolutionslogo" />
+            app:srcCompat="@drawable/emslogo" />
 
         <ImageView
             android:id="@+id/imageView7"
