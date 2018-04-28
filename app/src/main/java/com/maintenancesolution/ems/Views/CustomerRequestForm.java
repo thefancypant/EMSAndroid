@@ -85,10 +85,18 @@ public class CustomerRequestForm extends AppCompatActivity {
     ImageView imageViewPhoto1;
     @BindView(R.id.imageViewPhoto2)
     ImageView imageViewPhoto2;
+    @BindView(R.id.imageViewPhoto3)
+    ImageView imageViewPhoto3;
+    @BindView(R.id.imageViewPhoto4)
+    ImageView imageViewPhoto4;
     @BindView(R.id.imageViewPhoto1Logo)
     ImageView imageViewPhoto1Logo;
     @BindView(R.id.imageViewPhoto2Logo)
     ImageView imageViewPhoto2Logo;
+    @BindView(R.id.imageViewPhoto3Logo)
+    ImageView imageViewPhoto3Logo;
+    @BindView(R.id.imageViewPhoto4Logo)
+    ImageView imageViewPhoto4Logo;
     @BindView(R.id.spinnerWorkType)
     Spinner mJobsSpinner;
     @BindView(R.id.imageViewTools)
@@ -112,10 +120,14 @@ public class CustomerRequestForm extends AppCompatActivity {
     private ImageView selectedImageView;
     private File compressedFileOne;
     private File compressedFileTwo;
+    private File compressedFileThree;
+    private File compressedFileFour;
     private File galleryFile;
     private File galleryCompressedFile;
     private MultipartBody.Part photoPart1;
     private MultipartBody.Part photoPart2;
+    private MultipartBody.Part photoPart3;
+    private MultipartBody.Part photoPart4;
     private int MY_PERMISSIONS_CAMERA = 1;
     private int MY_PERMISSIONS_GALLERY = 2;
 
@@ -613,6 +625,24 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         }
 
+        if (compressedFileThree != null) {
+            RequestBody imageFileBody =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileThree);
+            photoPart3 = MultipartBody
+                    .Part
+                    .createFormData("photo3", compressedFileThree.getName(), imageFileBody);
+
+        }
+        if (compressedFileFour != null) {
+            RequestBody imageFileBody =
+                    RequestBody.create(MediaType.parse("image/*"), compressedFileFour);
+            photoPart4 = MultipartBody
+                    .Part
+                    .createFormData("photo4", compressedFileFour.getName(), imageFileBody);
+
+
+        }
+
         customerRequest = new CustomerRequest(
                 mNameEditText.getText().toString().trim()
                 , mAddressEditText.getText().toString().trim()
@@ -631,7 +661,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         mEmailEditText.getText().toString().trim(),
                         mPhoneNumberEditText.getText().toString().trim(),
                         mNotesEditText.getText().toString().trim(),
-                        jobTypes, photoPart1, photoPart2)
+                        jobTypes, photoPart1, photoPart2, photoPart3, photoPart4)
                 .enqueue(new Callback<Token>() {
                     @Override
                     public void onResponse(Call<Token> call, Response<Token> response) {
@@ -672,8 +702,10 @@ public class CustomerRequestForm extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.imageViewPhoto1
-            , R.id.imageViewPhoto2
+    @OnClick({R.id.imageViewPhoto1,
+            R.id.imageViewPhoto2,
+            R.id.imageViewPhoto3,
+            R.id.imageViewPhoto4
     })
     public void click(ImageView imageView) {
         Log.d("id", "doSomething: clicked ID" + Integer.toString(imageView.getId()));
@@ -689,6 +721,18 @@ public class CustomerRequestForm extends AppCompatActivity {
                 break;
             case R.id.imageViewPhoto2:
                 selectedImageView = imageViewPhoto2;
+                showPickImageDialog();
+
+                break;
+            case R.id.imageViewPhoto3:
+                selectedImageView = imageViewPhoto3;
+
+                showPickImageDialog();
+
+
+                break;
+            case R.id.imageViewPhoto4:
+                selectedImageView = imageViewPhoto4;
                 showPickImageDialog();
 
                 break;
@@ -793,8 +837,6 @@ public class CustomerRequestForm extends AppCompatActivity {
                             .load(cameraCompressedFile)
                             .into(imageViewPhoto1);
                     compressedFileOne = cameraCompressedFile;
-
-
                     break;
                 case R.id.imageViewPhoto2:
                     imageViewPhoto2Logo.setVisibility(View.GONE);
@@ -802,6 +844,21 @@ public class CustomerRequestForm extends AppCompatActivity {
                             .load(cameraCompressedFile)
                             .into(imageViewPhoto2);
                     compressedFileTwo = cameraCompressedFile;
+                    break;
+                case R.id.imageViewPhoto3:
+                    imageViewPhoto3Logo.setVisibility(View.GONE);
+
+                    Picasso.with(getApplicationContext())
+                            .load(cameraCompressedFile)
+                            .into(imageViewPhoto3);
+                    compressedFileThree = cameraCompressedFile;
+                    break;
+                case R.id.imageViewPhoto4:
+                    imageViewPhoto4Logo.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext())
+                            .load(cameraCompressedFile)
+                            .into(imageViewPhoto4);
+                    compressedFileFour = cameraCompressedFile;
                     break;
             }
 
@@ -836,18 +893,30 @@ public class CustomerRequestForm extends AppCompatActivity {
                             .load(galleryCompressedFile)
                             .into(imageViewPhoto1);
                     compressedFileOne = galleryCompressedFile;
-
-
                     break;
                 case R.id.imageViewPhoto2:
-                    if (galleryCompressedFile.length() != 0)
 
                         imageViewPhoto2Logo.setVisibility(View.GONE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewPhoto2);
                     compressedFileTwo = galleryCompressedFile;
+                    break;
+                case R.id.imageViewPhoto3:
 
+                    imageViewPhoto3Logo.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext())
+                            .load(galleryCompressedFile)
+                            .into(imageViewPhoto3);
+                    compressedFileThree = galleryCompressedFile;
+                    break;
+                case R.id.imageViewPhoto4:
+
+                    imageViewPhoto4Logo.setVisibility(View.GONE);
+                    Picasso.with(getApplicationContext())
+                            .load(galleryCompressedFile)
+                            .into(imageViewPhoto4);
+                    compressedFileFour = galleryCompressedFile;
                     break;
             }
 

@@ -64,4 +64,5 @@
     <string name="select_sending_to_and_current_area">Please select valid moving from area and sending to area</string>
     <string name="scan_assets">Please scan assets.</string>
     <string name="select_a_valid_code">Please select a valid area code</string>
+    <string name="associate">Associate</string>
 </resources>

@@ -63,7 +63,9 @@ public interface NetworkApi {
             @Part("notes") String description,
             @Part("types") String types,
             @Part MultipartBody.Part photo1,
-            @Part MultipartBody.Part photo2);
+            @Part MultipartBody.Part photo2,
+            @Part MultipartBody.Part photo3,
+            @Part MultipartBody.Part photo4);
 
     @GET("/app/customers?no_pagination=True")
     Call<List<CustomerRequest>> getCustomerInfo(@Query("search") String email);
