@@ -59,9 +59,9 @@ import retrofit2.Response;
 
 public class CustomerRequestForm extends AppCompatActivity {
 
+    private static final String TAG = "CustomerRequestForm";
     private static int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     final String dir = Environment.getExternalStoragePublicDirectory(".Consulting") + "/Folder/";
-
     List<Job> workTypesList = new ArrayList<>();
     WorkTypeAdapater workTypeAdapater;
     ArrayList<String> spinnerArray = new ArrayList<>();
@@ -362,6 +362,10 @@ public class CustomerRequestForm extends AppCompatActivity {
 
             if (body.get(0).getPhone() != null) {
                 mPhoneNumberEditText.setText(body.get(0).getPhone());
+            }
+
+            if (body.get(0).getAddress() != null) {
+                mAddressEditText.setText(body.get(0).getAddress());
             }
         }
     }

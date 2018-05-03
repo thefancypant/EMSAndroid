@@ -149,6 +149,7 @@
                 android:hint="@string/phone_number"
                 android:imeOptions="actionNext"
                 android:inputType="phone"
+                android:maxLength="14"
                 android:paddingStart="40dp"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintDimensionRatio="h,5.75:0.7"
