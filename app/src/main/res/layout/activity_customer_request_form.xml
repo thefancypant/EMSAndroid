@@ -116,7 +116,7 @@
                 android:background="@color/white"
 
                 android:ems="10"
-                android:hint="@string/email"
+                android:hint="@string/customer_email"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
                 android:paddingStart="40dp"

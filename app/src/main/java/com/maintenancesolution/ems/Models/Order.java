@@ -14,7 +14,6 @@ import java.util.List;
 
 public class Order implements Parcelable {
 
-
     public static final Creator<Order> CREATOR = new Creator<Order>() {
         @Override
         public Order createFromParcel(Parcel in) {
@@ -128,6 +127,9 @@ public class Order implements Parcelable {
     @SerializedName("sign")
     @Expose
     private String sign;
+    @SerializedName("location")
+    @Expose
+    private String location;
 
 
     public Order() {
@@ -152,7 +154,6 @@ public class Order implements Parcelable {
         } else {
             longitudeRegister = in.readFloat();
         }
-        //endTime = in.readString();
         report = in.readString();
         jobtypes = in.readString();
         types = in.createTypedArrayList(Type.CREATOR);
@@ -181,6 +182,7 @@ public class Order implements Parcelable {
             evaluation = in.readInt();
         }
         sign = in.readString();
+        location = in.readString();
     }
 
     public List<Type> getTypes() {
@@ -463,6 +465,13 @@ public class Order implements Parcelable {
         isCompleted = completed;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     @Override
     public int describeContents() {
@@ -490,7 +499,6 @@ public class Order implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeFloat(longitudeRegister);
         }
-        //parcel.writeString(endTime);
         parcel.writeString(report);
         parcel.writeString(jobtypes);
         parcel.writeTypedList(types);
@@ -519,5 +527,6 @@ public class Order implements Parcelable {
             parcel.writeInt(evaluation);
         }
         parcel.writeString(sign);
+        parcel.writeString(location);
     }
 }

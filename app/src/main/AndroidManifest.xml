@@ -16,7 +16,7 @@
         android:icon="@mipmap/ems_app_logo"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ems_app_logo"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".ems.Views.SplashScreenActivity"

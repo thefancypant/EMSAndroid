@@ -37,6 +37,7 @@ import com.maintenancesolution.ems.Models.Token;
 import com.maintenancesolution.ems.Network.NetworkService;
 import com.maintenancesolution.ems.Utils.FileUtils;
 import com.maintenancesolution.ems.Utils.GeneralUtils;
+import com.maintenancesolution.ems.Utils.PreferenceUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -130,6 +131,9 @@ public class CustomerRequestForm extends AppCompatActivity {
     private MultipartBody.Part photoPart4;
     private int MY_PERMISSIONS_CAMERA = 1;
     private int MY_PERMISSIONS_GALLERY = 2;
+    private boolean authenticatedUser = false;
+    private PreferenceUtils preferenceUtils;
+    private String header;
 
     //private View mProgressView;
 
@@ -138,6 +142,12 @@ public class CustomerRequestForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_request_form);
         ButterKnife.bind(this);
+
+        if (getIntent().getBooleanExtra("AuthenticatedUser", false)) {
+            authenticatedUser = true;
+            getPrefUtils();
+        }
+
 
         generalUtils = new GeneralUtils(CustomerRequestForm.this);
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
@@ -198,7 +208,42 @@ public class CustomerRequestForm extends AppCompatActivity {
             public void onFocusChange(View view, boolean focusBoolean) {
                 if (!focusBoolean) {
                     //Toast.makeText(getApplicationContext(),mEmailEditText.getText().toString(),Toast.LENGTH_LONG).show();
-                    getCustomerInfo(mEmailEditText.getText().toString());
+                    if ((!mEmailEditText.getText().toString().trim().equals("")) &&
+                            mPhoneNumberEditText.getText().toString().trim().equals("") &&
+                            mNameEditText.getText().toString().trim().equals("")) {
+                        getCustomerInfoByEmail(mEmailEditText.getText().toString());
+                    }
+
+                }
+            }
+        });
+
+        mPhoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focusBoolean) {
+                if (!focusBoolean) {
+                    //Toast.makeText(getApplicationContext(),mEmailEditText.getText().toString(),Toast.LENGTH_LONG).show();
+                    if ((mEmailEditText.getText().toString().trim().equals("")) &&
+                            !mPhoneNumberEditText.getText().toString().trim().equals("") &&
+                            mNameEditText.getText().toString().trim().equals("")) {
+
+                        getCustomerInfoByPhone(mPhoneNumberEditText.getText().toString());
+                    }
+                }
+            }
+        });
+
+        mNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focusBoolean) {
+                if (!focusBoolean) {
+                    //Toast.makeText(getApplicationContext(),mEmailEditText.getText().toString(),Toast.LENGTH_LONG).show();
+                    if ((mEmailEditText.getText().toString().trim().equals("")) &&
+                            mPhoneNumberEditText.getText().toString().trim().equals("") &&
+                            !mNameEditText.getText().toString().trim().equals("")) {
+
+                        getCustomerInfoByName(mNameEditText.getText().toString());
+                    }
 
                 }
             }
@@ -332,10 +377,53 @@ public class CustomerRequestForm extends AppCompatActivity {
 
     }
 
-    private void getCustomerInfo(String s) {
+    private void getPrefUtils() {
+        preferenceUtils = new PreferenceUtils(CustomerRequestForm.this);
+        header = "JWT " + preferenceUtils.getAuthToken();
+    }
+
+    private void getCustomerInfoByEmail(String s) {
         NetworkService
                 .getInstance()
-                .getCustomerInfo(s)
+                .getCustomerInfoByEmail(s)
+                .enqueue(new Callback<List<CustomerRequest>>() {
+                    @Override
+                    public void onResponse(Call<List<CustomerRequest>> call, Response<List<CustomerRequest>> response) {
+                        if (response.code() == 200) {
+                            processCustomerInfo(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CustomerRequest>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void getCustomerInfoByPhone(String s) {
+        NetworkService
+                .getInstance()
+                .getCustomerInfoByPhone(s)
+                .enqueue(new Callback<List<CustomerRequest>>() {
+                    @Override
+                    public void onResponse(Call<List<CustomerRequest>> call, Response<List<CustomerRequest>> response) {
+                        if (response.code() == 200) {
+                            processCustomerInfo(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CustomerRequest>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void getCustomerInfoByName(String s) {
+        NetworkService
+                .getInstance()
+                .getCustomerInfoByName(s)
                 .enqueue(new Callback<List<CustomerRequest>>() {
                     @Override
                     public void onResponse(Call<List<CustomerRequest>> call, Response<List<CustomerRequest>> response) {
@@ -657,52 +745,106 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         Log.d("test", "makeRequest: " + mNameEditText.getText().toString().trim());
 
-        NetworkService
-                .getInstance()
-                .customerFormSubmit(
-                        mNameEditText.getText().toString().trim(),
-                        mAddressEditText.getText().toString().trim(),
-                        mEmailEditText.getText().toString().trim(),
-                        mPhoneNumberEditText.getText().toString().trim(),
-                        mNotesEditText.getText().toString().trim(),
-                        jobTypes, photoPart1, photoPart2, photoPart3, photoPart4)
-                .enqueue(new Callback<Token>() {
-                    @Override
-                    public void onResponse(Call<Token> call, Response<Token> response) {
-                        //sendData(customerRequest);
+        if (!authenticatedUser) {
 
-                        Log.d("jobTypes", "Successful");
-                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
-                        alertDialog.setTitle("Success!");
-                        alertDialog.setMessage("You have successfully submitted your request!");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
-                                        goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(goToNextActivity);
-                                        finish();
-                                    }
-                                });
-                        alertDialog.show();
+            NetworkService
+                    .getInstance()
+                    .customerFormSubmit(
+                            mNameEditText.getText().toString().trim(),
+                            mAddressEditText.getText().toString().trim(),
+                            mEmailEditText.getText().toString().trim(),
+                            mPhoneNumberEditText.getText().toString().trim(),
+                            mNotesEditText.getText().toString().trim(),
+                            jobTypes, photoPart1, photoPart2, photoPart3, photoPart4)
+                    .enqueue(new Callback<Token>() {
+                        @Override
+                        public void onResponse(Call<Token> call, Response<Token> response) {
+                            //sendData(customerRequest);
 
-                    }
+                            Log.d("jobTypes", "Successful");
+                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                            alertDialog.setTitle("Success!");
+                            alertDialog.setMessage("You have successfully submitted your request!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
+                                            goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(goToNextActivity);
+                                            finish();
+                                        }
+                                    });
+                            alertDialog.show();
 
-                    @Override
-                    public void onFailure(Call<Token> call, Throwable t) {
-                        Log.d("jobTypes", "Fail");
-                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
-                        alertDialog.setTitle("Failure!");
-                        alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        finish();
-                                    }
-                                });
-                        alertDialog.show();
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onFailure(Call<Token> call, Throwable t) {
+                            Log.d("jobTypes", "Fail");
+                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                            alertDialog.setTitle("Failure!");
+                            alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                    });
+        } else {
+
+            NetworkService
+                    .getInstance()
+                    .customerFormSubmit(
+                            header,
+                            mNameEditText.getText().toString().trim(),
+                            mAddressEditText.getText().toString().trim(),
+                            mEmailEditText.getText().toString().trim(),
+                            mPhoneNumberEditText.getText().toString().trim(),
+                            mNotesEditText.getText().toString().trim(),
+                            jobTypes, photoPart1, photoPart2, photoPart3, photoPart4)
+                    .enqueue(new Callback<Token>() {
+                        @Override
+                        public void onResponse(Call<Token> call, Response<Token> response) {
+                            //sendData(customerRequest);
+
+                            Log.d("jobTypes", "Successful");
+                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                            alertDialog.setTitle("Success!");
+                            alertDialog.setMessage("You have successfully submitted your request!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
+                                            goToNextActivity.putExtra("AuthenticatedUser", true);
+                                            goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(goToNextActivity);
+                                            finish();
+                                        }
+                                    });
+                            alertDialog.show();
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<Token> call, Throwable t) {
+                            Log.d("jobTypes", "Fail");
+                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                            alertDialog.setTitle("Failure!");
+                            alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
+                    });
+
+        }
     }
 
 

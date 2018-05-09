@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.maintenancesolution.R;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
@@ -43,6 +44,8 @@ public class DashboardActivity extends AppCompatActivity {
     ConstraintLayout InventoryCardItemTwo;
     @BindView(R.id.list_constraint_layout)
     ConstraintLayout listConstraintLayout;
+    @BindView(R.id.textViewNewOrder)
+    TextView textViewNewOrder;
     MenuInflater inflater;
     private String TAG = "DashboardActivity";
     private android.support.v7.widget.Toolbar toolbar;
@@ -110,6 +113,13 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.textViewNewOrder)
+    public void newOrder() {
+        Intent startListActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
+        startListActivity.putExtra("AuthenticatedUser", true);
+        startActivity(startListActivity);
+
+    }
 
     @OnClick(R.id.generalMaintenanceLayout)
     public void generalMaintenance() {

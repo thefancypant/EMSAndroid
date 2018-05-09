@@ -67,8 +67,29 @@ public interface NetworkApi {
             @Part MultipartBody.Part photo3,
             @Part MultipartBody.Part photo4);
 
+    @Multipart
+    @POST("/gm/post_job_requests/")
+    Call<Token> customerFormSubmit(
+            @Header("Authorization") String accessToken,
+            @Part("name") String name,
+            @Part("address") String address,
+            @Part("email") String email,
+            @Part("phone") String phone,
+            @Part("notes") String description,
+            @Part("types") String types,
+            @Part MultipartBody.Part photo1,
+            @Part MultipartBody.Part photo2,
+            @Part MultipartBody.Part photo3,
+            @Part MultipartBody.Part photo4);
+
     @GET("/app/customers?no_pagination=True")
-    Call<List<CustomerRequest>> getCustomerInfo(@Query("search") String email);
+    Call<List<CustomerRequest>> getCustomerInfoByEmail(@Query("email") String email);
+
+    @GET("/app/customers?no_pagination=True")
+    Call<List<CustomerRequest>> getCustomerInfoByPhone(@Query("phone") String phone);
+
+    @GET("/app/customers?no_pagination=True")
+    Call<List<CustomerRequest>> getCustomerInfoByName(@Query("name") String name);
 
 
 

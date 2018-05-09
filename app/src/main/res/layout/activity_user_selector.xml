@@ -93,7 +93,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:padding="4dp"
-            android:text="@string/customer"
+            android:text="@string/other_users"
             android:textColor="@color/text_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
