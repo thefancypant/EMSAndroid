@@ -36,6 +36,12 @@ public class ScanInventoryActivity extends AppCompatActivity implements QRCodeRe
     TextView typeTextView;
     @BindView(R.id.assetLayout)
     ConstraintLayout assetLayout;
+    @BindView(R.id.subtypeTextView)
+    TextView subtypeTextView;
+    @BindView(R.id.serialTextView)
+    TextView serialTextView;
+    @BindView(R.id.conditionTextView)
+    TextView conditionTextView;
     private String TAG = "ScanInventoryActivity";
     private PreferenceUtils preferenceUtils;
     private String header;
@@ -112,6 +118,9 @@ public class ScanInventoryActivity extends AppCompatActivity implements QRCodeRe
             descriptionTextView.setText(asset.getDescription());
             codeTextView.setText(asset.getCode());
             typeTextView.setText(asset.getType().getName());
+            subtypeTextView.setText(asset.getSubType().getName());
+            serialTextView.setText(asset.getSerial());
+            conditionTextView.setText(asset.getCondition());
         }
 
 

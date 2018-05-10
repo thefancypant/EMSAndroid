@@ -35,6 +35,16 @@ public class Asset {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("subtype")
+    @Expose
+    private SubType subType;
+    @SerializedName("serial")
+    @Expose
+    private String serial;
+    @SerializedName("condition_name")
+    @Expose
+    private String condition;
+
 
     public String getId() {
         return id;
@@ -106,5 +116,29 @@ public class Asset {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public SubType getSubType() {
+        return subType;
+    }
+
+    public void setSubType(SubType subType) {
+        this.subType = subType;
+    }
+
+    public String getSerial() {
+        return serial;
+    }
+
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 }

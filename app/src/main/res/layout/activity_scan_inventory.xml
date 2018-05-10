@@ -82,6 +82,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scanBarcodeaboveTextview">
 
+            <android.support.constraint.Guideline
+                android:id="@+id/horizontalGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
             <ImageView
                 android:id="@+id/descriptionImageView"
                 android:layout_width="65dp"
@@ -147,6 +154,33 @@
                 app:layout_goneMarginTop="10dp" />
 
             <TextView
+                android:id="@+id/subtypeHeadingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="5dp"
+                android:text="Subtype"
+
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/horizontalGuideline"
+                app:layout_constraintTop_toBottomOf="@+id/responsibleTextView"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
+                android:id="@+id/subtypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Equipment"
+                android:textColor="@color/text_black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/horizontalGuideline"
+                app:layout_constraintTop_toBottomOf="@+id/areaHeadingTextView"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
                 android:id="@+id/descriptionHeadingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -196,16 +230,65 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:text="adc-def-ghi-jkl"
                 android:textColor="@color/text_black"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/typeHeadingTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="@id/horizontalGuideline"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
+                android:id="@+id/serialHeadingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Serial"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/codeTextView"
+                app:layout_constraintStart_toStartOf="@+id/horizontalGuideline"
+                app:layout_constraintTop_toTopOf="@+id/codeHeadingTextView"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
+                android:id="@+id/serialTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="1234567890"
+                android:textColor="@color/text_black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/horizontalGuideline"
+                app:layout_constraintTop_toBottomOf="@+id/serialHeadingTextView"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
+                android:id="@+id/conditionHeadingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Condition"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/horizontalGuideline"
+                app:layout_constraintTop_toTopOf="@+id/typeHeadingTextView"
+                app:layout_goneMarginTop="10dp" />
+
+            <TextView
+                android:id="@+id/conditionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="New"
+                android:textColor="@color/text_black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/horizontalGuideline"
+                app:layout_constraintTop_toBottomOf="@+id/conditionHeadingTextView"
                 app:layout_goneMarginTop="10dp" />
 
 
@@ -226,15 +309,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="16dp"
                 android:text="Vacuum Cleaner"
                 android:textColor="@color/text_black"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toStartOf="@+id/horizontalGuideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_goneMarginTop="10dp" />
 
