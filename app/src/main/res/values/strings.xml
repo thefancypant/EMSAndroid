@@ -67,4 +67,8 @@
     <string name="associate">Associate</string>
     <string name="customer_email">Customer Email</string>
     <string name="other_users">Other users</string>
+    <string name="sign_up">Sign up</string>
+    <string name="company_name">Company name</string>
+    <string name="new_user">New User</string>
+    <string name="notes">Notes</string>
 </resources>

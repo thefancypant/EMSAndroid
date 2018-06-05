@@ -71,7 +71,7 @@
         <activity
             android:name=".ems.Views.DashboardActivity"
             android:label=""
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ems.Views.ClockActivity"
             android:screenOrientation="portrait" />
@@ -82,16 +82,17 @@
 
         <activity
             android:name=".ems.Views.ScanInventoryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ems.Views.CheckingInventoryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ems.Views.MovingInventoryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ems.Views.CountingInventoryActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".ems.Views.SignupActivity"></activity>
     </application>
 
 </manifest>
