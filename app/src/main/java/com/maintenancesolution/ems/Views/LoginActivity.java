@@ -2,8 +2,10 @@ package com.maintenancesolution.ems.Views;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,15 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.maintenancesolution.R;
+import com.maintenancesolution.ems.Models.SignupResponse;
 import com.maintenancesolution.ems.Models.Token;
 import com.maintenancesolution.ems.Network.NetworkService;
+import com.maintenancesolution.ems.Utils.Constants;
 import com.maintenancesolution.ems.Utils.GeneralUtils;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
-
-import org.json.JSONException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +45,9 @@ public class LoginActivity extends AppCompatActivity {
     private Dialog alertDialog;
     private ImageView imageViewUsername;
     private ImageView imageViewPassword;
+    private TextView textViewSignup;
+    private String header;
+    private String userGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +61,26 @@ public class LoginActivity extends AppCompatActivity {
         mEmailSignInButton = findViewById(R.id.buttonLogin);
         imageViewUsername = findViewById(R.id.imageViewUsername);
         imageViewPassword = findViewById(R.id.imageViewPassword);
+        textViewSignup = findViewById(R.id.textViewSignup);
         generalUtils = new GeneralUtils(LoginActivity.this);
 
         generalUtils.setEditTextUI(mEmailView, R.drawable.gray_username, R.drawable.blue_username, imageViewUsername);
         generalUtils.setEditTextUI(mPasswordView, R.drawable.gray_password, R.drawable.blue_password, imageViewPassword);
 
+        textViewSignup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goToNextActivity = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(goToNextActivity);
+            }
+        });
 
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     attemptLogin();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Log.d(TAG, e.toString());
 
                 }
@@ -110,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() throws JSONException {
+    private void attemptLogin() {
         /*if (mAuthTask != null) {
             return;
         }
@@ -172,14 +186,84 @@ public class LoginActivity extends AppCompatActivity {
     private void processAuthNetwork(Response<Token> response) {
         if (response.code() >= 200 && response.code() < 299) {
             preferenceUtils.saveAuthToken(response.body().getToken());
-            Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
+
+
+
+            /*Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(goToNextActivity);
+            startActivity(goToNextActivity);*/
+            checkUser(response.body().getToken());
+
+
         } else {
             Toast.makeText(getApplication(), "Username or Password Incorrect ", Toast.LENGTH_LONG).show();
         }
 
     }
+
+
+    private void checkUser(String token) {
+        //preferenceUtils = new PreferenceUtils(LoginActivity.this);
+        header = "JWT " + token;
+
+        NetworkService
+                .getInstance()
+                .checkUser(header)
+                .enqueue(new Callback<SignupResponse>() {
+                    @Override
+                    public void onResponse(Call<SignupResponse> call, Response<SignupResponse> response) {
+
+                        if (response.code() >= 200 && response.code() < 299) {
+                            processCheckUser(response);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SignupResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.toString());
+                    }
+                });
+    }
+
+    private void processCheckUser(Response<SignupResponse> response) {
+
+        if (!response.body().isActive()) {
+            //Show popup and send to login
+            AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+            alertDialog.setTitle("Success!");
+            alertDialog.setMessage("We will get in touch with you soon.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            /*Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
+                            goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(goToNextActivity);
+                            finish();*/
+                        }
+                    });
+            alertDialog.show();
+        } else {
+            if (response.body().getGroup() == "Customer") {
+
+                //userGroup= Constants.CUSTOMER;
+                Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                goToNextActivity.putExtra(Constants.USER_GROUP, 1);
+                startActivity(goToNextActivity);
+            } else /*if(response.body().getGroup().equals("Area Manager"))*/ {
+
+                Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                goToNextActivity.putExtra(Constants.USER_GROUP, 2);
+                startActivity(goToNextActivity);
+            }
+
+        }
+
+    }
+
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic

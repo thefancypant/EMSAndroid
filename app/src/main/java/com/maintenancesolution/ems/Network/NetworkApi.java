@@ -13,6 +13,8 @@ import com.maintenancesolution.ems.Models.MoveAssetsRequest;
 import com.maintenancesolution.ems.Models.Order;
 import com.maintenancesolution.ems.Models.PostLocationRequest;
 import com.maintenancesolution.ems.Models.PostLocationResponse;
+import com.maintenancesolution.ems.Models.SignupRequest;
+import com.maintenancesolution.ems.Models.SignupResponse;
 import com.maintenancesolution.ems.Models.Token;
 import com.maintenancesolution.ems.Models.UpdateAssetLocationRequest;
 import com.maintenancesolution.ems.Models.UpdateTimeRequest;
@@ -52,6 +54,9 @@ public interface NetworkApi {
 
     @POST("/verify/")
     Call<Token> verify(@Body Token token);
+
+    @POST("/app/users/new/")
+    Call<SignupResponse> newUserSignup(@Body SignupRequest signupRequest);
 
     @Multipart
     @POST("/gm/post_job_requests/")
@@ -190,6 +195,9 @@ public interface NetworkApi {
 
     @POST("/inv/assets_moving_assets/")
     Call<Asset> moveAssets(@Header("Authorization") String accessToken, @Body MoveAssetsRequest moveAssetsRequest);
+
+    @GET("/app/users/check/")
+    Call<SignupResponse> checkUser(@Header("Authorization") String accessToken);
 
     /*@Multipart
     @POST("/api/works/{id}/")

@@ -13,14 +13,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.maintenancesolution.R;
+import com.maintenancesolution.ems.Utils.Constants;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
 import com.maintenancesolution.ems.Views.ListActivity.ListActivity;
 
@@ -44,21 +46,47 @@ public class DashboardActivity extends AppCompatActivity {
     ConstraintLayout InventoryCardItemTwo;
     @BindView(R.id.list_constraint_layout)
     ConstraintLayout listConstraintLayout;
-    @BindView(R.id.textViewNewOrder)
-    TextView textViewNewOrder;
+    /*@BindView(R.id.textViewNewOrder)
+    TextView textViewNewOrder;*/
     MenuInflater inflater;
+    @BindView(R.id.jobRequestLayout)
+    ConstraintLayout jobRequestLayout;
     private String TAG = "DashboardActivity";
-    private android.support.v7.widget.Toolbar toolbar;
+    private Toolbar toolbar;
     private Button refreshButton;
     private PreferenceUtils preferenceUtils;
     private String header;
     private LocationManager locationManager;
+    private int userGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+
+        userGroup = getIntent().getIntExtra(Constants.USER_GROUP, 1);
+
+        if (userGroup == 1) {
+
+            jobRequestLayout.setVisibility(View.VISIBLE);
+            generalMaintenanceLayout.setVisibility(View.GONE);
+            timeCardLayout.setVisibility(View.GONE);
+            InventoryCardItemLayout.setVisibility(View.GONE);
+            InventoryCardItemOne.setVisibility(View.GONE);
+            InventoryCardItemTwo.setVisibility(View.GONE);
+
+
+        } else if (userGroup == 2) {
+            jobRequestLayout.setVisibility(View.VISIBLE);
+            generalMaintenanceLayout.setVisibility(View.VISIBLE);
+            timeCardLayout.setVisibility(View.VISIBLE);
+            InventoryCardItemLayout.setVisibility(View.VISIBLE);
+            InventoryCardItemOne.setVisibility(View.VISIBLE);
+            InventoryCardItemTwo.setVisibility(View.VISIBLE);
+
+        }
+
         getPrefUtils();
         checkCameraPermissions();
 
@@ -66,7 +94,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
-
 
 
     }
@@ -89,7 +116,7 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.action_logout:
                 //Logout logic goes here
                 preferenceUtils.saveAuthToken("");
-                final Intent intent = new Intent(DashboardActivity.this, UserSelectorActivity.class);
+                final Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -113,13 +140,13 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.textViewNewOrder)
+    /*@OnClick(R.id.textViewNewOrder)
     public void newOrder() {
         Intent startListActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
         startListActivity.putExtra("AuthenticatedUser", true);
         startActivity(startListActivity);
 
-    }
+    }*/
 
     @OnClick(R.id.generalMaintenanceLayout)
     public void generalMaintenance() {
@@ -203,7 +230,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     @Override

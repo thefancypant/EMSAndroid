@@ -51,7 +51,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 }
                             });
                     alertDialog.show();*/
-                    Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
+                    Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
                     goToNextActivity.putExtra("internet", 2);
                     goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(goToNextActivity);
@@ -102,7 +102,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Token> call, Throwable t) {
-                        Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
+                        Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
                         goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(goToNextActivity);
                     }
@@ -122,7 +122,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             preferenceUtils.saveAuthToken(null);
 
-            Intent goToNextActivity = new Intent(getApplicationContext(), UserSelectorActivity.class);
+            Intent goToNextActivity = new Intent(getApplicationContext(), LoginActivity.class);
             goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(goToNextActivity);
         }
