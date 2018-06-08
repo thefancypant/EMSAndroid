@@ -68,7 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
         userGroup = getIntent().getIntExtra(Constants.USER_GROUP, 1);
 
         if (userGroup == 1) {
-
+            //Customer
             jobRequestLayout.setVisibility(View.VISIBLE);
             generalMaintenanceLayout.setVisibility(View.GONE);
             timeCardLayout.setVisibility(View.GONE);
@@ -78,6 +78,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         } else if (userGroup == 2) {
+            //Manager
             jobRequestLayout.setVisibility(View.VISIBLE);
             generalMaintenanceLayout.setVisibility(View.VISIBLE);
             timeCardLayout.setVisibility(View.VISIBLE);
@@ -140,13 +141,14 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    /*@OnClick(R.id.textViewNewOrder)
+    @OnClick(R.id.jobRequestLayout)
     public void newOrder() {
         Intent startListActivity = new Intent(getApplicationContext(), CustomerRequestForm.class);
         startListActivity.putExtra("AuthenticatedUser", true);
+        startListActivity.putExtra(Constants.USER_GROUP, userGroup);
         startActivity(startListActivity);
 
-    }*/
+    }
 
     @OnClick(R.id.generalMaintenanceLayout)
     public void generalMaintenance() {

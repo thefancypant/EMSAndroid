@@ -73,6 +73,24 @@ public interface NetworkApi {
             @Part MultipartBody.Part photo4);
 
     @Multipart
+    @POST("/gm/job_requests/")
+    Call<Token> customerFormSubmitnew(
+            @Header("Authorization") String accessToken,
+            @Part("center_id") int center_id,
+            @Part("name") String name,
+            @Part("email") String email,
+            @Part("phone") String phone,
+            @Part("address") String address,
+            @Part("notes") String description,
+            @Part("types") String types,
+            @Part("not_to_exceed") int notToExceed,
+            @Part("is_approved_from_app") int approvedFromApp,
+            @Part MultipartBody.Part photo1,
+            @Part MultipartBody.Part photo2,
+            @Part MultipartBody.Part photo3,
+            @Part MultipartBody.Part photo4);
+
+    @Multipart
     @POST("/gm/post_job_requests/")
     Call<Token> customerFormSubmit(
             @Header("Authorization") String accessToken,

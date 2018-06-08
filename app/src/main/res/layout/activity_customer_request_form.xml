@@ -109,12 +109,48 @@
                 app:layout_constraintStart_toStartOf="@+id/textViewAddress"
                 app:layout_constraintTop_toTopOf="@+id/textViewAddress" />
 
+            <Spinner
+                android:id="@+id/spinnerCenter"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/edittext_background_normal"
+                android:ems="10"
+                app:layout_constraintDimensionRatio="h,6:0.8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageViewCenter"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/gray_tools"
+                app:layout_constraintBottom_toBottomOf="@+id/spinnerCenter"
+                app:layout_constraintStart_toStartOf="@+id/spinnerCenter"
+                app:layout_constraintTop_toTopOf="@+id/spinnerCenter" />
+
+            <ImageView
+                android:id="@+id/imageViewArrowCenters"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+
+                android:src="@drawable/arrow_down"
+                app:layout_constraintBottom_toBottomOf="@+id/spinnerCenter"
+                app:layout_constraintEnd_toEndOf="@+id/spinnerCenter"
+                app:layout_constraintTop_toTopOf="@+id/spinnerCenter" />
+
             <EditText
                 android:id="@+id/textViewEmail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@color/white"
-
+                android:layout_marginTop="16dp"
                 android:ems="10"
                 android:hint="@string/customer_email"
                 android:imeOptions="actionNext"
@@ -125,7 +161,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/spinnerCenter" />
 
             <ImageView
                 android:id="@+id/imageViewEmail"
@@ -375,11 +411,84 @@
 
             </ListView>
 
+
+            <EditText
+                android:id="@+id/editTextNotToExceed"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="Not to exceed amount"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:paddingStart="40dp"
+                android:textColor="@color/colorPrimaryDark"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="@id/textViewAddress"
+                app:layout_constraintStart_toStartOf="@id/textViewAddress"
+                app:layout_constraintTop_toBottomOf="@id/imageViewPhoto3" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="@id/editTextNotToExceed"
+                app:layout_constraintTop_toBottomOf="@id/editTextNotToExceed" />
+
+            <TextView
+                android:id="@+id/textViewRadioButton1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="Approve proposal"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingStart="40dp"
+                android:paddingTop="2dp"
+                android:textSize="18sp"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="@id/editTextNotToExceed"
+                app:layout_constraintStart_toEndOf="@id/radioButton1"
+                app:layout_constraintTop_toBottomOf="@id/editTextNotToExceed" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="@id/editTextNotToExceed"
+                app:layout_constraintTop_toBottomOf="@id/radioButton1" />
+
+            <TextView
+                android:id="@+id/textViewRadioButton2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint="Request proposal"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingStart="40dp"
+                android:paddingTop="2dp"
+                android:textSize="18sp"
+                app:layout_constraintDimensionRatio="h,5.75:0.7"
+                app:layout_constraintEnd_toEndOf="@id/editTextNotToExceed"
+                app:layout_constraintStart_toEndOf="@id/radioButton2"
+                app:layout_constraintTop_toBottomOf="@id/radioButton1" />
+
             <EditText
                 android:id="@+id/editTextDescription"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="16dp"
                 android:background="@color/white"
                 android:ems="10"
                 android:gravity="left|top"
@@ -394,9 +503,10 @@
                 android:paddingTop="10dp"
                 app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
                 app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/radioButton2"
                 app:layout_constraintStart_toStartOf="@+id/textViewEmail"
-                app:layout_constraintTop_toBottomOf="@id/imageViewPhoto3"
-                tools:layout_editor_absoluteY="210dp" />
+                tools:layout_editor_absoluteY="714dp" />
 
             <ImageView
                 android:id="@+id/imageViewDescription"

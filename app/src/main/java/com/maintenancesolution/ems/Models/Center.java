@@ -15,6 +15,10 @@ public class Center {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("manager")
+    @Expose
+    private Manager manager;
+
 
 
     public Integer getId() {
@@ -33,4 +37,11 @@ public class Center {
         this.name = name;
     }
 
+    public Manager getManager() {
+        return manager;
+    }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
 }

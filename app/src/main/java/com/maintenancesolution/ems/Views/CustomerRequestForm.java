@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -24,17 +25,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.maintenancesolution.R;
 import com.maintenancesolution.ems.Misc.WorkTypeAdapater;
+import com.maintenancesolution.ems.Models.Center;
 import com.maintenancesolution.ems.Models.CustomerRequest;
 import com.maintenancesolution.ems.Models.Job;
 import com.maintenancesolution.ems.Models.Token;
 import com.maintenancesolution.ems.Network.NetworkService;
+import com.maintenancesolution.ems.Utils.Constants;
 import com.maintenancesolution.ems.Utils.FileUtils;
 import com.maintenancesolution.ems.Utils.GeneralUtils;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
@@ -114,6 +119,22 @@ public class CustomerRequestForm extends AppCompatActivity {
     Button submitButton;
     GeneralUtils generalUtils;
     CustomerRequest customerRequest;
+    @BindView(R.id.spinnerCenter)
+    Spinner spinnerCenter;
+    @BindView(R.id.imageViewCenter)
+    ImageView imageViewCenter;
+    @BindView(R.id.imageViewArrowCenters)
+    ImageView imageViewArrowCenters;
+    @BindView(R.id.editTextNotToExceed)
+    EditText editTextNotToExceed;
+    @BindView(R.id.radioButton1)
+    AppCompatRadioButton radioButton1;
+    @BindView(R.id.textViewRadioButton1)
+    TextView textViewRadioButton1;
+    @BindView(R.id.radioButton2)
+    AppCompatRadioButton radioButton2;
+    @BindView(R.id.textViewRadioButton2)
+    TextView textViewRadioButton2;
     private ArrayList<String> jobsSelectedList = new ArrayList<>();
     private String cameraImage;
     private File cameraFile;
@@ -134,6 +155,12 @@ public class CustomerRequestForm extends AppCompatActivity {
     private boolean authenticatedUser = false;
     private PreferenceUtils preferenceUtils;
     private String header;
+    private int userGroup;
+    private ArrayList<String> spinnerCentersArray = new ArrayList<>();
+
+    private int centerId;
+    private int notToExceed = 0;
+    private int approvedFromApp = 2;
 
     //private View mProgressView;
 
@@ -148,23 +175,44 @@ public class CustomerRequestForm extends AppCompatActivity {
             getPrefUtils();
         }
 
+        userGroup = getIntent().getIntExtra(Constants.USER_GROUP, 1);
+
+        if (userGroup == 1) {
+            //Customer
+            radioButton1.setVisibility(View.VISIBLE);
+            textViewRadioButton1.setVisibility(View.VISIBLE);
+            radioButton2.setVisibility(View.VISIBLE);
+            textViewRadioButton2.setVisibility(View.VISIBLE);
+
+        } else if (userGroup == 2) {
+            //Manager
+            radioButton1.setVisibility(View.GONE);
+            textViewRadioButton1.setVisibility(View.GONE);
+            radioButton2.setVisibility(View.GONE);
+            textViewRadioButton2.setVisibility(View.GONE);
+        }
+
 
         generalUtils = new GeneralUtils(CustomerRequestForm.this);
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
-        generalUtils.setEditTextUI(mEmailEditText, R.drawable.gray_email, R.drawable.blue_email, imageViewEmail);
-        generalUtils.setEditTextUI(mPhoneNumberEditText, R.drawable.gray_phone, R.drawable.blue_phone, imageViewPhone);
-        generalUtils.setEditTextUI(mNotesEditText, R.drawable.gray_request, R.drawable.blue_request, imageViewDescription);
-        generalUtils.setEditTextUI(mNameEditText);
-        generalUtils.setEditTextUI(mAddressEditText);
+        //generalUtils.setEditTextUI(mEmailEditText, R.drawable.gray_email, R.drawable.blue_email, imageViewEmail);
+        //generalUtils.setEditTextUI(mPhoneNumberEditText, R.drawable.gray_phone, R.drawable.blue_phone, imageViewPhone);
+        //generalUtils.setEditTextUI(mNotesEditText, R.drawable.gray_request, R.drawable.blue_request, imageViewDescription);
+        //generalUtils.setEditTextUI(mNameEditText);
+        //generalUtils.setEditTextUI(editTextNotToExceed);
+
+        //generalUtils.setEditTextUI(mAddressEditText);
         mNotesEditText = findViewById(R.id.editTextDescription);
         mNotesEditText.setMaxLines(4);
         mNotesEditText.setHorizontallyScrolling(false);
 
         mJobsSpinner.setEnabled(false);
+        spinnerCenter.setEnabled(false);
         imageViewArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
         mWorkTypesListView.setVisibility(View.GONE);
 
         getJobs();
+        getCenters();
 
         mWorkTypesListView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
@@ -249,6 +297,32 @@ public class CustomerRequestForm extends AppCompatActivity {
             }
         });
 
+        radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    radioButton2.setChecked(false);
+                    textViewRadioButton2.setTextColor(getResources().getColor(R.color.default_hint_color));
+
+                    textViewRadioButton1.setTextColor(getBaseContext().getResources().getColor(R.color.colorPrimaryDark));
+                    approvedFromApp = 1;
+                    //radioButton1.setButtonTintMode();
+                }
+            }
+        });
+
+        radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    radioButton1.setChecked(false);
+                    textViewRadioButton1.setTextColor(getResources().getColor(R.color.default_hint_color));
+                    textViewRadioButton2.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    approvedFromApp = 2;
+
+                }
+            }
+        });
         /*mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -514,6 +588,75 @@ public class CustomerRequestForm extends AppCompatActivity {
         });
     }
 
+    private void getCenters() {
+        NetworkService
+                .getInstance()
+                .getCenters(header)
+                .enqueue(new Callback<List<Center>>() {
+                    @Override
+                    public void onResponse(Call<List<Center>> call, Response<List<Center>> response) {
+                        if (response.code() >= 200 && response.code() < 300) {
+
+                            processCenters(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Center>> call, Throwable t) {
+
+                    }
+                });
+
+    }
+
+    private void processCenters(final List<Center> centerList) {
+
+        spinnerCentersArray.add("Select Center");
+        for (int i = 0; i < centerList.size(); i++) {
+            spinnerCentersArray.add(centerList.get(i).getName());
+        }
+        spinnerCenter.setEnabled(true);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_background, R.id.textViewJob, spinnerCentersArray);
+        spinnerCenter.setAdapter(arrayAdapter);
+
+        spinnerCenter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != 0) {
+                    if (!spinnerCentersArray.get(position).equals("Select Center")) {
+                        //jobsSelectedList.add(spinnerArray.get(position));
+
+                        centerId = centerList.get(position - 1).getId();
+
+                        mEmailEditText.setText(centerList.get(position - 1).getManager().getUser().getEmail());
+                        mNameEditText.setText(centerList.get(position - 1).getManager().getUser().getName());
+                        mPhoneNumberEditText.setText(centerList.get(position - 1).getManager().getPhone());
+                        // mEmailEditText.setFocusableInTouchMode(true);
+
+
+                        //mEmailEditText.clearFocus();
+                        //mEmailEditText.setEnabled(false);
+
+                        //mNameEditText.setEnabled(false);
+                        //mPhoneNumberEditText.setEnabled(false);
+
+                        /*workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList, CustomerRequestForm.this, null);
+                        mWorkTypesListView.setAdapter(workTypeAdapater);
+
+                        workTypeAdapater.notifyDataSetChanged();*/
+                        setSpinnerUi();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
     public WorkTypeAdapater getWorkTypeAdapater() {
         return workTypeAdapater;
     }
@@ -645,7 +788,51 @@ public class CustomerRequestForm extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             //showProgress(true);
-            makeRequest();
+
+            if (userGroup == 1) {
+
+                if (approvedFromApp == 1) {
+                    final AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                    alertDialog.setTitle("Attention!");
+                    alertDialog.setMessage("Are you sure you want to create and approve a Job Request? It will indicates EMS to generate a Work Order right away for you ?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    makeRequest();
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                } else if (approvedFromApp == 2) {
+
+                    final AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                    alertDialog.setTitle("Attention!");
+                    alertDialog.setMessage("Are you sure you want to create a Job Request and request a proposal? EMS will receive your proposal request and contact you soon");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    makeRequest();
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    alertDialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+
+                }
+
+
+            } else {
+                makeRequest();
+            }
         }
     }
 
@@ -745,55 +932,59 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         Log.d("test", "makeRequest: " + mNameEditText.getText().toString().trim());
 
-        if (!authenticatedUser) {
+        //if (!authenticatedUser) {
 
-            NetworkService
-                    .getInstance()
-                    .customerFormSubmit(
-                            mNameEditText.getText().toString().trim(),
-                            mAddressEditText.getText().toString().trim(),
-                            mEmailEditText.getText().toString().trim(),
-                            mPhoneNumberEditText.getText().toString().trim(),
-                            mNotesEditText.getText().toString().trim(),
-                            jobTypes, photoPart1, photoPart2, photoPart3, photoPart4)
-                    .enqueue(new Callback<Token>() {
-                        @Override
-                        public void onResponse(Call<Token> call, Response<Token> response) {
-                            //sendData(customerRequest);
+        NetworkService
+                .getInstance()
+                .customerFormSubmitnew(
+                        header,
+                        centerId,
+                        mNameEditText.getText().toString().trim(),
+                        mEmailEditText.getText().toString().trim(),
+                        mPhoneNumberEditText.getText().toString().trim(),
+                        mAddressEditText.getText().toString().trim(),
+                        mNotesEditText.getText().toString().trim(),
+                        jobTypes,
+                        Integer.parseInt(editTextNotToExceed.getText().toString()),
+                        approvedFromApp, photoPart1, photoPart2, photoPart3, photoPart4)
+                .enqueue(new Callback<Token>() {
+                    @Override
+                    public void onResponse(Call<Token> call, Response<Token> response) {
+                        //sendData(customerRequest);
 
-                            Log.d("jobTypes", "Successful");
-                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
-                            alertDialog.setTitle("Success!");
-                            alertDialog.setMessage("You have successfully submitted your request!");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent goToNextActivity = new Intent(getApplicationContext(), ThankYouActivity.class);
-                                            goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(goToNextActivity);
-                                            finish();
-                                        }
-                                    });
-                            alertDialog.show();
+                        Log.d("jobTypes", "Successful");
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Success!");
+                        alertDialog.setMessage("You have successfully submitted your request!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
+                                        goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(goToNextActivity);
+                                        finish();
+                                    }
+                                });
+                        alertDialog.show();
 
-                        }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Token> call, Throwable t) {
-                            Log.d("jobTypes", "Fail");
-                            AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
-                            alertDialog.setTitle("Failure!");
-                            alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            finish();
-                                        }
-                                    });
-                            alertDialog.show();
-                        }
-                    });
-        } else {
+                    @Override
+                    public void onFailure(Call<Token> call, Throwable t) {
+                        Log.d("jobTypes", "Fail");
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Failure!");
+                        alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        /*finish();*/
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                });
+        /*} else {
 
             NetworkService
                     .getInstance()
@@ -844,7 +1035,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         }
                     });
 
-        }
+        }*/
     }
 
 
@@ -1042,7 +1233,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                     break;
                 case R.id.imageViewPhoto2:
 
-                        imageViewPhoto2Logo.setVisibility(View.GONE);
+                    imageViewPhoto2Logo.setVisibility(View.GONE);
                     Picasso.with(getApplicationContext())
                             .load(galleryCompressedFile)
                             .into(imageViewPhoto2);
@@ -1190,9 +1381,9 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         } else {
             mWorkTypesListView.setVisibility(View.VISIBLE);
-            mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
+            //mJobsSpinner.setBackground(getResources().getDrawable(R.drawable.edittext_background_dark));
             imageViewArrow.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
-            imageViewTools.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+            //imageViewTools.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
         }
     }
 

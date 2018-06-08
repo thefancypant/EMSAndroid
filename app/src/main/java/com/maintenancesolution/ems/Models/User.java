@@ -23,6 +23,9 @@ public class User {
     @SerializedName("last_name")
     @Expose
     private String lastName;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
     public Integer getId() {
         return id;
@@ -64,4 +67,11 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
