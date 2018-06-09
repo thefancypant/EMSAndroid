@@ -62,4 +62,15 @@ public class PreferenceUtils {
     public String getRefreshToken() {
         return sharedPreferences.getString(Constants.REFRESH_TOKEN, null);
     }
+
+    public void saveUserType(int userType) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(Constants.USER_GROUP, userType);
+        editor.commit();
+    }
+
+    public int getUserType() {
+        return sharedPreferences.getInt(Constants.USER_GROUP, Constants.CUSTOMER_CODE);
+    }
+
 }

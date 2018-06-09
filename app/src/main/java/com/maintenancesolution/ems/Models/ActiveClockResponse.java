@@ -48,9 +48,9 @@ public class ActiveClockResponse {
     @SerializedName("lunch_out_datetime")
     @Expose
     private TimeObject lunchOutDatetime;
-    @SerializedName("hours")
+    /*@SerializedName("hours")
     @Expose
-    private Integer hours;
+    private Integer hours;*/
 
     public String getId() {
         return id;
@@ -134,12 +134,12 @@ public class ActiveClockResponse {
         this.clockInDatetime = clockInDatetime;
     }
 
-    public Integer getHours() {
+    /*public Integer getHours() {
         return hours;
     }
 
     public void setHours(Integer hours) {
         this.hours = hours;
-    }
+    }*/
 
 }

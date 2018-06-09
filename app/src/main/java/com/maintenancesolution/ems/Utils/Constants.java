@@ -11,5 +11,8 @@ public interface Constants {
     String REFRESH_TOKEN = "refreshToken";
     String CUSTOMER = "Customer";
     String USER_GROUP = "UserGroup";
+    int CUSTOMER_CODE = 1;
+    int MANAGER_CODE = 2;
+
 
 }

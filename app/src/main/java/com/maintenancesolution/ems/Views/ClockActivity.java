@@ -762,7 +762,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
             //Request location updates:
             try {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
             } catch (Exception e) {
                 e.printStackTrace();
             }

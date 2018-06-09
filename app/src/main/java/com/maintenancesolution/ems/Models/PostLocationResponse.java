@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PostLocationResponse {
 
-    @SerializedName("Message")
+    @SerializedName("message")
     @Expose
     private String message;
 

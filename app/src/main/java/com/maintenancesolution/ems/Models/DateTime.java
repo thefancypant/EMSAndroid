@@ -14,9 +14,9 @@ public class DateTime {
     @SerializedName("date")
     @Expose
     private String date;
-    @SerializedName("timestamp")
+    /*@SerializedName("timestamp")
     @Expose
-    private Integer timestamp;
+    private Integer timestamp;*/
     @SerializedName("time")
     @Expose
     private String time;
@@ -37,13 +37,13 @@ public class DateTime {
         this.date = date;
     }
 
-    public Integer getTimestamp() {
+    /*public Integer getTimestamp() {
         return timestamp;
     }
 
     public void setTimestamp(Integer timestamp) {
         this.timestamp = timestamp;
-    }
+    }*/
 
     public String getTime() {
         return time;

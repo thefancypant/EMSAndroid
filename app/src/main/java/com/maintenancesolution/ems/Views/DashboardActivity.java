@@ -65,7 +65,9 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
 
-        userGroup = getIntent().getIntExtra(Constants.USER_GROUP, 1);
+        getPrefUtils();
+
+        userGroup = preferenceUtils.getUserType();
 
         if (userGroup == 1) {
             //Customer
@@ -88,7 +90,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         }
 
-        getPrefUtils();
         checkCameraPermissions();
 
         // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
@@ -117,6 +118,7 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.action_logout:
                 //Logout logic goes here
                 preferenceUtils.saveAuthToken("");
+                preferenceUtils.saveUserType(0);
                 final Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();

@@ -127,7 +127,6 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/gray_tools"
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerCenter"
                 app:layout_constraintStart_toStartOf="@+id/spinnerCenter"
                 app:layout_constraintTop_toTopOf="@+id/spinnerCenter" />
@@ -501,6 +500,7 @@
                 android:paddingEnd="5dp"
                 android:paddingStart="40dp"
                 android:paddingTop="10dp"
+                android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintEnd_toEndOf="@+id/textViewEmail"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:layout_marginTop="16dp"

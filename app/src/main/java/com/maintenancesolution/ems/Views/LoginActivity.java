@@ -245,18 +245,20 @@ public class LoginActivity extends AppCompatActivity {
                     });
             alertDialog.show();
         } else {
-            if (response.body().getGroup() == "Customer") {
+            if (response.body().getGroup().equals("Customer")) {
 
                 //userGroup= Constants.CUSTOMER;
                 Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                goToNextActivity.putExtra(Constants.USER_GROUP, 1);
+                preferenceUtils.saveUserType(Constants.CUSTOMER_CODE);
+                // goToNextActivity.putExtra(Constants.USER_GROUP, 1);
                 startActivity(goToNextActivity);
             } else /*if(response.body().getGroup().equals("Area Manager"))*/ {
 
                 Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                goToNextActivity.putExtra(Constants.USER_GROUP, 2);
+                preferenceUtils.saveUserType(Constants.MANAGER_CODE);
+                // goToNextActivity.putExtra(Constants.USER_GROUP, 2);
                 startActivity(goToNextActivity);
             }
 

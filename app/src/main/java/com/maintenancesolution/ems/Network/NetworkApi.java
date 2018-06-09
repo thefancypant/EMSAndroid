@@ -133,14 +133,14 @@ public interface NetworkApi {
     @GET("/gm/user_works/?no_pagination=True")
     Call<List<Order>> getUserWorks(@Header("Authorization") String header);
 
-    @POST("/gm/works/{id}/")
+    @PUT("/gm/works/{id}/update/")
     Call<PostLocationResponse> postLocation(
             @Header("Authorization") String header
             , @Path("id") String resource_id
             , @Body PostLocationRequest postLocationRequest);
 
     //@Multipart
-    @POST("/api/works/{id}/")
+    @PUT("/api/works/{id}/update/")
     Call<GenericResponse> postSignNetwork(@Header("Authorization") String accessToken,
                                           @Path("id") String resource_id,
                                           /*@Part("evaluation") String evaluation,
@@ -152,7 +152,7 @@ public interface NetworkApi {
     Call<Order> getSelectedUserWork(@Header("Authorization") String accessToken,
                                     @Path("id") Integer resource_id);
 
-    @POST("/gm/works/{id}/")
+    @PUT("/gm/works/{id}/update/")
     Call<GenericResponse> postTypesReport(@Header("Authorization") String accessToken,
                                           @Path("id") String resource_id,
                                           @Body Order item
@@ -161,7 +161,7 @@ public interface NetworkApi {
                                           @Query("report")String report)*/);
 
     @Multipart
-    @POST("/gm/works/{id}/")
+    @PUT("/gm/works/{id}/update/")
     Call<GenericResponse> postBeforeImagesNetwork(@Header("Authorization") String accessToken,
                                                   @Path("id") int resource_id,
 

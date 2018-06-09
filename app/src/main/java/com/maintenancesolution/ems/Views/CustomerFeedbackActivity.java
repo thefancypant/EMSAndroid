@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,7 +30,6 @@ import com.maintenancesolution.ems.Misc.VolleySingleton;
 import com.maintenancesolution.ems.Models.Order;
 import com.maintenancesolution.ems.Network.NetworkContract;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
-import com.maintenancesolution.ems.Views.ListActivity.ListActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -82,15 +80,15 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+                final Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 /*goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
 
-                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/";
+                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/complete/";
                 Log.d("FinalUrl", "onClick: " + url);
-                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.PUT, url, new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         String resultResponse = new String(response.data);
@@ -152,7 +150,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
+                    public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("Authorization", header);
                         return params;
@@ -168,15 +166,15 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+                final Intent goToNextActivity = new Intent(getApplicationContext(), DashboardActivity.class);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 /*goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 
 
-                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/";
-                Log.d("FinalUrl", "onClick: " + url);
-                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+                String url = NetworkContract.BASE_URL + "/gm/works/" + order.getId() + "/complete/";
+                Log.d("FinalUrlSuperVisor", "onClick: " + url);
+                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.PUT, url, new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         String resultResponse = new String(response.data);
@@ -239,7 +237,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
+                    public Map<String, String> getHeaders() {
                         Map<String, String> params = new HashMap<String, String>();
                         params.put("Authorization", header);
                         return params;
