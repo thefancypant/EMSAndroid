@@ -158,7 +158,7 @@ public class CustomerRequestForm extends AppCompatActivity {
     private int userGroup;
     private ArrayList<String> spinnerCentersArray = new ArrayList<>();
 
-    private int centerId;
+    private int centerId = 0;
     private int notToExceed = 0;
     private int approvedFromApp = 2;
 
@@ -251,7 +251,7 @@ public class CustomerRequestForm extends AppCompatActivity {
 
             }
         });*/
-        mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focusBoolean) {
                 if (!focusBoolean) {
@@ -296,7 +296,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                 }
             }
         });
-
+*/
         radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -635,10 +635,10 @@ public class CustomerRequestForm extends AppCompatActivity {
 
 
                         //mEmailEditText.clearFocus();
-                        //mEmailEditText.setEnabled(false);
+                        mEmailEditText.setEnabled(false);
 
-                        //mNameEditText.setEnabled(false);
-                        //mPhoneNumberEditText.setEnabled(false);
+                        mNameEditText.setEnabled(false);
+                        mPhoneNumberEditText.setEnabled(false);
 
                         /*workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, jobsSelectedList, CustomerRequestForm.this, null);
                         mWorkTypesListView.setAdapter(workTypeAdapater);
@@ -646,6 +646,17 @@ public class CustomerRequestForm extends AppCompatActivity {
                         workTypeAdapater.notifyDataSetChanged();*/
                         setSpinnerUi();
                     }
+
+                } else {
+                    mEmailEditText.setText("");
+                    mNameEditText.setText("");
+                    mPhoneNumberEditText.setText("");
+                    centerId = 0;
+
+                    mEmailEditText.setEnabled(false);
+                    mNameEditText.setEnabled(false);
+                    mPhoneNumberEditText.setEnabled(false);
+
                 }
 
             }
@@ -736,12 +747,12 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         // Check for a valid email address.
         if (mEmailEditText.getText().toString().trim().equals("")) {
-            mEmailEditText.setError(getString(R.string.error_field_required));
+            //mEmailEditText.setError(getString(R.string.error_field_required));
             focusView = mEmailEditText;
             cancel = true;
         }
         if (mNameEditText.getText().toString().trim().equals("")) {
-            mNameEditText.setError(getString(R.string.error_field_required));
+            //mNameEditText.setError(getString(R.string.error_field_required));
             focusView = mNameEditText;
             cancel = true;
         }
@@ -751,7 +762,7 @@ public class CustomerRequestForm extends AppCompatActivity {
             cancel = true;
         }
         if (mPhoneNumberEditText.getText().toString().trim().equals("")) {
-            mPhoneNumberEditText.setError(getString(R.string.error_field_required));
+            //mPhoneNumberEditText.setError(getString(R.string.error_field_required));
             focusView = mPhoneNumberEditText;
             cancel = true;
         }
@@ -767,7 +778,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         }
 
 
-        if (cancel || typesFlag) {
+        if (cancel || typesFlag || (centerId == 0)) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             if (cancel) {
@@ -783,6 +794,18 @@ public class CustomerRequestForm extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+            }
+            if (centerId == 0) {
+                AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                alertDialog.setTitle("Missing Center");
+                alertDialog.setMessage("Please select a valid center and try again.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                alertDialog.show();
+
             }
         } else {
             // Show a progress spinner, and kick off a background task to
