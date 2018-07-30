@@ -205,14 +205,14 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     clockInTimeTextView.setVisibility(View.VISIBLE);
                     clockIntime = response.body().getClockInDatetime().getTime();
                     clockIntimefull = response.body().getClockInDatetime().getFull();
-                    buttonClockIn.setClickable(false);
+                    // buttonClockIn.setClickable(false);
                     clockInTimeTextView.setText(response.body().getClockInDatetime().getTime());
                 }
                 if (response.body().getLunchInDatetime() != null) {
                     lunchInTimeTextView.setVisibility(View.VISIBLE);
                     buttonLunchIn.setVisibility(View.VISIBLE);
                     buttonLunchIn.setText(R.string.lunch_out);
-                    buttonClockIn.setClickable(false);
+                    //buttonClockIn.setClickable(false);
                     LunchIntime = response.body().getLunchInDatetime().getTime();
                     LunchIntimefull = response.body().getLunchInDatetime().getFull();
 
@@ -409,7 +409,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                     lunchTextView.setVisibility(View.VISIBLE);
                     clockOutTextView.setVisibility(View.VISIBLE);
                     clockInTextView.setVisibility(View.VISIBLE);
-                    buttonClockIn.setClickable(false);
+                    // buttonClockIn.setClickable(false);
                     clockInTimeTextView.setVisibility(View.VISIBLE);
                     clockIntime = getTime().get(1);
                     clockIntimefull = getTime().get(0);
@@ -531,7 +531,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             if (selectedCenterCode != "" && spinner.getSelectedItemPosition() != 0) {
                 LunchIntime = getTime().get(1);
                 LunchIntimefull = getTime().get(0);
-                buttonClockIn.setClickable(false);
+                //buttonClockIn.setClickable(false);
 
                 lunchInTimeTextView.setVisibility(View.VISIBLE);
                 lunchInTimeTextView.setText(LunchIntime);

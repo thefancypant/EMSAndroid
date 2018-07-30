@@ -745,7 +745,7 @@ public class CustomerRequestForm extends AppCompatActivity {
         boolean typesFlag = false;
         View focusView = null;
 
-        // Check for a valid email address.
+       /* // Check for a valid email address.
         if (mEmailEditText.getText().toString().trim().equals("")) {
             //mEmailEditText.setError(getString(R.string.error_field_required));
             focusView = mEmailEditText;
@@ -755,23 +755,23 @@ public class CustomerRequestForm extends AppCompatActivity {
             //mNameEditText.setError(getString(R.string.error_field_required));
             focusView = mNameEditText;
             cancel = true;
-        }
+        }*/
         if (mAddressEditText.getText().toString().trim().equals("")) {
             mAddressEditText.setError(getString(R.string.error_field_required));
             focusView = mAddressEditText;
             cancel = true;
         }
-        if (mPhoneNumberEditText.getText().toString().trim().equals("")) {
+        /*if (mPhoneNumberEditText.getText().toString().trim().equals("")) {
             //mPhoneNumberEditText.setError(getString(R.string.error_field_required));
             focusView = mPhoneNumberEditText;
             cancel = true;
-        }
+        }*/
 
-        if (mNotesEditText.getText().toString().trim().equals("")) {
+        /*if (mNotesEditText.getText().toString().trim().equals("")) {
             mNotesEditText.setError(getString(R.string.error_field_required));
             focusView = mNotesEditText;
             cancel = true;
-        }
+        }*/
         if (jobsSelectedList.size() == 0) {
             typesFlag = true;
 
