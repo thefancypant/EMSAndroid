@@ -14,17 +14,6 @@ import java.util.List;
 
 public class Order implements Parcelable {
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -130,12 +119,27 @@ public class Order implements Parcelable {
     @SerializedName("location")
     @Expose
     private String location;
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 
 
     public Order() {
 
         //Empty Constructor
     }
+
+    @SerializedName("code")
+    @Expose
+    private String code;
 
     protected Order(Parcel in) {
         if (in.readByte() == 0) {
@@ -183,6 +187,7 @@ public class Order implements Parcelable {
         }
         sign = in.readString();
         location = in.readString();
+        code = in.readString();
     }
 
     public List<Type> getTypes() {
@@ -473,6 +478,14 @@ public class Order implements Parcelable {
         this.location = location;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -528,5 +541,6 @@ public class Order implements Parcelable {
         }
         parcel.writeString(sign);
         parcel.writeString(location);
+        parcel.writeString(code);
     }
 }

@@ -57,14 +57,24 @@ public class OrderListAdapter extends BaseAdapter {
         TextView textViewJob = rowView.findViewById(R.id.textViewJob);
         TextView textViewAddress = rowView.findViewById(R.id.textViewAddress);
         TextView textViewLocation = rowView.findViewById(R.id.locationTextView);
+        TextView textViewCode = rowView.findViewById(R.id.textViewCode);
+        TextView textViewDescription = rowView.findViewById(R.id.descriptionTextView);
+
+
 
         Order order = (Order) getItem(i);
         // 2
-        textViewAddress.setText(order.getAddress());
+        //if(order.getCode()!=null) {
+        textViewCode.setText(order.getCode());
+        //}
         textViewDate.setText(order.getDateTime().getDate());
         textViewTime.setText(order.getDateTime().getTime());
+
         textViewJob.setText(order.getProject().getName());
+        textViewDescription.setText(order.getNotes());
         textViewLocation.setText(order.getLocation());
+        textViewAddress.setText(order.getAddress());
+
         return rowView;
     }
 

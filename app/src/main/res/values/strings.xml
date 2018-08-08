@@ -47,7 +47,7 @@
     <string name="done_text">Done</string>
     <string name="please_sign_below">Please Sign Below</string>
     <string name="service_completed">Service Completed</string>
-    <string name="email">Email</string>
+    <string name="email">Email or username</string>
     <string name="phone_number">Phone Number</string>
     <string name="name">Name</string>
     <string name="address">Address</string>

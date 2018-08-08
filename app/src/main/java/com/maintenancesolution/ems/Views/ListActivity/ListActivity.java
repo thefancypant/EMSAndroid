@@ -68,27 +68,12 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //imageView = findViewById(R.id.logout);
 
-       /* getSupportActionBar().setCustomView(R.layout.tool_bar);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                preferenceUtils.saveAuthToken("");
-                final Intent intent = new Intent(ListActivity.this, UserSelectorActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });*/
-        // getSupportActionBar().setDisplayShowCustomEnabled(true);
-        // checkLocationPermission();
-        //enableGps();
         getPrefUtils();
 
         setContentView(R.layout.activity_newlist);
         mListView = findViewById(R.id.recipe_list_view);
         refreshButton = findViewById(R.id.buttonRefresh);
-        // mListView.setEmptyView(findViewById(R.id.recipe_list_view));
         toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         makeRequest();
@@ -443,7 +428,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     protected void onPostResume() {
-        makeRequest();
+        //makeRequest();
         super.onPostResume();
     }
 }
