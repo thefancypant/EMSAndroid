@@ -420,7 +420,7 @@
                 android:ems="10"
                 android:hint="Not to exceed amount"
                 android:imeOptions="actionNext"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:paddingStart="40dp"
                 android:textColor="@color/colorPrimaryDark"
                 app:layout_constraintDimensionRatio="h,5.75:0.7"

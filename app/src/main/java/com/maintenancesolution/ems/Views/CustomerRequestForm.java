@@ -957,6 +957,11 @@ public class CustomerRequestForm extends AppCompatActivity {
 
         //if (!authenticatedUser) {
 
+        double editTextNotToExceedInteger = 0;
+        if (!editTextNotToExceed.getText().toString().trim().equals("")) {
+            editTextNotToExceedInteger = Double.parseDouble(editTextNotToExceed.getText().toString());
+        }
+        Log.d(TAG, "makeRequest: " + Double.toString(editTextNotToExceedInteger));
         NetworkService
                 .getInstance()
                 .customerFormSubmitnew(
@@ -968,7 +973,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         mAddressEditText.getText().toString().trim(),
                         mNotesEditText.getText().toString().trim(),
                         jobTypes,
-                        Integer.parseInt(editTextNotToExceed.getText().toString()),
+                        editTextNotToExceedInteger,
                         approvedFromApp, photoPart1, photoPart2, photoPart3, photoPart4)
                 .enqueue(new Callback<Token>() {
                     @Override
@@ -1001,7 +1006,7 @@ public class CustomerRequestForm extends AppCompatActivity {
                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        /*finish();*/
+                                        finish();
                                     }
                                 });
                         alertDialog.show();

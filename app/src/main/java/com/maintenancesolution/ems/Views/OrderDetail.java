@@ -25,9 +25,11 @@ import android.widget.Spinner;
 
 import com.maintenancesolution.R;
 import com.maintenancesolution.ems.Misc.WorkTypeAdapater;
+import com.maintenancesolution.ems.Models.Equipment;
 import com.maintenancesolution.ems.Models.GenericResponse;
 import com.maintenancesolution.ems.Models.Job;
 import com.maintenancesolution.ems.Models.Order;
+import com.maintenancesolution.ems.Models.OrderPUT;
 import com.maintenancesolution.ems.Network.NetworkService;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
 
@@ -64,7 +66,13 @@ public class OrderDetail extends AppCompatActivity {
     String cameraImage;
     ArrayList<String> spinnerArray = new ArrayList<>();
     List<Job> workTypesList = new ArrayList<>();
+
+
+    List<Equipment> equipmentList = new ArrayList<>();
+
     ArrayList<String> jobsSelectedList = new ArrayList<>();
+    ArrayList<String> equipmentSelectedList = new ArrayList<>();
+
     private View mProgressView;
     private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     private File newfile;
@@ -105,7 +113,8 @@ public class OrderDetail extends AppCompatActivity {
 
         spinnerWorkType.setEnabled(false);
         listViewSelectedJobs.setVisibility(View.GONE);
-        getJobs();
+        //getJobs();
+        getEquipment();
 
         buttonAddImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,15 +145,15 @@ public class OrderDetail extends AppCompatActivity {
         if (order.getReport() != null && !order.getReport().equals("")) {
             editTextDescription.setText(order.getReport());
         }
-        if (order.getTypes().size() != 0) {
+        if (order.getEquipments().size() != 0) {
 
-            for (int i = 0; i < order.getTypes().size(); i++) {
-                jobsSelectedList.add(order.getTypes().get(i).getName());
+            for (int i = 0; i < order.getEquipments().size(); i++) {
+                equipmentSelectedList.add(order.getEquipments().get(i).getName());
             }
 
         }
-        Log.d("setUI", "setUI: " + jobsSelectedList.toString());
-        workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, jobsSelectedList, null, OrderDetail.this);
+        Log.d("setUI", "setUI: " + equipmentSelectedList.toString());
+        workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, equipmentSelectedList, null, OrderDetail.this);
         listViewSelectedJobs.setAdapter(workTypeAdapater);
 
         workTypeAdapater.notifyDataSetChanged();
@@ -155,18 +164,20 @@ public class OrderDetail extends AppCompatActivity {
     }
 
     private void postTypeReport() {
-        String jobTypes = new String();
-        for (int i = 0; i < jobsSelectedList.size(); i++) {
-            for (int j = 0; j < workTypesList.size(); j++) {
-                if (workTypesList.get(j).getName().equals(jobsSelectedList.get(i))) {
-                    jobTypes += workTypesList.get(j).getId() + ",";
+        String equipments = new String();
+        for (int i = 0; i < equipmentSelectedList.size(); i++) {
+            for (int j = 0; j < equipmentList.size(); j++) {
+                if (equipmentList.get(j).getName().equals(equipmentSelectedList.get(i))) {
+                    equipments += equipmentList.get(j).getId() + ",";
                 }
             }
 
 
         }
-        Order item = new Order();
-        item.setJobtypes(jobTypes);
+        //equipments.substring(0, equipments.length() - 1);
+        OrderPUT item = new OrderPUT();
+        item.setEquipments(equipments);
+        //item.setJobtypes(jobTypes);
         item.setReport(editTextDescription.getText().toString().trim());
         NetworkService
                 .getInstance()
@@ -234,7 +245,7 @@ public class OrderDetail extends AppCompatActivity {
         header = "JWT " + preferenceUtils.getAuthToken();
     }
 
-    private void getJobs() {
+    /*private void getJobs() {
         NetworkService
                 .getInstance()
                 .getJobTypes()
@@ -252,9 +263,80 @@ public class OrderDetail extends AppCompatActivity {
                 });
 
 
+    }*/
+
+    private void getEquipment() {
+        NetworkService
+                .getInstance()
+                .getEquipment(header)
+                .enqueue(new Callback<List<Equipment>>() {
+                    @Override
+                    public void onResponse(Call<List<Equipment>> call, Response<List<Equipment>> response) {
+                        porocessEquipment(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Equipment>> call, Throwable t) {
+
+                    }
+                });
+
+
     }
 
-    private void processJobs(List<Job> jobList) {
+    private void porocessEquipment(List<Equipment> body) {
+        equipmentList = body;
+        spinnerArray.add("Select equipment used");
+        //spinnerArray.add("Select Work Type");
+        for (int i = 0; i < equipmentList.size(); i++) {
+            spinnerArray.add(equipmentList.get(i).getName());
+        }
+
+
+        spinnerWorkType.setEnabled(true);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_background, R.id.textViewJob, spinnerArray);
+        spinnerWorkType.setAdapter(arrayAdapter);
+
+        spinnerWorkType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != 0) {
+                    spinnerWorkType.setSelection(0);
+                    if (!spinnerArray.get(position).equals("Select equipment used")) {
+                        if (!equipmentSelectedList.contains(spinnerArray.get(position))) {
+                            equipmentSelectedList.add(spinnerArray.get(position));
+                        }
+
+                        workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, equipmentSelectedList, null, OrderDetail.this);
+                        listViewSelectedJobs.setAdapter(workTypeAdapater);
+
+                        workTypeAdapater.notifyDataSetChanged();
+
+
+                        setSpinnerUi();
+                   /* mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            jobsSelectedList.remove(i);
+                            workTypeAdapater.notifyDataSetChanged();
+                        }
+                    });*/
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        setUI(order);
+
+    }
+
+    /*private void processJobs(List<Job> jobList) {
 
         workTypesList = jobList;
         spinnerArray.add("Select Work Type");
@@ -285,13 +367,13 @@ public class OrderDetail extends AppCompatActivity {
 
 
                         setSpinnerUi();
-                   /* mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                   *//* mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             jobsSelectedList.remove(i);
                             workTypeAdapater.notifyDataSetChanged();
                         }
-                    });*/
+                    });*//*
 
                     }
                 }
@@ -306,10 +388,10 @@ public class OrderDetail extends AppCompatActivity {
         setUI(order);
         //workTypeAdapater.notifyDataSetChanged();
 
-    }
+    }*/
 
     public void setSpinnerUi() {
-        if (jobsSelectedList.size() == 0) {
+        if (equipmentSelectedList.size() == 0) {
             listViewSelectedJobs.setVisibility(View.GONE);
             spinnerWorkType.setBackground(getResources().getDrawable(R.drawable.edittext_background_normal));
             imageViewDownArrow.setColorFilter(getResources().getColor(R.color.login_page_background));
@@ -353,7 +435,7 @@ public class OrderDetail extends AppCompatActivity {
             focusView = editTextDescription;
             cancel = true;
         }
-        if (jobsSelectedList.size() == 0) {
+        if (equipmentSelectedList.size() == 0) {
             typesFlag = true;
 
         }
@@ -367,7 +449,7 @@ public class OrderDetail extends AppCompatActivity {
             }
             if (typesFlag) {
                 AlertDialog alertDialog = new AlertDialog.Builder(OrderDetail.this).create();
-                alertDialog.setTitle("Missing Work Type");
+                alertDialog.setTitle("Missing Equipment");
                 alertDialog.setMessage("Please select one type of Work Type by pressing on the Select Work Type button");
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
                         new DialogInterface.OnClickListener() {

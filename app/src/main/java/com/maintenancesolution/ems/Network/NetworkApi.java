@@ -7,10 +7,12 @@ import com.maintenancesolution.ems.Models.Center;
 import com.maintenancesolution.ems.Models.CheckAssetRequest;
 import com.maintenancesolution.ems.Models.CountAssetsRequest;
 import com.maintenancesolution.ems.Models.CustomerRequest;
+import com.maintenancesolution.ems.Models.Equipment;
 import com.maintenancesolution.ems.Models.GenericResponse;
 import com.maintenancesolution.ems.Models.Job;
 import com.maintenancesolution.ems.Models.MoveAssetsRequest;
 import com.maintenancesolution.ems.Models.Order;
+import com.maintenancesolution.ems.Models.OrderPUT;
 import com.maintenancesolution.ems.Models.PostLocationRequest;
 import com.maintenancesolution.ems.Models.PostLocationResponse;
 import com.maintenancesolution.ems.Models.SignupRequest;
@@ -83,7 +85,7 @@ public interface NetworkApi {
             @Part("address") String address,
             @Part("notes") String description,
             @Part("types") String types,
-            @Part("not_to_exceed") int notToExceed,
+            @Part("not_to_exceed") double notToExceed,
             @Part("is_approved_from_app") int approvedFromApp,
             @Part MultipartBody.Part photo1,
             @Part MultipartBody.Part photo2,
@@ -155,7 +157,7 @@ public interface NetworkApi {
     @PUT("/gm/works/{id}/update/")
     Call<GenericResponse> postTypesReport(@Header("Authorization") String accessToken,
                                           @Path("id") String resource_id,
-                                          @Body Order item
+                                          @Body OrderPUT item
                                           /*@Query("id") String id,
                                           @Query("job_types")String types,
                                           @Query("report")String report)*/);
@@ -216,6 +218,9 @@ public interface NetworkApi {
 
     @GET("/app/users/check/")
     Call<SignupResponse> checkUser(@Header("Authorization") String accessToken);
+
+    @GET("/gm/job_equipments?no_pagination=True")
+    Call<List<Equipment>> getEquipment(@Header("Authorization") String accessToken);
 
     /*@Multipart
     @POST("/api/works/{id}/")

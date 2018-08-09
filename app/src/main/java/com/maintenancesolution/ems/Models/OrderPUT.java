@@ -8,12 +8,19 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by kalyan on 1/2/18.
- */
+public class OrderPUT implements Parcelable {
 
-public class Order implements Parcelable {
+    public static final Creator<OrderPUT> CREATOR = new Creator<OrderPUT>() {
+        @Override
+        public OrderPUT createFromParcel(Parcel in) {
+            return new OrderPUT(in);
+        }
 
+        @Override
+        public OrderPUT[] newArray(int size) {
+            return new OrderPUT[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -53,19 +60,9 @@ public class Order implements Parcelable {
     @SerializedName("types")
     @Expose
     private List<Type> types;
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
-
-
+    @SerializedName("equipments")
+    @Expose
+    private String equipments;
     @SerializedName("before_photo1")
     @Expose
     private String beforePhoto1;
@@ -135,17 +132,14 @@ public class Order implements Parcelable {
     @SerializedName("code")
     @Expose
     private String code;
-    @SerializedName("equipments")
-    @Expose
-    private List<Equipment> equipments;
 
 
-    public Order() {
+    public OrderPUT() {
 
         //Empty Constructor
     }
 
-    protected Order(Parcel in) {
+    protected OrderPUT(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
         } else {
@@ -165,7 +159,7 @@ public class Order implements Parcelable {
         report = in.readString();
         jobtypes = in.readString();
         types = in.createTypedArrayList(Type.CREATOR);
-        equipments = in.createTypedArrayList(Equipment.CREATOR);
+        equipments = in.readString();
         beforePhoto1 = in.readString();
         beforePhoto2 = in.readString();
         beforePhoto3 = in.readString();
@@ -491,11 +485,11 @@ public class Order implements Parcelable {
         this.code = code;
     }
 
-    public List<Equipment> getEquipments() {
+    public String getEquipments() {
         return equipments;
     }
 
-    public void setEquipments(List<Equipment> equipments) {
+    public void setEquipments(String equipments) {
         this.equipments = equipments;
     }
 
@@ -529,7 +523,7 @@ public class Order implements Parcelable {
         parcel.writeString(report);
         parcel.writeString(jobtypes);
         parcel.writeTypedList(types);
-        parcel.writeTypedList(equipments);
+        parcel.writeString(equipments);
         parcel.writeString(beforePhoto1);
         parcel.writeString(beforePhoto2);
         parcel.writeString(beforePhoto3);
