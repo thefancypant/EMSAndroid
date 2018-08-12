@@ -330,6 +330,8 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
         SimpleDateFormat minutesFormat = new SimpleDateFormat("m");
         SimpleDateFormat hoursFormat = new SimpleDateFormat("hh");
+        SimpleDateFormat dayOfMonthFormat = new SimpleDateFormat("dd");
+
 
         Date date = new Date();
         String month = monthFormat.format(date).toString();
@@ -339,11 +341,12 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         String minutes = minutesFormat.format(new Date()).toString();
         String am_pm = amPmFormat.format(date).toString();
         String dayOfWeek = dayOfWeekFormat.format(date).toString();
-        String year = yearFormat.format(date).toString();
+        String dayOfMonth = dayOfMonthFormat.format(date).toString();
+        //String year = yearFormat.format(date).toString();
 
-        dayTextView.setText(dayOfWeek.toUpperCase() + " " + month.toUpperCase() + " " + year);
+        dayTextView.setText(dayOfWeek.toUpperCase() + " " + month.toUpperCase() + " " + dayOfMonth);
 
-        Log.d(TAG, "setClock: " + hour + ":" + minutes + " " + am_pm + " " + dayOfWeek + " " + month + " " + year);
+        Log.d(TAG, "setClock: " + hour + ":" + minutes + " " + am_pm + " " + dayOfWeek + " " + month + " " + dayOfMonth);
 
     }
 

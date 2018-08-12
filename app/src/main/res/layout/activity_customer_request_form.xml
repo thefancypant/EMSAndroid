@@ -445,7 +445,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/white"
                 android:ems="10"
-                android:hint="Instantly approve"
+                android:hint="Instantly approved"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:paddingStart="40dp"

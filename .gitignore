@@ -122,3 +122,4 @@ crashlytics-build.properties
 fabric.properties
 app/libs/
 /app/release/
+/app/release/output.json
