@@ -212,6 +212,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                                     @Override
                                     public void onResponse(NetworkResponse response) {
                                         String resultResponse = new String(response.data);
+                                        Log.d("OnComplete", "onResponse: " + response.data.toString());
                                         // parse success output
                                         showProgress(false);
                                         AlertDialog alertDialog = new AlertDialog.Builder(CustomerFeedbackActivity.this).create();

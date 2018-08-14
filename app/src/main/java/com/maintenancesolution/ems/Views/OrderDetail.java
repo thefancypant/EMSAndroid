@@ -436,7 +436,7 @@ public class OrderDetail extends AppCompatActivity {
             cancel = true;
         }
         if (equipmentSelectedList.size() == 0) {
-            typesFlag = true;
+            //typesFlag = true;
 
         }
 
