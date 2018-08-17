@@ -64,16 +64,34 @@ public class OrderListAdapter extends BaseAdapter {
 
         Order order = (Order) getItem(i);
         // 2
-        //if(order.getCode()!=null) {
+        if (order.getCode() != null) {
         textViewCode.setText(order.getCode());
-        //}
-        textViewDate.setText(order.getDateTime().getDate());
-        textViewTime.setText(order.getDateTime().getTime());
+        }
+        if (order.getDateTime() != null) {
 
-        textViewJob.setText(order.getProject().getName());
-        textViewDescription.setText(order.getNotes());
-        textViewLocation.setText(order.getLocation());
-        textViewAddress.setText(order.getAddress());
+            textViewDate.setText(order.getDateTime().getDate());
+        }
+        if (order.getDateTime() != null) {
+
+            textViewTime.setText(order.getDateTime().getTime());
+        }
+
+        if (order.getProject() != null) {
+
+            textViewJob.setText(order.getProject().getName());
+        }
+        if (order.getNotes() != null) {
+
+            textViewDescription.setText(order.getNotes());
+        }
+        if (order.getLocation() != null) {
+
+            textViewLocation.setText(order.getLocation());
+        }
+        if (order.getAddress() != null) {
+
+            textViewAddress.setText(order.getAddress());
+        }
 
         return rowView;
     }
