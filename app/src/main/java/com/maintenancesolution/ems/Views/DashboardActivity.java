@@ -120,6 +120,7 @@ public class DashboardActivity extends AppCompatActivity {
                 preferenceUtils.saveAuthToken("");
                 preferenceUtils.saveUserType(0);
                 final Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
                 return true;

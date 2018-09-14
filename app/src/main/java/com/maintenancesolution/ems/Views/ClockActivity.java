@@ -826,7 +826,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
         if (alertDialogGatheringLocation != null) {
             alertDialogGatheringLocation.dismiss();
-            buttonClockIn();
+            //buttonClockIn();
         }
     }
 
