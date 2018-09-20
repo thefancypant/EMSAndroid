@@ -4,13 +4,10 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,6 +30,7 @@ import com.maintenancesolution.ems.Models.Center;
 import com.maintenancesolution.ems.Models.UpdateTimeRequest;
 import com.maintenancesolution.ems.Network.NetworkService;
 import com.maintenancesolution.ems.Utils.GeneralUtils;
+import com.maintenancesolution.ems.Utils.GpsLocationTracker;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +48,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ClockActivity extends AppCompatActivity implements LocationListener {
+public class ClockActivity extends AppCompatActivity /*implements LocationListener*/ {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static IntentFilter s_intentFilter;
@@ -113,6 +111,8 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     private Dialog loadingGif;
     private List<Center> centersList = new ArrayList<>();
     private AlertDialog alertDialogGatheringLocation;
+    GpsLocationTracker mGpsLocationTracker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -354,11 +354,25 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkGpsPermissions: Permissions not available");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-
+            /*LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(10000);
+            mLocationRequest.setFastestInterval(5000);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);*/
             //return false;
         } else {
             Log.d(TAG, "checkGpsPermissions: Permissions available");
-            gpsIsEnabled();
+            //gpsIsEnabled();
+            mGpsLocationTracker = new GpsLocationTracker(ClockActivity.this);
+
+            try {
+                if (Settings.Secure.getInt(getApplicationContext().getContentResolver(), Settings.Secure.LOCATION_MODE) != 3) {
+                    mGpsLocationTracker.showLocationModeAlert();
+                }
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            getLocation();
+
 
         }
 
@@ -369,39 +383,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
         header = "JWT " + preferenceUtils.getAuthToken();
     }
 
-    private void gpsIsEnabled() {
 
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            try {
-                Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
-                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("GPS not enabled");  // GPS not found
-                builder.setMessage("Do you want to enable GPS"); // Want to enable?
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "gpsIsEnabled: Dialog Yes clicked ");
-
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.d(TAG, "gpsIsEnabled: Dialog No clicked ");
-
-                    }
-                });
-                builder.create().show();
-            } catch (Exception e) {
-            }
-            return;
-        } else {
-            Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
-            getLocation();
-        }
-
-    }
 
     @OnClick(R.id.buttonClockIn)
     public void buttonClockIn() {
@@ -475,52 +457,16 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             alertDialogBuilder.setTitle("Gathering Location Information.Please wait...");
 
 
-            alertDialogBuilder.setMessage("").setCancelable(false);
+            alertDialogBuilder.setMessage("");
 
 
             alertDialogGatheringLocation = alertDialogBuilder.create();
 
 
             alertDialogGatheringLocation.show();
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
 
-
-
-
-
-           /* LocationListener locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-
-                    buttonClockIn();
-                }
-
-                @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String s) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String s) {
-
-                }
-            };*/
-            /*do {
-                Log.d(TAG, "buttonClockIn: Check for Location ");
-                if (longitude != 0.0 && lattiude != 0.0) {
-                    //dialog.dismiss();
-                    loadingGif.dismiss();
-                    Log.d(TAG, "buttonClockIn: Location  found");
-
-                    buttonClockIn();
-                    break;
-                }
-            } while (true);*/
+            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
+            checkGpsPermissions();
 
 
         }
@@ -788,12 +734,35 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
     }
 
+
     private void getLocation() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            /*&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/) {
 
-            // ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+        if (mGpsLocationTracker.canGetLocation()) {
+            lattiude = mGpsLocationTracker.getLatitude();
+            longitude = mGpsLocationTracker.getLongitude();
+            Log.i(TAG, String.format("latitude: %s", lattiude));
+            Log.i(TAG, String.format("longitude: %s", longitude));
+            //buttonClockIn();
+
+        } else {
+            mGpsLocationTracker.showSettingsAlert();
+        }
+
+        if (alertDialogGatheringLocation != null) {
+            alertDialogGatheringLocation.dismiss();
+            //buttonClockIn();
+        }
+
+
+    }
+
+    /*private void getLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            *//*&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*//*) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             Log.d(TAG, "getLocation: Permissions not found");
 
 
@@ -811,10 +780,12 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             Log.d(TAG, "getLocation: Permissions found seeking location data");
 
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
-        }
-    }
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-    @Override
+        }
+    }*/
+
+   /* @Override
     public void onLocationChanged(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
@@ -846,7 +817,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
 
         gpsIsEnabled();
 
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -864,11 +835,15 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
+                        mGpsLocationTracker = new GpsLocationTracker(ClockActivity.this);
+                        checkGpsPermissions();
+
+
                         //Request location updates:
                         //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
-                        gpsIsEnabled();
+                        //gpsIsEnabled();
                     }
 
                 } else {
@@ -886,7 +861,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
     protected void onResume() {
         super.onResume();
 
-        if (ContextCompat.checkSelfPermission(this,
+        /*if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
@@ -896,7 +871,7 @@ public class ClockActivity extends AppCompatActivity implements LocationListener
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
 

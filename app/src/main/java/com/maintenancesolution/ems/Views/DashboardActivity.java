@@ -211,7 +211,7 @@ public class DashboardActivity extends AppCompatActivity {
             Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("GPS not enabled");  // GPS not found
-            builder.setMessage("Do you want to enable GPS"); // Want to enable?
+            builder.setMessage("Please enable GPS and select location method to High accuracy"); // Want to enable?
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Log.d(TAG, "gpsIsEnabled: Dialog Yes clicked ");
