@@ -68,23 +68,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         }, SPLASH_DISPLAY_LENGTH);
     }
 
-   /* private void setUpAWS() {
-        Context appContext = getApplicationContext();
-        AWSConfiguration awsConfig = new AWSConfiguration(appContext);
-        IdentityManager identityManager = new IdentityManager(appContext, awsConfig);
-        IdentityManager.setDefaultIdentityManager(identityManager);
-        //Log.i("pinpoint",identityManager.getCachedUserID());
-        user_id = identityManager.getCachedUserID();
-        identityManager.doStartupAuth(this, new StartupAuthResultHandler() {
-            @Override
-            public void onComplete(StartupAuthResult startupAuthResult) {
-
-                Log.i("pinpoint","onComplete");
-                // User identity is ready as unauthenticated user or previously signed-in user.
-            }
-        });
-
-    }*/
 
     private void checkToken() {
                 /*if (preferenceUtils.getRefreshToken() == null)

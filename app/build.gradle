@@ -7,8 +7,8 @@ android {
         applicationId "com.maintenancesolution.ems"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 13
-        versionName "2.02"
+        versionCode 14
+        versionName "2.03"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -84,6 +84,9 @@ dependencies {
     //Image Compression
     compile "id.zelory:compressor:$ImageCompressionLibrary"
 
+    //Location and google services
+    compile "com.google.android.gms:play-services-location:15.0.1"
+
     //Testing Libraries
     testCompile 'junit:junit:4.12'
 
@@ -113,10 +116,5 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 
-    //compile 'com.android.support:multidex:1.0.2'
-    //compile 'com.google.android.gms:play-services-gcm:9.6.0'
 
-    /*compile 'com.android.support:multidex:1.0.0'
-        compile 'com.google.android.gms:play-services-gcm:9.6.0'*/
-    //provided files('libs/amazon-device-messaging-1.0.1.jar')
 }

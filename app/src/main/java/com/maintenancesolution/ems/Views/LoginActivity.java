@@ -1,10 +1,17 @@
 package com.maintenancesolution.ems.Views;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,12 +55,16 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textViewSignup;
     private String header;
     private String userGroup;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         preferenceUtils = PreferenceUtils.getInstance(getApplicationContext());
+        checkCameraPermissions();
 
         // Set up the login form.
         mEmailView = findViewById(R.id.editTextUserName);
@@ -364,5 +375,118 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
         }
     }*/
+    private void checkCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkGpsPermissions: Permissions not available");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+
+            //return false;
+        } else {
+            checkGpsPermissions();
+            Log.d(TAG, "checkCameraPermissions: Permissions available");
+            //gpsIsEnabled();
+
+        }
+
+    }
+
+    private void checkGpsPermissions() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkGpsPermissions: Permissions not available");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+
+            //return false;
+        } else {
+            Log.d(TAG, "checkGpsPermissions: Permissions available");
+            gpsIsEnabled();
+
+        }
+
+    }
+
+    private void gpsIsEnabled() {
+
+        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("GPS not enabled");  // GPS not found
+            builder.setMessage("Please enable GPS and select location method to High accuracy"); // Want to enable?
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.d(TAG, "gpsIsEnabled: Dialog Yes clicked ");
+
+                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.d(TAG, "gpsIsEnabled: Dialog No clicked ");
+
+                }
+            });
+            builder.create().show();
+            return;
+        } else {
+            Log.d(TAG, "gpsIsEnabled: Permissions available.Gps not enabled");
+            //getLocation();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.CAMERA)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        checkGpsPermissions();
+
+                    }
+
+                } else {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
+
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        gpsIsEnabled();
+
+                    }
+
+                } else {
+
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+
+                }
+                return;
+
+            }
+
+        }
+    }
 }
 

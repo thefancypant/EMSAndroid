@@ -2,7 +2,6 @@ package com.maintenancesolution.ems.Views;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,7 +13,6 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +28,7 @@ import com.maintenancesolution.ems.Models.Center;
 import com.maintenancesolution.ems.Models.UpdateTimeRequest;
 import com.maintenancesolution.ems.Network.NetworkService;
 import com.maintenancesolution.ems.Utils.GeneralUtils;
+import com.maintenancesolution.ems.Utils.GoogleLocationActivity;
 import com.maintenancesolution.ems.Utils.GpsLocationTracker;
 import com.maintenancesolution.ems.Utils.PreferenceUtils;
 
@@ -48,7 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ClockActivity extends AppCompatActivity /*implements LocationListener*/ {
+public class ClockActivity extends GoogleLocationActivity /*implements LocationListener*/ {
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static IntentFilter s_intentFilter;
@@ -85,8 +84,7 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
     TextView lunchOutTimeTextView;
     @BindView(R.id.clockOutTimeTextView)
     TextView clockOutTimeTextView;
-    private double lattiude;
-    private double longitude;
+
     private LocationManager locationManager;
     private PreferenceUtils preferenceUtils;
     private String header;
@@ -112,14 +110,14 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
     private List<Center> centersList = new ArrayList<>();
     private AlertDialog alertDialogGatheringLocation;
     GpsLocationTracker mGpsLocationTracker;
-
+    double lattiude = 0;
+    double longitude = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock);
         ButterKnife.bind(this);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //enableGps();
         try {
             loadingGif = new GeneralUtils(this).showLoadingGif(this);
@@ -273,6 +271,11 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
 
     private void processCenters(final Response<List<Center>> response) {
         //loadingGif.dismiss();
+        if (getLocation() != null) {
+            lattiude = getLocation().getLatitude();
+            longitude = getLocation().getLongitude();
+        }
+
         if (response.code() >= 200 && response.code() < 300) {
             centersList = response.body();
 
@@ -322,6 +325,8 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
     }
 
     private void setClock() {
+        /*lattiude=getLocation().getLatitude();
+        longitude=getLocation().getLongitude();*/
 
         Calendar calendar = GregorianCalendar.getInstance();
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
@@ -371,7 +376,10 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
             } catch (Settings.SettingNotFoundException e) {
                 e.printStackTrace();
             }
-            getLocation();
+            if (getLocation() != null) {
+                lattiude = getLocation().getLatitude();
+                longitude = getLocation().getLongitude();
+            }
 
 
         }
@@ -387,6 +395,10 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
 
     @OnClick(R.id.buttonClockIn)
     public void buttonClockIn() {
+        if (getLocation() != null) {
+            lattiude = getLocation().getLatitude();
+            longitude = getLocation().getLongitude();
+        }
         if (longitude != 0.0 && lattiude != 0.0) {
             if (clockIntime == "") {
                 if (selectedCenterCode != "" && spinner.getSelectedItemPosition() != 0) {
@@ -735,89 +747,8 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
     }
 
 
-    private void getLocation() {
 
 
-        if (mGpsLocationTracker.canGetLocation()) {
-            lattiude = mGpsLocationTracker.getLatitude();
-            longitude = mGpsLocationTracker.getLongitude();
-            Log.i(TAG, String.format("latitude: %s", lattiude));
-            Log.i(TAG, String.format("longitude: %s", longitude));
-            //buttonClockIn();
-
-        } else {
-            mGpsLocationTracker.showSettingsAlert();
-        }
-
-        if (alertDialogGatheringLocation != null) {
-            alertDialogGatheringLocation.dismiss();
-            //buttonClockIn();
-        }
-
-
-    }
-
-    /*private void getLocation() {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            *//*&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*//*) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-            Log.d(TAG, "getLocation: Permissions not found");
-
-
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        } else
-
-        {
-            Log.d(TAG, "getLocation: Permissions found seeking location data");
-
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-        }
-    }*/
-
-   /* @Override
-    public void onLocationChanged(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        Log.d("location", "onLocationChanged: " + Double.toString(latitude));
-        Log.d("location", "onLocationChanged: " + Double.toString(longitude));
-
-        this.lattiude = latitude;
-        this.longitude = longitude;
-
-        if (alertDialogGatheringLocation != null) {
-            alertDialogGatheringLocation.dismiss();
-            //buttonClockIn();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-        gpsIsEnabled();
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-        gpsIsEnabled();
-
-    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -861,17 +792,6 @@ public class ClockActivity extends AppCompatActivity /*implements LocationListen
     protected void onResume() {
         super.onResume();
 
-        /*if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            //Request location updates:
-            try {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 
 
